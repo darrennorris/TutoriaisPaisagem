@@ -1,0 +1,670 @@
+---
+title: "Escala"
+author: "Darren Norris"
+date: "`r Sys.Date()`"
+output:
+  html_document:       
+    toc: true
+    toc_float: true
+  pdf_document:       
+    toc: true
+    extra_dependencies: ["flafter"]
+    includes:
+      in_header: "preamble.txe"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Apresentação
+Nesta aula (https://rpubs.com/darren75/escala) vamos entender a importância de escala na ecologia da paisagem através cálculos com a proporção de floresta.
+Durante a aula você aprenderá a
+
+1.  Alterar escala (resolução e extensão espacial),  
+2.  Calcular a área de uma classe de habitat,  
+3.  Desenvolve uma comparação multiescala.
+
+<br> 
+É muito importante ficar claro para você o que é escala (e o que não é!) e qual a importância desse conceito na elaboração do desenho amostral, na coleta de dados, nas análises e na tomada de decisão. Nesse tutorial usaremos conteudo baseado no Capítulo 2 do livro [Fletcher & Fortin. 2019. Spatial Ecology and Conservation Modeling: Applications with R](https://link.springer.com/book/10.1007/978-3-030-01989-1)  e ["Tutorial Escala"](https://www.needs.ufscar.br/tutorial_escala.pdf) do Dr. Alexandre Martensen.
+
+## Escala: breve definação
+
+Todos os processos e padrões ecológicos têm uma dimensão temporal e espacial. Assim sendo, o conceito de <b>escala</b> não somente representar essas dimensões, mas também, ajudar nos apresentá-los de uma forma que facilite o entendimento sobre os processos e padrões sendo estudados. 
+
+
+Na ecologia o termo escala refere-se à dimensão ou domínio espaço-temporal de um processo ou padrão. Na ecologia da paisagem, a escala é frequentemente descrita por sua componentes: resolução e extensão. 
+
+* **Resolução**:  menor unidade espacial de medida para um padrão ou processo.
+* **Extensão**: descreve o comprimento ou tamanho de área sob investigação.
+
+Resolução e extensão tendem a covariar – estudos com maior extensão tendem a ter resolução maiores também. Parte dessa covariância é prática: é difícil trabalhar em grandes extensões com dados coletados em tamanhos de resolução finos. No entanto, parte dessa covariância também é conceitual: muitas vezes em grandes extensões, podemos esperar que processos operando em resolução muito finos forneçam somente “ruído” e não dados/informações relevantes sobre os sistemas. Como  os desafios computacionais diminuíram e a disponibilidade de dados de alta resolução aumentou, a covariância entre resolução e extensão nas investigações diminuiu.
+
+## Codigo e R
+ * Objetivo não é de apresentar detalhes sobre os cálculos/métodos estatísticas ou os funções no [R](https://cran.r-project.org/). Existem diversos exemplos disponíveis [“Ciência de Dados com R–Introdução......”: ](https://cdr.ibpad.com.br/cdr-intro.pdf) e com google "r cran grupo de ajudar tutorial".......
+
+ * O objetivo é  de apresentar um tutorial mostrado os capacidades e opções para desenvolver e integrar pesquisas na ecologia da paisagem no ambiente estatística de [R](https://cran.r-project.org/)
+
+Obviamente, todas as tarefas de geoprocessamento podem ser desenvolvidas anteriormente em um SIG ([QGIS](https://docs.qgis.org/3.22/pt_BR/docs/training_manual/)). Então porque use R? R tem a capacidade (baseada em codigo) para alternar  entre tarefas de processamento, modelagem e visualização de dados geográficos e não geográficos. Alem disso, como é possível importar, modificar, analisar e visualizar dados espaciais no mesmo ambiente com script/codigo, o R permite fluxos de trabalho transparentes e reproduzíveis ([A Ciência Aberta](https://foster.gitbook.io/manual-de-formacao-em-ciencia-aberta/02introducaoacienciaaberta/01conceito_e_principios_da_ciencia_aberta)).
+
+## Primeiros passos com uma raster
+
+Uma raster é um matriz de valores com coordenados geográficos. Cada pixel de uma raster representa uma região geográfica, e o valor do pixel representa uma característica dessa região (mais sobre [dados raster](https://docs.qgis.org/3.22/pt_BR/docs/gentle_gis_introduction/raster_data.html)).
+
+Em geral é necessário baixar alguns pacotes para que possamos fazer
+as nossas análises. Precisamos os seguintes pacotes, que deve esta instalado antes: 
+
+ * [tidyverse](https://www.tidyverse.org/), 
+ * [terra](https://rspatial.org/terra/pkg/index.html),
+ * [sf](https://r-spatial.github.io/sf/),
+ * [mapview](https://r-spatial.github.io/mapview/), 
+ * [tmap](https://r-tmap.github.io/tmap-book/).
+
+Carregar pacotes: 
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(terra)
+library(sf)
+library(mapview)
+library(tmap)
+```
+
+
+Inicialmente iremos gerar uma raster representando uma paisagem bem simples, de 6 por 6 pixels.
+Você já deve saber que pixel é a unidade básica de uma imagem (lembra da camera do seu celular, 10Mb ou algo assim?!). Vocês devem ter
+visto sobre pixels e resolução no mesmo em aulas de geoprocessamento. Aqui podemos tratar o pixel como a resolução. Vamos dizer que temos um pixel de 10 metros (res=10 no bloco de código), ou seja,
+uma quadrado de 10 por 10m, sendo essa, a menor unidade mapeável (tambem tem ligação com escala cartográfica!).
+
+```{r, echo=TRUE, message=FALSE, warning=FALSE, fig.width =4, fig.height = 2.5, fig.cap="Fig. 1. Paisagem simples de 36 pixels."}
+#Essa linha de comando gera a paisagem virtual (simulação)
+pai_sim <- rast(ncols=6, nrows=6, 
+                xmin=1, xmax=60, 
+                ymin=1, ymax=60, 
+                res=10) 
+#E essa atribui valores ("values") para os pixels criados acima
+values(pai_sim)<-1 
+plot(pai_sim) #essa plota
+text(pai_sim) #Essa coloca os valores dos pixels
+```
+
+<P style="page-break-before: always">
+
+Agora vamos olhar um exemplo do mundo real. Uma pequena amostra do Rio Araguari, perto de Porto Grande. O ponto central da raster é de longitude: -51.406312 latitude: 0.726236. Para visualizar o ponto no Google Earth: https://earthengine.google.com/timelapse#v=0.72154,-51.41543,11.8,latLng&t=2.24&ps=25&bt=19840101&et=20201231&startDwell=0&endDwell=0 .
+
+O arquivo raster tem uma pequena amostra com a classificação da terra feito pela [MapBiomas](https://mapbiomas.org/), que produz mapeamento anual da cobertura e uso da terra no Brasil desde 1985.
+
+Baixar arquivo com os dados (formato ".tif"), link: [https://github.com/darrennorris/gisdata/blob/master/inst/raster/amostra_mapbiomas_2020.tif](https://github.com/darrennorris/gisdata/blob/master/inst/raster/amostra_mapbiomas_2020.tif) .
+Lembrando-se de salvar o arquivo ("amostra_mapbiomas_2020.tif") em um local conhecido no seu computador. 
+
+```{r eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+rin <- "C:/Users/user/Documents/Articles/gis_layers/gisdata/inst/raster/amostra_mapbiomas_2020.tif"
+ramostra <- rast(rin)
+```
+
+Carregar o arquivo trabalhamos com o pacote [terra](https://CRAN.R-project.org/package=terra). O pacote tem varios funçoes para a análise e modelagem de dados geográficos. Nós podemos ler os dados de cobertura da terra com a função <code>rast</code>.
+```{r eval=FALSE, echo=TRUE, message=FALSE, warning=FALSE}
+#
+ramostra <- rast(file.choose())
+```
+
+Agora podemos verificar informcões sobre o raster (metadados). 
+
+```{r}
+ramostra
+```
+
+Isso nos mostra informações sobre escala espacial (resolução e extensão) e a sistema de coordenados (SIRGAS 2000 / UTM zone 22N (EPSG:31976)). Além disso é possível obter informações específicas através de funções específicas..
+
+```{r, eval= FALSE, echo = TRUE}
+# Obter informações sobre escala espacial
+# resolução
+res(ramostra)
+# numero de colunas
+ncol(ramostra)
+# numero de linhas
+nrow(ramostra)
+
+```
+
+
+### Pergunta 1
+
+
+`r kableExtra::text_spec("Com base nos resultados obtidos até agora, qual o tamanho do pixel em metros quadrados? Qual o tamnaho total da raster em hectares e quilometros quadrados?", color = "blue", bold = TRUE)`
+
+
+----------------------
+
+<P style="page-break-before: always">
+
+Podemos também plotar para verificar.
+```{r, fig.width =4, fig.height = 2.5, fig.cap="Fig. 2. Mapbiomas 2020. Uma pequena amostra do Rio Araguari, perto de Porto Grande."}
+plot(ramostra)
+```
+
+<br> 
+O mapa mostra que tem três classes com valores de 3, 12 e 33. 
+Lembrando, o objetivo principal não é de fazer mapas. Mas, a visualização dos dados é um passo importante para verificar e entender os padrões. Portanto, segue exemplo mostrando uma forma de viaualizar o arquivo de raster como mapa.
+
+Para entender o que os valores representam no mundo real precisamos de uma referência (legenda). Para a MapBiomas Coleção 6, arquivo: [Cod_Class_legenda_Col6_MapBiomas_BR.pdf](https://mapbiomas-br-site.s3.amazonaws.com/downloads/Colecction%206/Cod_Class_legenda_Col6_MapBiomas_BR.pdf). Existe também arquivos para fazer as mapas com cores corretas em [QGIS](https://mapbiomas-br-site.s3.amazonaws.com/downloads/Colecction%206/MapBiomas_Col6_classes_colors.qml) ou [ArcGIS](https://mapbiomas-br-site.s3.amazonaws.com/downloads/Colecction%206/Legenda_Col6_MapBiomas.lyr).
+
+Olhando a legenda ([Cod_Class_legenda_Col6_MapBiomas_BR.pdf](https://mapbiomas-br-site.s3.amazonaws.com/downloads/Colecction%206/Cod_Class_legenda_Col6_MapBiomas_BR.pdf)), sabemos que "3", "12" e "33" representem cobertura de "Formação Florestal", "Formação Campestre", e "Rio, Lago e Oceano". Então podemos fazer um mapa com mais informações.
+
+Daqui pra frente vamos aproveitar uma forma mais elegante de apresentar mapas e gráficos. Isso seria atraves a função "ggplot" (pacote [ggplot2](https://ggplot2.tidyverse.org/)), que faz parte do "tidyverse". Mais exemplos no [R cookbook](http://www.cookbook-r.com/Graphs/) : http://www.cookbook-r.com/Graphs/ . 
+
+E com mais exemplos de mapas e dados espaciais no R:
+[sf e ggplot2](https://www.r-spatial.org/r/2018/10/25/ggplot2-sf.html) : https://www.r-spatial.org/r/2018/10/25/ggplot2-sf.html
+
+[Capitulo 9](https://geocompr.robinlovelace.net/adv-map.html) no livro [Geocomputation with R](https://geocompr.robinlovelace.net/) : https://geocompr.robinlovelace.net/adv-map.html
+
+Primeiramente precisamos incluir as informações relevantes da legenda.
+Ou seja, incluir os nomes para cada valor de classe.
+
+```{r}
+# legenda e cores na sequencia correta
+classe_valor <- c(3, 12, 33)
+classe_legenda <- c("Formação Florestal", 
+                   "Formação Campestre", "Rio, Lago e Oceano")
+classe_cores <- c("#006400", "#B8AF4F", "#0000FF") 
+```
+
+Agora podemos fazer o mapa com as classes e os cores seguindo o padrão recomendado pela MapBiomas para Coleção 6.
+
+
+```{r, dpi=300, fig.width =5, fig.height = 4, out.height=400, out.width=500, fig.cap="Fig. 3. Paisagem com valores e classes de cobertura da terra. Mapbiomas 2020. Uma pequena amostra do Rio Araguari, perto de Porto Grande."}
+# Passo necessario para mostrar os valores
+ramostra_df <- as.data.frame(ramostra, xy = TRUE)
+
+ggplot(ramostra_df, aes(x=x, y=y)) +
+  geom_raster(aes(fill = factor(mapbiomas_2020))) +
+  scale_fill_manual("classe", 
+                      values = classe_cores, 
+                    labels = classe_legenda) + 
+  coord_equal() +
+  geom_text(data = ramostra_df, aes(x = x, y = y, 
+                label = mapbiomas_2020)) + 
+  theme(legend.position="top") + 
+  guides(fill=guide_legend(nrow=2,byrow=TRUE))
+
+```
+
+
+
+## Alterando a resolução
+ 
+Alterando a resolução serve como exemplo mostrando como os passos/etapas/cálculos mude dependendo o tipo de 
+dados. Ou seja, é preciso adotar metodologias diferentes para dados categóricos (por exemplo classificação de cobertura da terra) e dados contínuos  (por exemplo distância até rio).
+
+Alterando a resolução às vezes seria necessário, por exemplo, quando preciso padronizar dados/imagens oriundos de fontes diferentes com resoluções diferentes e/ou para reduzir a complexidade da modelagem. Lembrando - em cada nível de resolução, são observáveis processos e padrões que não podem necessariamente ser inferidos daqueles abaixo ou acima.
+
+Agora iremos degradar a resolução desses dados, ou seja, iremos alterar o tamanho dos pixels. Como exemplo, iremos juntar (agregar) 3 pixels em um único pixel. Como você acha que podemos fazer isso? Quais valores esse pixel que vai substituir os 3 originais deve ter? Existem diversas maneiras de se fazer isso, uma das formas é através da média.
+
+```{r}
+ramostra_media<-aggregate(ramostra, fact=3, fun="mean")
+ramostra_media <- resample(ramostra, ramostra_media)
+```
+
+Visualizar. Os valores calculados pela função não fazem sentido para uma classificação categórica.
+```{r, dpi=300, fig.width =5, fig.height = 4, out.height=400, out.width=500, fig.cap="Fig. 4. Aggregação errado. Uso da média cria valores categóricos errados e impossíveis."}
+# Tidy
+as.data.frame(ramostra_media, xy = TRUE) %>% 
+  mutate(mapbiomas_2020 = round(mapbiomas_2020,1)) -> ramostra_media_df
+# Plot
+ggplot(ramostra_media_df, aes(x=x, y=y)) +
+  geom_raster(aes(fill = factor(mapbiomas_2020))) +
+  scale_fill_discrete("valor") + 
+  coord_equal() + 
+  geom_text(data = ramostra_media_df, aes(x = x, y = y, 
+                label = mapbiomas_2020)) 
+
+```
+
+<br> 
+Outra opção é utilizar o valor mais comum da área, o que é particularmente adequado quando temos um mapa categórico, como por exemplo floresta/não-floresta. Segue exemplo com o valor mais frequente (modal).
+```{r}
+ramostra_modal<- aggregate(ramostra, fact=3, fun="modal")
+ramostra_modal <- resample(ramostra, ramostra_modal, method="near")
+```
+
+Visualizar. Os valores calculados pela função são consistentes com o original e fazem sentido. 
+```{r, dpi=300, fig.width =5, fig.height = 4, out.height=400, out.width=500, fig.cap="Fig. 5. Aggregação pela mais frequente."}
+# Tidy
+ramostra_modal_df <- as.data.frame(ramostra_modal, xy = TRUE) 
+# Plot
+ggplot(ramostra_modal_df, aes(x=x, y=y)) +
+  geom_raster(aes(fill = factor(mapbiomas_2020))) +
+  scale_fill_discrete("valor") + 
+  coord_equal() + 
+geom_text(data=ramostra_modal_df, aes(x=x, y=y, label=mapbiomas_2020))
+```
+
+<P style="page-break-before: always">
+
+Em cada nível de resolução, são observáveis processos e padrões que não podem necessariamente ser inferidos daqueles abaixo ou acima. Aqui por exemplo, mudamos a proporção de cobertura florestal em nossa pequeno paisagem quando juntamos 3 pixels em um único (proporção modou de 3/72 para 1/9). Ou seja, com cada passo mudamos a representção do mundo.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, dpi=300, fig.width =9, fig.height = 5, out.height=350, out.width=650, fig.cap="Fig. 6. Mudanças causadas pela agregação."}
+bind_rows(as.polygons(ramostra, dissolve = FALSE) %>% 
+  st_as_sf() %>% mutate(type = "original"), 
+  as.polygons(ramostra_media, dissolve = FALSE) %>% 
+     st_as_sf() %>% mutate(type = "media", 
+                           mapbiomas_2020 = round(mapbiomas_2020,1)),
+  as.polygons(ramostra_modal, dissolve = FALSE) %>% 
+     st_as_sf() %>% mutate(type = "modal")) -> sf_grids
+
+sf_grids %>% 
+  ggplot() + 
+  geom_sf(aes(fill = factor(mapbiomas_2020))) +
+  scale_fill_discrete("valor") + 
+  scale_x_continuous(breaks = c(-51.4075, -51.4065, -51.4055)) +
+  #geom_text(aes(x = x, y = y, 
+  #              label = mapbiomas_2020)) + 
+  facet_wrap(~type) + 
+  theme(legend.position="top") + 
+  guides(fill=guide_legend(nrow=2,byrow=TRUE))
+
+```
+
+
+### Pergunta 2
+
+
+`r kableExtra::text_spec("Confira os resultados e explique o que aconteceu. Como e porque moudou os valores em cada caso (média e modal)?", color = "blue", bold = TRUE)`
+
+
+------------------
+
+<P style="page-break-before: always">
+
+## Escala espacial e desenho amostral
+Dado o papel que a escala pode desempenhar em nossa compreensão dos padrões  e processos ecológicos, como escala deve ser considerada no desenho do estudo? Claramente, a resposta a esta pergunta irá variar
+dependendo dos fenômenos de interesse, mas ecologistas e estatísticos têm forneceu algumas orientações importantes. As questões-chave incluem o tamanho da unidade de amostragem (resoloção), o tipo de
+unidade de amostra e localizações da unidade de amostra, incluindo o espacamento entre as amostras (distância entre as amostras) e o tamanho da área de estudo.
+
+Com a disponibilidade de imagens de satélite é possível responder questões importantes relacionadas ao desenho do estudo antes de qualquer trabalho de campo. Uma tecnica de geoprocessamento (bordas - [Buffers](https://docs.qgis.org/3.16/pt_BR/docs/gentle_gis_introduction/vector_spatial_analysis_buffers.html)) é um dos mais frequentemente adotados para quantificar escala espacial na ecologia da paisagem.   
+
+ O objetivo é criar buffers circulares de diferentes extensões ao redor dos sitios de amostragem (pontos, pixels, manchas, transetos lineares etc). Aqui, vamos entender a escala em que a cobertura de floresta muda ao redor dos rios. Para isso, quantificamos a quantidade de floresta que ocorre em várias distâncias em pontos ao longo dos rios a montante das hidrelétricas no Rio Araguari. Para ilustrar esta abordagem geral, usamos o banco de dados MapBiomas Coleção 6 de 2020, e vincule esses dados de cobertura da terra aos pontos de amostragem em rios.
+
+
+#### 1.1) Obter e carregar dados (vectores)
+
+```{r, echo=FALSE, eval=TRUE, message=FALSE, warning=FALSE}
+meuSIG <- "C:\\Users\\user\\Documents\\Articles\\gis_layers\\gisdata\\inst\\vector\\rivers.gpkg"
+fs <- file.size(meuSIG)/(1024^2)
+```
+
+
+Precisamos carregar os dados para rios e pontos de amostragem. Baixar arquivo (vector) com os dados (formato "GPKG", tamanho `r round(fs,1)` MB). 
+Mais sobre [dados vetoriais](https://docs.qgis.org/3.22/pt_BR/docs/gentle_gis_introduction/vector_data.html).
+O formato aberto [GeoPackage](https://www.geopackage.org/) é um contêiner que permite armazenar dados SIG (feições/camadas) em um único arquivo. Por exemplo, um arquivo GeoPackage pode conter vários dados (dados vetoriais e raster) em diferentes sistemas de coordenadas. Todos esses recursos permitem que você compartilhe dados facilmente e evite a duplicação de arquivos.
+
+Baixar o arquivo Link: [https://github.com/darrennorris/gisdata/blob/master/inst/vector/rivers.GPKG](https://github.com/darrennorris/gisdata/blob/master/inst/vector/rivers.GPKG) .
+Lembrando-se de salvar o arquivo ("rivers.GPKG")  em um local conhecido no seu computador.
+
+Agora avisar R sobre onde ficar o arquivo. O código abaixo vai abrir uma nova janela, e você deve buscar e selecionar o arquivo "rivers.GPKG": 
+```{r echo=TRUE, eval=FALSE}
+meuSIG <- file.choose()
+```
+
+Agora vamos olhar o que tem no arquivo. Existem camadas diferentes com pontos, linhas e polígonos:
+```{r }
+sf::st_layers(meuSIG)
+```
+
+<P style="page-break-before: always">
+
+Nós só precisamos de duas dessas camadas. O código abaixo vai carregar as camadas que precisamos e criar os objetos "rsm" e "rsl".
+Assim, agora temos dados com: pontos cada 5 km ao longo os rios ("rsm") e a linha central de rios ("rsl").
+```{r }
+# pontos cada 5 km
+rsm <- sf::st_read(meuSIG, layer = "midpoints")
+# linha central de rios
+rsl <- sf::st_read(meuSIG, layer = "centerline")
+```
+
+
+
+<P style="page-break-before: always">
+
+
+#### 1.2) Visualizar os arquivos (camadas vector)
+Visualizar para verificar.
+Mapa com linha central e pontos de rios em trechos de 5km.
+
+```{r fig.width=6, fig.height=4, fig.cap="Fig. 7. Pontos ao longo dos rios a montante das hidrelétricas no Rio Araguari."}
+ggplot(rsl) +
+  geom_sf(aes(color=rio)) +
+  geom_sf(data = rsm, shape=21, aes(fill=zone))
+```
+
+<br> 
+Mapa interativo (funcione somente com internet) 
+Mostrando agora com fundo de mapas "base" (OpenStreetMap/ESRI etc) 
+```{r fig.width=4, fig.height=4, echo=TRUE, warning=FALSE, fig.cap="Fig. 8. Linhas dos rios a montante das hidrelétricas no Rio Araguari."}
+#
+mapview(rsl, zcol = "rio") 
+
+```
+
+<br> 
+
+<P style="page-break-before: always">
+
+
+#### 1.3) Obter e carregar dados (raster)
+```{r echo=FALSE, eval=TRUE, message=FALSE, warning=FALSE}
+meuSIGr <- "C:\\Users\\user\\Documents\\Articles\\gis_layers\\gisdata\\inst\\raster\\mapbiomas_AP_utm_rio\\utm_cover_AP_rio_2020.tif"
+fs2 <- file.size(meuSIGr)/(1024^2)
+```
+Mais uma vez vamos aproveitar os dados de MapBiomas. Agora baixar arquivo raster com cobertura de terra no entorno dos rios em 2020, (formato ".tif", tamanho `r round(fs2,1)` MB). 
+Link: [https://github.com/darrennorris/gisdata/blob/master/inst/raster/mapbiomas_AP_utm_rio/utm_cover_AP_rio_2020.tif](https://github.com/darrennorris/gisdata/blob/master/inst/raster/mapbiomas_AP_utm_rio/utm_cover_AP_rio_2020.tif) .
+Lembrando-se de salvar o arquivo ("utm_cover_AP_rio_2020.tif") em um local conhecido no seu computador. Agora avisar R sobre onde ficar o arquivo. O código abaixo vai abrir uma nova janela, e você deve buscar e selecionar o arquivo "utm_cover_AP_rio_2020.tif": 
+```{r echo=TRUE, eval=FALSE}
+meuSIGr <- file.choose()
+```
+
+O código abaixo vai carregar os dados e criar o objeto "mapbiomas_2020". 
+
+```{r }
+mapbiomas_2020 <- rast(meuSIGr)
+
+```
+
+
+#### 1.4) Visualizar os arquivos (camadas raster e vector)
+Visualizar para verificar. Mais pratica de visualizar camadas de raster e vetor juntos com funcões no pacote Tmap (https://r-tmap.github.io/tmap-book/index.html).
+
+```{r fig.width=5, fig.height=5, fig.cap="Fig. 9. Cobertura da terra ao redor do Rio Araguari em 2020. Mostrando os pontos de amostragem (pontos amarelas) cada 5 quilômetros ao longo do rio."}
+# Passo necessario para agilizar o processamento
+mapbiomas_2020_modal<-aggregate(mapbiomas_2020, fact=10, fun="modal")
+# Plot
+tm_shape(mapbiomas_2020_modal) +
+  tm_raster(title = "Classe", style = "cat", palette = "Set3") + 
+tm_shape(rsl) + 
+  tm_lines(col="blue") + 
+tm_shape(rsm) + 
+  tm_dots(size = 0.2, col = "yellow") + 
+tm_compass(position=c("left", "top")) +
+tm_scale_bar(breaks = c(0, 25, 50), text.size = 1, 
+             position=c("left", "bottom")) +
+tm_layout(legend.position = c("right","top"), legend.bg.color="white")
+```
+
+<br> 
+
+<P style="page-break-before: always">
+
+
+#### 1.4) Reclassificação
+Para simplificar nossa avaliação de escala, reclassificamos a camada mapbiomas_2020 em uma camada binária de floresta/não-floresta. Essa tarefa de geoprocessamento pode ser realizada anteriormente usando SIG ([QGIS](https://docs.qgis.org/3.22/pt_BR/docs/training_manual/rasters/terrain_analysis.html#moderate-fa-reclassifying-the-raster)).
+Aqui vamos reclassificar as categorias de cobertura da terra (agrupando diferentes áreas de cobertura florestal tipos) usando alguns comandos genéricos do R para criar uma nova camada com a cobertura de floresta
+ em toda a região de estudo. Para isso, criamos um mapa do mesmo grão e
+extensão, e então podemos redefinir os valores do mapa. Neste caso, queremos agrupar a cobertura da terra categorias 3 e 4 (Formação Florestal e Formação Savânica, respectivamente).
+
+```{r}
+# criar uma nova camada de floresta
+floresta_2020 <- mapbiomas_2020
+# Com valor de 0
+values(floresta_2020) <- 0
+# Atualizar categorias florestais agrupados com valor de 1
+floresta_2020[mapbiomas_2020==3 | mapbiomas_2020==4] <- 1 
+```
+
+
+Vizualizar para verificar.
+
+
+```{r, fig.width=5, fig.height=5, fig.cap="Fig. 10. Floresta ao redor do Rio Araguari. MapBiomas 2020 reclassificado em floresta e não-floresta. Mostrando os pontos de amostragem (pontos amarelas) cada 5 quilômetros ao longo do rio."}
+# Passo necessario para agilizar o processamento
+floresta_2020_modal<-aggregate(floresta_2020, fact=10, fun="modal")
+# Plot
+tm_shape(floresta_2020_modal) +
+  tm_raster(style = "cat", 
+            palette = c("0" = "#E974ED", "1" ="#129912"), legend.show = FALSE) + 
+  tm_add_legend(type = "fill", labels = c("não-floresta", "floresta"),
+    col = c("#E974ED", "#129912"), title = "Classe") +
+tm_shape(rsl) + 
+  tm_lines(col="blue") + 
+tm_shape(rsm) + 
+  tm_dots(size = 0.2, col = "yellow") + 
+tm_scale_bar(breaks = c(0, 25, 50), text.size = 1, 
+             text.color = "white", position=c("left", "bottom")) +
+tm_layout(legend.position = c("right","top"),legend.bg.color = "white")
+```
+
+<P style="page-break-before: always">
+
+#### 1.5) Comparação multiescala
+Em seguida, com as coordenadas dos pontos das localizações das amostras calculamos a quantidade de floresta que circunda cada local de amostragem em diferentes extensões.
+
+
+
+```{r}
+rsm_31976 <- st_transform(rsm, 31976) 
+# Buffer
+rsm_31976_b1000 <- st_buffer(rsm_31976[1, ], dist = 1000)
+
+# Recorte com buffer de 1000 metros (mudando a extensão).
+buffer.forest1.1km <- crop(floresta_2020, snap="out", rsm_31976_b1000)
+# Máscara para que os pixels fora do polígono sejam nulos.
+buffer.forest1.1km <- mask(buffer.forest1.1km, rsm_31976_b1000, touches=TRUE)
+names(buffer.forest1.1km) <- "forest_2020_1km"
+
+```
+
+### Pergunta 3
+
+
+`r kableExtra::text_spec("Qual é a extensão em número de pixels desse recorte?", color = "blue", bold = TRUE)`
+
+
+---------------------
+
+Vizualizar para verificar.
+```{r fig.width=3, fig.height=3, fig.cap="Fig. 11. Ilustração da determinação da quantidade de habitat ao redor de um ponto. Para um determinada extensão, o habitat de interesse é isolado. Um buffer (linha tracejada) é colocado ao redor de um ponto (amarela) e o número de células (pixels) que contém o habitat é somado e multiplicado pela área de cada pixel."}
+# Plot
+tm_shape(buffer.forest1.1km) +
+  tm_raster(style = "cat", 
+            palette = c("0" = "#E974ED", 
+                        "1" ="#129912"), legend.show = FALSE) + 
+tm_shape(rsm_31976[1, ]) + 
+  tm_symbols(shape =21, col = "yellow", 
+            border.col = "black", border.lwd = 0.2, size=0.5) + 
+tm_shape(rsm_31976_b1000) +
+  tm_borders(col = "black", lwd = 4, lty = "dashed") + 
+tm_add_legend(type = "fill",  labels = c("não-floresta", "floresta"),
+    col = c("#E974ED", "#129912"), title = "Classe") + 
+tm_compass(position=c("left", "top")) +
+tm_scale_bar(breaks = c(0, 0.5, 1), text.size = 1, 
+             position=c("left", "bottom")) +
+tm_layout(legend.position = c("right","top"), legend.bg.color = "white")
+```
+
+<P style="page-break-before: always"> 
+Temos valores de 0 (não-floresta) e 1 (floresta). Então, para saber a aréa de floresta podemos somar o número de células (pixels) que contém o habitat e multiplica pela área de cada pixel conforme o codigo:
+
+```{r}
+# 1) Somatório. 
+# No caso igual o numero de pixels de floresta. 
+# Para todo a paisagem, somatorio "global".
+# Não deve incluir pixels nulos, então use "na.rm = TRUE".
+soma_floresta <- global(buffer.forest1.1km, "sum", na.rm = TRUE) 
+soma_floresta
+
+# 2) Área de cada pixel.
+# Sabemos o sistema de coordinados (EPSG = 31976), é uma sistema projetado com unidade em metros.
+buffer.forest1.1km
+
+# Portanto, o tamanho de cada pixel é igual.
+area_pixel_m2 <- 29.89281 * 29.89281
+area_pixel_m2
+
+# 3) Calculos de aréa.
+# Aréa de floresta m2
+area_floresta_m2 <- soma_floresta * area_pixel_m2
+area_floresta_m2
+# Aréa de floresta hectares
+area_floresta_ha <- area_floresta_m2 / 10000
+area_floresta_ha
+  
+```
+
+<P style="page-break-before: always">
+
+Para uma comparação multiescala, vamos repetir o mesmo processo, mas agora com distancias de 250, 500, 1000, 2000 e 4000 metros, doubrando a escala (extensão) em cada passo. 
+
+```{r, echo=FALSE, fig.width=15, fig.height=5, dpi=300, out.height=250, out.width=750, fig.cap="Fig. 12. Cobertura florestal em extensões diferentes ao redor de um local de amostragem."}
+rsm_31976 <- st_transform(rsm, 31976) 
+#250 m
+rsm_31976_b250 <- st_buffer(rsm_31976[1, ], dist = 250)
+buffer.forest1.250m <- crop(floresta_2020, rsm_31976_b250, snap="out")
+buffer.forest1.250m <- mask(buffer.forest1.250m, rsm_31976_b250, touches=TRUE)
+# 500 m
+rsm_31976_b500 <- st_buffer(rsm_31976[1, ], dist = 500)
+buffer.forest1.500m <- crop(floresta_2020, snap="out", rsm_31976_b500)
+buffer.forest1.500m <- mask(buffer.forest1.500m, touches=TRUE, rsm_31976_b500)
+# 1000 m
+rsm_31976_b1000 <- st_buffer(rsm_31976[1, ], dist = 1000)
+buffer.forest1.1km <- crop(floresta_2020, rsm_31976_b1000)
+buffer.forest1.1km <- mask(buffer.forest1.1km, rsm_31976_b1000)
+# 2000 m
+rsm_31976_b2000 <- st_buffer(rsm_31976[1, ], dist = 2000)
+buffer.forest1.2000m <- crop(floresta_2020, rsm_31976_b2000)
+buffer.forest1.2000m <- mask(buffer.forest1.2000m, rsm_31976_b2000)
+# 4000 m
+rsm_31976_b4000 <- st_buffer(rsm_31976[1, ], dist = 4000)
+buffer.forest1.4000m <- crop(floresta_2020, rsm_31976_b4000)
+buffer.forest1.4000m <- mask(buffer.forest1.4000m, rsm_31976_b4000)
+#fig 250
+fig_250m <- tm_shape(buffer.forest1.250m) +
+  tm_raster(style = "cat", 
+            palette = c("0" = "#E974ED", 
+                        "1" ="#129912"), legend.show = FALSE) + 
+  tm_shape(rsm_31976[1, ]) + 
+  tm_symbols(shape =21, col = "yellow", 
+            border.col = "black", border.lwd = 0.2, size=0.5) + 
+  tm_shape(rsm_31976_b250) +
+  tm_borders(col = "black", lwd = 4, lty = "dashed") + 
+  tm_add_legend(type = "fill", 
+    labels = c("não-floresta", "floresta"),
+    col = c("#E974ED", "#129912"),
+    title = "Classe") + 
+tm_scale_bar(breaks = c(0, 0.125, 0.25), text.size = 1, position=c("left", "bottom")) +
+tm_layout(title = "raio = 250 m", 
+          legend.position = c("right","top"),
+          legend.bg.color = "white")
+# fig 500 m
+fig_500m <- tm_shape(buffer.forest1.500m) +
+  tm_raster(style = "cat", 
+            palette = c("0" = "#E974ED", 
+                        "1" ="#129912"), legend.show = FALSE) + 
+  tm_shape(rsm_31976[1, ]) + 
+  tm_symbols(shape =21, col = "yellow", 
+            border.col = "black", border.lwd = 0.2, size=0.5) + 
+  tm_shape(rsm_31976_b500) +
+  tm_borders(col = "black", lwd = 4, lty = "dashed") + 
+  tm_add_legend(type = "fill", 
+    labels = c("não-floresta", "floresta"),
+    col = c("#E974ED", "#129912"),
+    title = "Classe") + 
+tm_scale_bar(breaks = c(0, 0.25, 0.5), text.size = 1, 
+             position=c("left", "bottom")) +
+tm_layout(title = "raio = 500 m", 
+          legend.position = c("right","top"),
+          legend.bg.color = "white")
+# fig 1000 m
+fig_1000m <- tm_shape(buffer.forest1.1km) +
+  tm_raster(style = "cat", 
+            palette = c("0" = "#E974ED", 
+                        "1" ="#129912"), legend.show = FALSE) + 
+  tm_shape(rsm_31976[1, ]) + 
+  tm_symbols(shape =21, col = "yellow", 
+            border.col = "black", border.lwd = 0.2, size=0.5) + 
+  tm_shape(rsm_31976_b1000) +
+  tm_borders(col = "black", lwd = 4, lty = "dashed") + 
+  tm_add_legend(type = "fill", 
+    labels = c("não-floresta", "floresta"),
+    col = c("#E974ED", "#129912"),
+    title = "Classe") + 
+tm_scale_bar(breaks = c(0, 0.5, 1), text.size = 1, 
+             position=c("left", "bottom")) +
+tm_layout(title = "raio = 1000 m", 
+legend.position = c("right","top"),
+          legend.bg.color = "white")
+# fig 2000 m
+fig_2000m <- tm_shape(buffer.forest1.2000m) +
+  tm_raster(style = "cat", 
+            palette = c("0" = "#E974ED", 
+                        "1" ="#129912"), legend.show = FALSE) + 
+  tm_shape(rsm_31976[1, ]) + 
+  tm_symbols(shape =21, col = "yellow", 
+            border.col = "black", border.lwd = 0.2, size=0.5) + 
+  tm_shape(rsm_31976_b2000) +
+  tm_borders(col = "black", lwd = 4, lty = "dashed") + 
+  tm_add_legend(type = "fill", 
+    labels = c("não-floresta", "floresta"),
+    col = c("#E974ED", "#129912"),
+    title = "Classe") + 
+tm_scale_bar(breaks = c(0, 1, 2), text.size = 1, 
+             position=c("left", "bottom")) +
+tm_layout(title = "raio = 2000 m", 
+legend.position = c("right","top"),
+          legend.bg.color = "white")
+#fig 4000 m 
+fig_4000m <- tm_shape(buffer.forest1.4000m) +
+  tm_raster(style = "cat", 
+            palette = c("0" = "#E974ED", 
+                        "1" ="#129912"), legend.show = FALSE) + 
+  tm_shape(rsm_31976[1, ]) + 
+  tm_symbols(shape =21, col = "yellow", 
+            border.col = "black", border.lwd = 0.2, size=0.5) + 
+  tm_shape(rsm_31976_b4000) +
+  tm_borders(col = "black", lwd = 4, lty = "dashed") + 
+  tm_add_legend(type = "fill", 
+    labels = c("não-floresta", "floresta"),
+    col = c("#E974ED", "#129912"),
+    title = "Classe") + 
+tm_scale_bar(breaks = c(0, 2, 4), text.size = 1, 
+             position=c("left", "bottom")) +
+tm_layout(title = "raio = 4000 m", 
+legend.position = c("right","top"),
+          legend.bg.color = "white")
+#plot
+tmap_arrange(fig_250m, fig_500m, fig_1000m, fig_2000m, fig_4000m, nrow=1)
+```
+
+<br> 
+Aspectos quantitativos dos dados mudam fundamentalmente com a escala.
+Por exemplo, nesse caso, parece que a proporção de floresta aumenta à medida que a extensão aumenta de 500 para 4000 metros. Esta percepção visual é suportada pelos valores calculados, onde as áreas são:
+
+* raio 250 m = 0 hectares de floresta
+* raio 500 m = 6,3 hectares de floresta
+* raio 1000 m = 84,3 hectares de floresta
+* raio 2000 m = 502.6 hectares de floresta
+* raio 4000 m = 3351.0 hectares de floresta
+
+### Pergunta 4
+
+`r kableExtra::text_spec("Usando os valores conhecidos de raio e área de floresta para os diferentes buffers circulares, calcule a proporção de floresta em cada uma das diferentes extensões de buffer. Apresente 1) os resultados incluindo cálculos. 2) um gráfico com valores de extensão no eixo x e proporção da floresta no eixo y. 3) Em menos de 200 palavras apresente sua interpretação do gráfico.", color = "blue", bold = TRUE)`
+
+
+----------------------
+
+### Pergunta 5
+
+
+`r kableExtra::text_spec("A modelagem multiescala quantifica as condições do ambiente em múltiplas escalas alterando o resolução ou a extensão da análise e, em seguida, avaliando qual das escalas consideradas  explica melhor um padrão ou processo. Escolha 1 espécie aquático e 1 espécie terrestre que ocorram na região. Com base nas diferenças entre extensões (indicados no exemplo anterior) e as características funcionais das espécies (por exemplo área de vida), escolher as extensões mais adequadas para um estudo multiescala de cada espécie.", color = "blue", bold = TRUE)`
+
+
+----------------------
+
+
+## Proximo: repetindo para muitas amostras.
+
+Neste exemplo comparamos a área de floresta em torno de um único ponto de amostragem. Para calcular o mesmo para todos os 52 pontos, seriam necessárias varias repetições (52 pontos x 5 extensões = 260 repetições).
+
+Poderíamos escrever código para executar esse processo automaticamente. Felizmente, alguém já escreveu funções para fazer isso e muito mais. O próximo tutorial sobre métricas de paisagem mostrará exemplos usando o pacote "landscapemetrics" (https://r-spatialecology.github.io/landscapemetrics/).
+
+<br> 
