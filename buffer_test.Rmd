@@ -1,16 +1,16 @@
 ---
 title: "Buffer test"
 output:
+  bookdown::html_document2:
+    toc: yes
+    toc_float: yes
+    fig_caption: yes
   pdf_document:
     toc: yes
     number_sections: yes
     extra_dependencies: flafter
     includes:
       in_header: preamble.txe
-  bookdown::html_document2:
-    toc: yes
-    toc_float: yes
-    fig_caption: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -37,7 +37,7 @@ library(kableExtra)
 
 load raster
 ```{r, echo=FALSE}
-rin <- "C:\\Users\\user\\Documents\\CA\\ep_buffer\\data\\mapbiomas_AP_utm_rio\\utm_cover_AP_rio_2020.tif"
+rin <- "data/mapbiomas_AP_utm_rio/utm_cover_AP_rio_2020.tif"
 
 mapbiomas_2020 <- rast(rin)
 # criar uma nova camada de floresta
@@ -50,7 +50,7 @@ floresta_2020[mapbiomas_2020==3 | mapbiomas_2020==4] <- 1
 
 River lines
 ```{r, echo=FALSE, eval=TRUE, message=FALSE, warning=FALSE}
-meuSIG <- "C:\\Users\\user\\Documents\\Articles\\gis_layers\\gisdata\\inst\\vector\\rivers.gpkg"
+meuSIG <- "data/rivers.gpkg"
 fs <- file.size(meuSIG)/(1024^2)
 ```
 
