@@ -79,7 +79,7 @@ Você já deve saber que pixel é a unidade básica de uma imagem (lembra da cam
 visto sobre pixels e resolução no mesmo em aulas de geoprocessamento. Aqui podemos tratar o pixel como a resolução. Vamos dizer que temos um pixel de 10 metros (res=10 no bloco de código), ou seja,
 uma quadrado de 10 por 10m, sendo essa, a menor unidade mapeável (tambem tem ligação com escala cartográfica!).
 
-```{r, echo=TRUE, message=FALSE, warning=FALSE, fig.width =4, fig.height = 2.5, fig.cap="Fig. 1. Paisagem simples de 36 pixels."}
+```{r, echo=TRUE, message=FALSE, warning=FALSE, fig.width =4, fig.height = 2.5, fig.cap="Paisagem simples de 36 pixels."}
 #Essa linha de comando gera a paisagem virtual (simulação)
 pai_sim <- rast(ncols=6, nrows=6, 
                 xmin=1, xmax=60, 
@@ -142,7 +142,7 @@ nrow(ramostra)
 <P style="page-break-before: always">
 
 Podemos também plotar para verificar.
-```{r, fig.width =4, fig.height = 2.5, fig.cap="Fig. 2. Mapbiomas 2020. Uma pequena amostra do Rio Araguari, perto de Porto Grande."}
+```{r, fig.width =4, fig.height = 2.5, fig.cap="Mapbiomas 2020. Uma pequena amostra do Rio Araguari, perto de Porto Grande."}
 plot(ramostra)
 ```
 
@@ -175,7 +175,7 @@ classe_cores <- c("#006400", "#B8AF4F", "#0000FF")
 Agora podemos fazer o mapa com as classes e os cores seguindo o padrão recomendado pela MapBiomas para Coleção 6.
 
 
-```{r, dpi=300, fig.width =5, fig.height = 4, out.height=400, out.width=500, fig.cap="Fig. 3. Paisagem com valores e classes de cobertura da terra. Mapbiomas 2020. Uma pequena amostra do Rio Araguari, perto de Porto Grande."}
+```{r, dpi=300, fig.width =5, fig.height = 4, out.height=400, out.width=500, fig.cap="Paisagem com valores e classes de cobertura da terra. Mapbiomas 2020. Uma pequena amostra do Rio Araguari, perto de Porto Grande."}
 # Passo necessario para mostrar os valores
 ramostra_df <- as.data.frame(ramostra, xy = TRUE)
 
@@ -209,7 +209,7 @@ ramostra_media <- resample(ramostra, ramostra_media)
 ```
 
 Visualizar. Os valores calculados pela função não fazem sentido para uma classificação categórica.
-```{r, dpi=300, fig.width =5, fig.height = 4, out.height=400, out.width=500, fig.cap="Fig. 4. Aggregação errado. Uso da média cria valores categóricos errados e impossíveis."}
+```{r, dpi=300, fig.width =5, fig.height = 4, out.height=400, out.width=500, fig.cap="Aggregação errado. Uso da média cria valores categóricos errados e impossíveis."}
 # Tidy
 as.data.frame(ramostra_media, xy = TRUE) %>% 
   mutate(mapbiomas_2020 = round(mapbiomas_2020,1)) -> ramostra_media_df
@@ -231,7 +231,7 @@ ramostra_modal <- resample(ramostra, ramostra_modal, method="near")
 ```
 
 Visualizar. Os valores calculados pela função são consistentes com o original e fazem sentido. 
-```{r, dpi=300, fig.width =5, fig.height = 4, out.height=400, out.width=500, fig.cap="Fig. 5. Aggregação pela mais frequente."}
+```{r, dpi=300, fig.width =5, fig.height = 4, out.height=400, out.width=500, fig.cap="Aggregação pela mais frequente."}
 # Tidy
 ramostra_modal_df <- as.data.frame(ramostra_modal, xy = TRUE) 
 # Plot
@@ -246,7 +246,7 @@ geom_text(data=ramostra_modal_df, aes(x=x, y=y, label=mapbiomas_2020))
 
 Em cada nível de resolução, são observáveis processos e padrões que não podem necessariamente ser inferidos daqueles abaixo ou acima. Aqui por exemplo, mudamos a proporção de cobertura florestal em nossa pequeno paisagem quando juntamos 3 pixels em um único (proporção modou de 3/72 para 1/9). Ou seja, com cada passo mudamos a representção do mundo.
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE, dpi=300, fig.width =9, fig.height = 5, out.height=350, out.width=650, fig.cap="Fig. 6. Mudanças causadas pela agregação."}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, dpi=300, fig.width =9, fig.height = 5, out.height=350, out.width=650, fig.cap="Mudanças causadas pela agregação."}
 bind_rows(as.polygons(ramostra, dissolve = FALSE) %>% 
   st_as_sf() %>% mutate(type = "original"), 
   as.polygons(ramostra_media, dissolve = FALSE) %>% 
@@ -334,7 +334,7 @@ rsl <- sf::st_read(meuSIG, layer = "centerline")
 Visualizar para verificar.
 Mapa com linha central e pontos de rios em trechos de 5km.
 
-```{r fig.width=6, fig.height=4, fig.cap="Fig. 7. Pontos ao longo dos rios a montante das hidrelétricas no Rio Araguari."}
+```{r fig.width=6, fig.height=4, fig.cap="Pontos ao longo dos rios a montante das hidrelétricas no Rio Araguari."}
 ggplot(rsl) +
   geom_sf(aes(color=rio)) +
   geom_sf(data = rsm, shape=21, aes(fill=zone))
@@ -343,7 +343,7 @@ ggplot(rsl) +
 <br> 
 Mapa interativo (funcione somente com internet) 
 Mostrando agora com fundo de mapas "base" (OpenStreetMap/ESRI etc) 
-```{r fig.width=4, fig.height=4, echo=TRUE, warning=FALSE, fig.cap="Fig. 8. Linhas dos rios a montante das hidrelétricas no Rio Araguari."}
+```{r fig.width=4, fig.height=4, echo=TRUE, warning=FALSE, fig.cap="Linhas dos rios a montante das hidrelétricas no Rio Araguari."}
 #
 mapview(rsl, zcol = "rio") 
 
@@ -377,7 +377,7 @@ mapbiomas_2020 <- rast(meuSIGr)
 #### 1.4) Visualizar os arquivos (camadas raster e vector)
 Visualizar para verificar. Mais pratica de visualizar camadas de raster e vetor juntos com funcões no pacote Tmap (https://r-tmap.github.io/tmap-book/index.html).
 
-```{r fig.width=5, fig.height=5, fig.cap="Fig. 9. Cobertura da terra ao redor do Rio Araguari em 2020. Mostrando os pontos de amostragem (pontos amarelas) cada 5 quilômetros ao longo do rio."}
+```{r fig.width=5, fig.height=5, fig.cap="Cobertura da terra ao redor do Rio Araguari em 2020. Mostrando os pontos de amostragem (pontos amarelas) cada 5 quilômetros ao longo do rio."}
 # Passo necessario para agilizar o processamento
 mapbiomas_2020_modal<-aggregate(mapbiomas_2020, fact=10, fun="modal")
 # Plot
@@ -417,7 +417,7 @@ floresta_2020[mapbiomas_2020==3 | mapbiomas_2020==4] <- 1
 Vizualizar para verificar.
 
 
-```{r, fig.width=5, fig.height=5, fig.cap="Fig. 10. Floresta ao redor do Rio Araguari. MapBiomas 2020 reclassificado em floresta e não-floresta. Mostrando os pontos de amostragem (pontos amarelas) cada 5 quilômetros ao longo do rio."}
+```{r, fig.width=5, fig.height=5, fig.cap="Floresta ao redor do Rio Araguari. MapBiomas 2020 reclassificado em floresta e não-floresta. Mostrando os pontos de amostragem (pontos amarelas) cada 5 quilômetros ao longo do rio."}
 # Passo necessario para agilizar o processamento
 floresta_2020_modal<-aggregate(floresta_2020, fact=10, fun="modal")
 # Plot
@@ -464,7 +464,7 @@ names(buffer.forest1.1km) <- "forest_2020_1km"
 ---------------------
 
 Vizualizar para verificar.
-```{r fig.width=3, fig.height=3, fig.cap="Fig. 11. Ilustração da determinação da quantidade de habitat ao redor de um ponto. Para um determinada extensão, o habitat de interesse é isolado. Um buffer (linha tracejada) é colocado ao redor de um ponto (amarela) e o número de células (pixels) que contém o habitat é somado e multiplicado pela área de cada pixel."}
+```{r fig.width=3, fig.height=3, fig.cap="Ilustração da determinação da quantidade de habitat ao redor de um ponto. Para um determinada extensão, o habitat de interesse é isolado. Um buffer (linha tracejada) é colocado ao redor de um ponto (amarela) e o número de células (pixels) que contém o habitat é somado e multiplicado pela área de cada pixel."}
 # Plot
 tm_shape(buffer.forest1.1km) +
   tm_raster(style = "cat", 
@@ -516,7 +516,7 @@ area_floresta_ha
 
 Para uma comparação multiescala, vamos repetir o mesmo processo, mas agora com distancias de 250, 500, 1000, 2000 e 4000 metros, doubrando a escala (extensão) em cada passo. 
 
-```{r, echo=FALSE, fig.width=15, fig.height=5, dpi=300, out.height=250, out.width=750, fig.cap="Fig. 12. Cobertura florestal em extensões diferentes ao redor de um local de amostragem."}
+```{r, echo=FALSE, fig.width=15, fig.height=5, dpi=300, out.height=250, out.width=750, fig.cap="Cobertura florestal em extensões diferentes ao redor de um local de amostragem."}
 rsm_31976 <- st_transform(rsm, 31976) 
 #250 m
 rsm_31976_b250 <- st_buffer(rsm_31976[1, ], dist = 250)
