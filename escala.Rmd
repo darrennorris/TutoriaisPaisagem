@@ -4,12 +4,13 @@ author: "Darren Norris"
 date: "`r Sys.Date()`"
 output:
   bookdown::html_document2:
-    toc: yes
+    toc: true    
     toc_float: yes
-    toc_depth: 2
+    toc_depth: 3
     fig_caption: yes
   pdf_document:       
     toc: true
+    toc_depth: 3
     extra_dependencies: ["flafter"]
     includes:
       in_header: "preamble.txe"
@@ -290,7 +291,7 @@ Com a disponibilidade de imagens de satélite é possível responder questões i
  O objetivo é criar buffers circulares de diferentes extensões ao redor dos sitios de amostragem (pontos, pixels, manchas, transetos lineares etc). Aqui, vamos entender a escala em que a cobertura de floresta muda ao redor dos rios. Para isso, quantificamos a quantidade de floresta que ocorre em várias distâncias em pontos ao longo dos rios a montante das hidrelétricas no Rio Araguari. Para ilustrar esta abordagem geral, usamos o banco de dados MapBiomas Coleção 6 de 2020, e vincule esses dados de cobertura da terra aos pontos de amostragem em rios.
 
 
-#### 1.1) Obter e carregar dados (vectores)
+#### Obter e carregar dados (vectores)
 
 ```{r, echo=FALSE, eval=TRUE, message=FALSE, warning=FALSE}
 meuSIG <- "C:\\Users\\user\\Documents\\Articles\\gis_layers\\gisdata\\inst\\vector\\rivers.gpkg"
@@ -331,7 +332,7 @@ rsl <- sf::st_read(meuSIG, layer = "centerline")
 <P style="page-break-before: always">
 
 
-#### 1.2) Visualizar os arquivos (camadas vector)
+#### Visualizar os arquivos (camadas vector)
 Visualizar para verificar.
 Mapa com linha central e pontos de rios em trechos de 5km.
 
@@ -355,7 +356,7 @@ mapview(rsl, zcol = "rio")
 <P style="page-break-before: always">
 
 
-#### 1.3) Obter e carregar dados (raster)
+#### Obter e carregar dados (raster)
 ```{r echo=FALSE, eval=TRUE, message=FALSE, warning=FALSE}
 meuSIGr <- "C:\\Users\\user\\Documents\\Articles\\gis_layers\\gisdata\\inst\\raster\\mapbiomas_AP_utm_rio\\utm_cover_AP_rio_2020.tif"
 fs2 <- file.size(meuSIGr)/(1024^2)
@@ -375,7 +376,7 @@ mapbiomas_2020 <- rast(meuSIGr)
 ```
 
 
-#### 1.4) Visualizar os arquivos (camadas raster e vector)
+#### Visualizar os arquivos (camadas raster e vector)
 Visualizar para verificar. Mais pratica de visualizar camadas de raster e vetor juntos com funcões no pacote Tmap (https://r-tmap.github.io/tmap-book/index.html).
 
 ```{r fig.width=5, fig.height=5, fig.cap="Cobertura da terra ao redor do Rio Araguari em 2020. Mostrando os pontos de amostragem (pontos amarelas) cada 5 quilômetros ao longo do rio."}
@@ -399,7 +400,7 @@ tm_layout(legend.position = c("right","top"), legend.bg.color="white")
 <P style="page-break-before: always">
 
 
-#### 1.4) Reclassificação
+#### Reclassificação
 Para simplificar nossa avaliação de escala, reclassificamos a camada mapbiomas_2020 em uma camada binária de floresta/não-floresta. Essa tarefa de geoprocessamento pode ser realizada anteriormente usando SIG ([QGIS](https://docs.qgis.org/3.22/pt_BR/docs/training_manual/rasters/terrain_analysis.html#moderate-fa-reclassifying-the-raster)).
 Aqui vamos reclassificar as categorias de cobertura da terra (agrupando diferentes áreas de cobertura florestal tipos) usando alguns comandos genéricos do R para criar uma nova camada com a cobertura de floresta
  em toda a região de estudo. Para isso, criamos um mapa do mesmo grão e
@@ -438,7 +439,7 @@ tm_layout(legend.position = c("right","top"),legend.bg.color = "white")
 
 <P style="page-break-before: always">
 
-#### 1.5) Comparação multiescala
+#### Comparação multiescala
 Em seguida, com as coordenadas dos pontos das localizações das amostras calculamos a quantidade de floresta que circunda cada local de amostragem em diferentes extensões.
 
 
