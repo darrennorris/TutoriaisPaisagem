@@ -6,6 +6,7 @@ output:
   bookdown::html_document2:
     toc: yes
     toc_float: yes
+    toc_depth: 2
     fig_caption: yes
   pdf_document:       
     toc: true
