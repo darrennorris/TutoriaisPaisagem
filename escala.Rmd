@@ -244,7 +244,7 @@ ramostra_modal_df <- as.data.frame(ramostra_modal, xy = TRUE)
 # Plot
 ggplot(ramostra_modal_df, aes(x=x, y=y)) +
   geom_raster(aes(fill = factor(mapbiomas_2020))) +
-  scale_fill_discrete("valor") + 
+  scale_fill_manual("classe", values = classe_cores) + 
   coord_equal() + 
 geom_text(data=ramostra_modal_df, aes(x=x, y=y, label=mapbiomas_2020))
 ```
@@ -261,14 +261,17 @@ bind_rows(as.polygons(ramostra, dissolve = FALSE) %>%
                            mapbiomas_2020 = round(mapbiomas_2020,1)),
   as.polygons(ramostra_modal, dissolve = FALSE) %>% 
      st_as_sf() %>% mutate(type = "modal")) -> sf_grids
+#class values
+classe_valor_all <- c(3, 12, 14.3, 23.5, 23.8, 30, 31.3, 32.1, 32.5, 32.6, 33)
+class_val_grey <- c("grey95", "grey90", "grey85", "grey80", "grey75", 
+                    "grey70", "grey65", "grey60")
+classe_cores_all <- c("#006400","#B8AF4F", class_val_grey,  "#0000FF") 
 
 sf_grids %>% 
   ggplot() + 
-  geom_sf(aes(fill = factor(mapbiomas_2020))) +
-  scale_fill_discrete("valor") + 
+  geom_sf(aes(fill = factor(mapbiomas_2020))) + 
+  scale_fill_manual("classe", values = classe_cores_all) +
   scale_x_continuous(breaks = c(-51.4075, -51.4065, -51.4055)) +
-  #geom_text(aes(x = x, y = y, 
-  #              label = mapbiomas_2020)) + 
   facet_wrap(~type) + 
   theme(legend.position="top") + 
   guides(fill=guide_legend(nrow=2,byrow=TRUE))
