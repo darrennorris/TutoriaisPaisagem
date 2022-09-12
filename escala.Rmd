@@ -3,17 +3,18 @@ title: "Escala"
 author: "Darren Norris"
 date: "`r Sys.Date()`"
 output:
+  pdf_document:       
+    toc: true
+    toc_depth: 3
+    number_sections: yes
+    extra_dependencies: ["flafter"]
+    includes:
+      in_header: "preamble.txe"
   bookdown::html_document2:
     toc: true    
     toc_float: yes
     toc_depth: 3
     fig_caption: yes
-  pdf_document:       
-    toc: true
-    toc_depth: 3
-    extra_dependencies: ["flafter"]
-    includes:
-      in_header: "preamble.txe"
 always_allow_html: yes
 ---
 
@@ -142,7 +143,8 @@ nrow(ramostra)
 
 ----------------------
 
-<P style="page-break-before: always">
+
+\newpage
 
 Podemos também plotar para verificar.
 ```{r, fig.width =4, fig.height = 2.5, fig.cap="Mapbiomas 2020. Uma pequena amostra do Rio Araguari, perto de Porto Grande."}
@@ -196,6 +198,7 @@ ggplot(ramostra_df, aes(x=x, y=y)) +
 ```
 
 
+\newpage
 
 ## Alterando a resolução
  
@@ -212,7 +215,7 @@ ramostra_media <- resample(ramostra, ramostra_media)
 ```
 
 Visualizar. Os valores calculados pela função não fazem sentido para uma classificação categórica.
-```{r, dpi=300, fig.width =5, fig.height = 4, out.height="400px", out.width="500px", fig.cap="Aggregação errado. Uso da média cria valores categóricos errados e impossíveis."}
+```{r, dpi=300, fig.width =5, fig.height = 4, out.height="200px", out.width="250px", fig.cap="Aggregação errado. Uso da média cria valores categóricos errados e impossíveis."}
 # Tidy
 as.data.frame(ramostra_media, xy = TRUE) %>% 
   mutate(mapbiomas_2020 = round(mapbiomas_2020,1)) -> ramostra_media_df
@@ -245,7 +248,7 @@ ggplot(ramostra_modal_df, aes(x=x, y=y)) +
 geom_text(data=ramostra_modal_df, aes(x=x, y=y, label=mapbiomas_2020))
 ```
 
-<P style="page-break-before: always">
+\newpage
 
 Em cada nível de resolução, são observáveis processos e padrões que não podem necessariamente ser inferidos daqueles abaixo ou acima. Aqui por exemplo, mudamos a proporção de cobertura florestal em nossa pequeno paisagem quando juntamos 3 pixels em um único (proporção modou de 3/72 para 1/9). Ou seja, com cada passo mudamos a representção do mundo.
 
@@ -280,7 +283,7 @@ sf_grids %>%
 
 ------------------
 
-<P style="page-break-before: always">
+\newpage
 
 ## Escala espacial e desenho amostral
 Dado o papel que a escala pode desempenhar em nossa compreensão dos padrões  e processos ecológicos, como escala deve ser considerada no desenho do estudo? Claramente, a resposta a esta pergunta irá variar
@@ -317,7 +320,7 @@ Agora vamos olhar o que tem no arquivo. Existem camadas diferentes com pontos, l
 sf::st_layers(meuSIG)
 ```
 
-<P style="page-break-before: always">
+\newpage
 
 Nós só precisamos de duas dessas camadas. O código abaixo vai carregar as camadas que precisamos e criar os objetos "rsm" e "rsl".
 Assim, agora temos dados com: pontos cada 5 km ao longo os rios ("rsm") e a linha central de rios ("rsl").
@@ -330,7 +333,7 @@ rsl <- sf::st_read(meuSIG, layer = "centerline")
 
 
 
-<P style="page-break-before: always">
+\newpage
 
 
 #### Visualizar os arquivos (camadas vector)
@@ -354,7 +357,8 @@ mapview(rsl, zcol = "rio")
 
 <br> 
 
-<P style="page-break-before: always">
+
+\newpage
 
 
 #### Obter e carregar dados (raster)
@@ -398,14 +402,15 @@ tm_layout(legend.position = c("right","top"), legend.bg.color="white")
 
 <br> 
 
-<P style="page-break-before: always">
+\newpage
 
 
 #### Reclassificação
+
+<br>
+
 Para simplificar nossa avaliação de escala, reclassificamos a camada mapbiomas_2020 em uma camada binária de floresta/não-floresta. Essa tarefa de geoprocessamento pode ser realizada anteriormente usando SIG ([QGIS](https://docs.qgis.org/3.22/pt_BR/docs/training_manual/rasters/terrain_analysis.html#moderate-fa-reclassifying-the-raster)).
-Aqui vamos reclassificar as categorias de cobertura da terra (agrupando diferentes áreas de cobertura florestal tipos) usando alguns comandos genéricos do R para criar uma nova camada com a cobertura de floresta
- em toda a região de estudo. Para isso, criamos um mapa do mesmo grão e
-extensão, e então podemos redefinir os valores do mapa. Neste caso, queremos agrupar a cobertura da terra categorias 3 e 4 (Formação Florestal e Formação Savânica, respectivamente).
+Aqui vamos reclassificar as categorias de cobertura da terra (agrupando diferentes áreas de cobertura florestal tipos) usando alguns comandos genéricos do R para criar uma nova camada com a cobertura de floresta em toda a região de estudo. Para isso, criamos um mapa do mesmo grão e extensão, e então podemos redefinir os valores do mapa. Neste caso, queremos agrupar a cobertura da terra categorias 3 e 4 (Formação Florestal e Formação Savânica, respectivamente).
 
 ```{r}
 # criar uma nova camada de floresta
@@ -416,6 +421,8 @@ values(floresta_2020) <- 0
 floresta_2020[mapbiomas_2020==3 | mapbiomas_2020==4] <- 1 
 ```
 
+
+\newpage
 
 Vizualizar para verificar.
 
@@ -443,8 +450,6 @@ tm_layout(legend.position = c("right","top"),legend.bg.color = "white")
 #### Comparação multiescala
 Em seguida, com as coordenadas dos pontos das localizações das amostras calculamos a quantidade de floresta que circunda cada local de amostragem em diferentes extensões.
 
-
-
 ```{r}
 rsm_31976 <- st_transform(rsm, 31976) 
 # Buffer
@@ -458,13 +463,8 @@ names(buffer.forest1.1km) <- "forest_2020_1km"
 
 ```
 
-### Pergunta 3
 
-
-`r kableExtra::text_spec("Qual é a extensão em número de pixels desse recorte (buffer.forest1.1km)?", color = "blue", bold = TRUE)`
-
-
----------------------
+\newpage
 
 Vizualizar para verificar.
 ```{r fig.width=3, fig.height=3, fig.cap="Ilustração da determinação da quantidade de habitat ao redor de um ponto. Para um determinada extensão, o habitat de interesse é isolado. Um buffer (linha tracejada) é colocado ao redor de um ponto (amarela) e o número de células (pixels) que contém o habitat é somado e multiplicado pela área de cada pixel."}
@@ -486,7 +486,17 @@ tm_scale_bar(breaks = c(0, 0.5, 1), text.size = 1,
 tm_layout(legend.position = c("right","top"), legend.bg.color = "white")
 ```
 
+
+### Pergunta 3
+
+
+`r kableExtra::text_spec("Qual é a extensão em número de pixels desse recorte (buffer.forest1.1km)?", color = "blue", bold = TRUE)`
+
+
+---------------------
+
 <P style="page-break-before: always"> 
+
 Temos valores de 0 (não-floresta) e 1 (floresta). Então, para saber a aréa de floresta podemos somar o número de células (pixels) que contém o habitat e multiplica pela área de cada pixel conforme o codigo:
 
 ```{r}
@@ -516,7 +526,7 @@ area_floresta_ha
   
 ```
 
-<P style="page-break-before: always">
+\newpage
 
 Para uma comparação multiescala, vamos repetir o mesmo processo, mas agora com distancias de 250, 500, 1000, 2000 e 4000 metros, doubrando a escala (extensão) em cada passo. 
 
