@@ -16,6 +16,7 @@ output:
     toc_depth: 3
     fig_caption: yes
 always_allow_html: yes
+urlcolor: blue
 ---
 
 ```{r setup, include=FALSE}
