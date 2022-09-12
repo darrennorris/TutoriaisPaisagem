@@ -2,6 +2,7 @@
 \renewcommand{\bottomfraction}{.7}
 \renewcommand{\textfraction}{.15}
 \renewcommand{\floatpagefraction}{.66}
+\renewcommand{\figurename}{Figura}
 \setcounter{topnumber}{3}
 \setcounter{bottomnumber}{3}
 \setcounter{totalnumber}{4}

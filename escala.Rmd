@@ -3,17 +3,18 @@ title: "Escala"
 author: "Darren Norris"
 date: "`r Sys.Date()`"
 output:
-  bookdown::html_document2:
-    toc: true    
-    toc_float: yes
-    toc_depth: 3
-    fig_caption: yes
   pdf_document:       
     toc: true
     toc_depth: 3
     extra_dependencies: ["flafter"]
     includes:
       in_header: "preamble.txe"
+  bookdown::html_document2:
+    toc: true    
+    toc_float: yes
+    toc_depth: 3
+    fig_caption: yes
+always_allow_html: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -136,7 +137,7 @@ nrow(ramostra)
 ### Pergunta 1
 
 
-`r kableExtra::text_spec("Com base nos resultados obtidos até agora, qual o tamanho do pixel em metros quadrados? Qual o tamnaho total da raster em hectares e quilometros quadrados?", color = "blue", bold = TRUE)`
+`r kableExtra::text_spec("Com base nos resultados obtidos até agora em relação ao objeto raster ramostra, qual o tamanho do pixel em metros quadrados? Qual o tamnaho total da raster em hectares e quilometros quadrados?", color = "blue", bold = TRUE)`
 
 
 ----------------------
@@ -177,7 +178,7 @@ classe_cores <- c("#006400", "#B8AF4F", "#0000FF")
 Agora podemos fazer o mapa com as classes e os cores seguindo o padrão recomendado pela MapBiomas para Coleção 6.
 
 
-```{r, dpi=300, fig.width =5, fig.height = 4, out.height=400, out.width=500, fig.cap="Paisagem com valores e classes de cobertura da terra. Mapbiomas 2020. Uma pequena amostra do Rio Araguari, perto de Porto Grande."}
+```{r, dpi=300, fig.width =5, fig.height = 4, out.height="400px", out.width="500px", fig.cap="Paisagem com valores e classes de cobertura da terra. Mapbiomas 2020. Uma pequena amostra do Rio Araguari, perto de Porto Grande."}
 # Passo necessario para mostrar os valores
 ramostra_df <- as.data.frame(ramostra, xy = TRUE)
 
@@ -211,7 +212,7 @@ ramostra_media <- resample(ramostra, ramostra_media)
 ```
 
 Visualizar. Os valores calculados pela função não fazem sentido para uma classificação categórica.
-```{r, dpi=300, fig.width =5, fig.height = 4, out.height=400, out.width=500, fig.cap="Aggregação errado. Uso da média cria valores categóricos errados e impossíveis."}
+```{r, dpi=300, fig.width =5, fig.height = 4, out.height="400px", out.width="500px", fig.cap="Aggregação errado. Uso da média cria valores categóricos errados e impossíveis."}
 # Tidy
 as.data.frame(ramostra_media, xy = TRUE) %>% 
   mutate(mapbiomas_2020 = round(mapbiomas_2020,1)) -> ramostra_media_df
@@ -233,7 +234,7 @@ ramostra_modal <- resample(ramostra, ramostra_modal, method="near")
 ```
 
 Visualizar. Os valores calculados pela função são consistentes com o original e fazem sentido. 
-```{r, dpi=300, fig.width =5, fig.height = 4, out.height=400, out.width=500, fig.cap="Aggregação pela mais frequente."}
+```{r, dpi=300, fig.width =5, fig.height = 4, out.height="400px", out.width="500px", fig.cap="Aggregação pela mais frequente."}
 # Tidy
 ramostra_modal_df <- as.data.frame(ramostra_modal, xy = TRUE) 
 # Plot
@@ -248,7 +249,7 @@ geom_text(data=ramostra_modal_df, aes(x=x, y=y, label=mapbiomas_2020))
 
 Em cada nível de resolução, são observáveis processos e padrões que não podem necessariamente ser inferidos daqueles abaixo ou acima. Aqui por exemplo, mudamos a proporção de cobertura florestal em nossa pequeno paisagem quando juntamos 3 pixels em um único (proporção modou de 3/72 para 1/9). Ou seja, com cada passo mudamos a representção do mundo.
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE, dpi=300, fig.width =9, fig.height = 5, out.height=350, out.width=650, fig.cap="Mudanças causadas pela agregação."}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, dpi=300, fig.width =9, fig.height = 5, out.height="350px", out.width="650px", fig.cap="Mudanças causadas pela agregação."}
 bind_rows(as.polygons(ramostra, dissolve = FALSE) %>% 
   st_as_sf() %>% mutate(type = "original"), 
   as.polygons(ramostra_media, dissolve = FALSE) %>% 
@@ -274,7 +275,7 @@ sf_grids %>%
 ### Pergunta 2
 
 
-`r kableExtra::text_spec("Confira os resultados e explique o que aconteceu. Como e porque moudou os valores em cada caso (média e modal)?", color = "blue", bold = TRUE)`
+`r kableExtra::text_spec("Confira o codigo e os resultados obtidos quando mudamos a resolução da ratser ramostra (por exemplo figuras 4, 5 e 6). Explique o que aconteceu. Como e porque moudou os valores em cada caso (média e modal)?", color = "blue", bold = TRUE)`
 
 
 ------------------
@@ -518,7 +519,7 @@ area_floresta_ha
 
 Para uma comparação multiescala, vamos repetir o mesmo processo, mas agora com distancias de 250, 500, 1000, 2000 e 4000 metros, doubrando a escala (extensão) em cada passo. 
 
-```{r, echo=FALSE, fig.width=15, fig.height=5, dpi=300, out.height=250, out.width=750, fig.cap="Cobertura florestal em extensões diferentes ao redor de um local de amostragem."}
+```{r, echo=FALSE, fig.width=15, fig.height=5, dpi=300, out.height="250px", out.width="750px", fig.cap="Cobertura florestal em extensões diferentes ao redor de um local de amostragem."}
 rsm_31976 <- st_transform(rsm, 31976) 
 #250 m
 rsm_31976_b250 <- st_buffer(rsm_31976[1, ], dist = 250)
@@ -639,8 +640,8 @@ tmap_arrange(fig_250m, fig_500m, fig_1000m, fig_2000m, fig_4000m, nrow=1)
 ```
 
 <br> 
-Aspectos quantitativos dos dados mudam fundamentalmente com a escala.
-Por exemplo, nesse caso, parece que a proporção de floresta aumenta à medida que a extensão aumenta de 500 para 4000 metros. Esta percepção visual é suportada pelos valores calculados, onde as áreas são:
+Aspectos quantitativos das paisagens mudam fundamentalmente com a escala.
+Por exemplo, nesse caso, parece que a proporção de floresta aumenta à medida que a extensão aumenta de 500 para 4000 metros. Esta percepção visual é confirmada pelos valores calculados, onde as áreas são:
 
 * raio 250 m = 0 hectares de floresta
 * raio 500 m = 6,3 hectares de floresta
