@@ -41,6 +41,7 @@ library(tmap)
 library(landscapemetrics)
 library(gridExtra)
 library(kableExtra)
+library(mgcv)
 ```
 
 # Data
@@ -193,13 +194,13 @@ bind_rows(minha_amostra_250,
           minha_amostra_2000, 
           minha_amostra_4000, 
           minha_amostra_8000, 
-          minha_amostra_16000) -> amostras_metricas
+          minha_amostra_16000) -> amostras_metrica
 
 ```
 
 # calculate proportion
 ```{r}
-amostras_metricas %>% 
+amostras_metrica %>% 
   mutate(floresta_ha = if_else(class == 1, value, 0)) %>% 
   group_by(raio) %>% 
   summarise(area_total_ha = round(sum(value), 2), 
@@ -207,12 +208,12 @@ amostras_metricas %>%
   mutate(proporcao_floresta = 
            round(area_floresta_ha / area_total_ha, 3), 
          porcentagem_floresta = 
-           round((area_floresta_ha / area_total_ha)*100, 1)) -> amostras_metricas_resumo
+           round((area_floresta_ha / area_total_ha)*100, 1)) -> amostra_metrica_resumo
 ```
 
 ## Make a graph
 ```{r}
-amostras_metricas_resumo %>% 
+amostra_metrica_resumo %>% 
   ggplot(aes(x=2*raio, y=porcentagem_floresta)) + 
   geom_point() + 
   labs(x = "extensão (metros)", y = "porcentagem de floresta")
@@ -220,7 +221,7 @@ amostras_metricas_resumo %>%
 
 ## Make a better graph
 ```{r}
-amostras_metricas_resumo %>% 
+amostra_metrica_resumo %>% 
   ggplot(aes(x=(2*raio)/1000, y=porcentagem_floresta)) + 
   geom_point() + 
   stat_smooth(method = "lm", se = FALSE, color = "green") + 
@@ -231,7 +232,7 @@ amostras_metricas_resumo %>%
 
 ## Compare linear and non linear
 ```{r create-fig-comp, echo=FALSE, message=FALSE, warning=FALSE}
-amostras_metricas_resumo %>% 
+amostra_metrica_resumo %>% 
   ggplot(aes(x=(2*raio)/1000, y=porcentagem_floresta)) + 
   geom_point() + 
   stat_smooth(method = "lm", color = "green") + 
@@ -240,7 +241,7 @@ amostras_metricas_resumo %>%
     x = "extensão (quilômetros)", 
     y = "porcentagem de floresta") -> fig_lm
 
-amostras_metricas_resumo %>% 
+amostra_metrica_resumo %>% 
   ggplot(aes(x=(2*raio)/1000, y=porcentagem_floresta)) + 
   geom_point() + 
   stat_smooth(method = "gam", formula = y ~ s(x, k = 5)) + 
@@ -253,6 +254,11 @@ pdf("figures/fig_comp_linear.pdf", width=7, height=3)
 grid.arrange(fig_lm, fig_gam, nrow=1)
 invisible(dev.off())
 
+png("figures/fig_comp_linear.png", width=7, height=3, 
+    units="in", res = 600)
+grid.arrange(fig_lm, fig_gam, nrow=1)
+invisible(dev.off())
+
 ```
 
 include figure
@@ -260,7 +266,7 @@ include figure
 more text
 
 ```{r insert-fig-comp, echo=FALSE, message=FALSE, warning=FALSE}
-knitr::include_graphics("figures/fig_comp_linear.pdf")
+knitr::include_graphics("figures/fig_comp_linear.png")
 ```
 
 
@@ -277,41 +283,78 @@ Multiplwe metricas area for all exten...
 
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
 
-minhas_metricas <- c("ca", "ed", "pladj", "cohesion")
+minhas_metricas <- c("cpland", "ed", "pladj", "cohesion")
 
 # raio 250 metros
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
            size = 250, shape = "circle", 
            metric = minhas_metricas) %>% 
-  mutate(raio = 250) -> minha_amostra_250 
+  mutate(raio = 250) -> metricas_amostra_250 
 # raio 500 metros
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
            size = 500, shape = "circle", 
            metric = minhas_metricas)  %>% 
-  mutate(raio = 500) -> minha_amostra_500
+  mutate(raio = 500) -> metricas_amostra_500
 # raio 1 km (1000 metros)
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
            size = 1000, shape = "circle", 
            metric = minhas_metricas)  %>% 
-  mutate(raio = 1000) -> minha_amostra_1000
+  mutate(raio = 1000) -> metricas_amostra_1000
 # raio 2 km
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
            size = 2000, shape = "circle", 
            metric = minhas_metricas) %>% 
-  mutate(raio = 2000) -> minha_amostra_2000
+  mutate(raio = 2000) -> metricas_amostra_2000
 # raio 4 km
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
            size = 4000, shape = "circle", 
            metric = minhas_metricas)  %>% 
-  mutate(raio = 4000) -> minha_amostra_4000
+  mutate(raio = 4000) -> metricas_amostra_4000
 # raio 8 km
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
            size = 8000, shape = "circle", 
            metric = minhas_metricas)  %>% 
-  mutate(raio = 8000) -> minha_amostra_8000
+  mutate(raio = 8000) -> metricas_amostra_8000
 # raio 16 km
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
            size = 16000, shape = "circle", 
            metric = minhas_metricas)  %>% 
-  mutate(raio = 16000) -> minha_amostra_16000
+  mutate(raio = 16000) -> metricas_amostra_16000
 ```
+
+join
+
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+bind_rows(metricas_amostra_250, 
+          metricas_amostra_500, 
+          metricas_amostra_1000, 
+          metricas_amostra_2000, 
+          metricas_amostra_4000, 
+          metricas_amostra_8000, 
+          metricas_amostra_16000) -> amostras_metricas
+
+```
+
+get forest 
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+amostras_metricas %>% 
+  filter(class==1) -> amostras_metricas_floresta
+
+```
+
+Best to include forest metrics 250 as 0 or NA?
+
+Plot
+
+```{r}
+amostras_metricas_floresta %>% 
+  ggplot(aes(x=(2*raio)/1000, y=value)) + 
+  geom_point() + 
+  stat_smooth(method = "gam", formula = y ~ s(x, k = 5), 
+               se=FALSE) + 
+  facet_wrap(~metric, scales = "free_y") +
+  labs(title = "Multiple metris",
+    x = "extensão (quilômetros)", 
+    y = "metric value")
+```
+
