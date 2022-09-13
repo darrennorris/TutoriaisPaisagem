@@ -1,7 +1,7 @@
 ---
 title: "Métricas da paisagem"
 output:
-  pdf_document:
+  bookdown::pdf_document2:
     toc: yes
     number_sections: yes
     extra_dependencies: flafter
@@ -116,8 +116,9 @@ tm_layout(legend.position = c("right","top"), legend.bg.color="white")
 \newpage
 
 
-# Landscape buffer
+# Area within buffer
 
+##  Ponto único, raio único
 Para amostrar métricas de paisagem dentro de um certo buffer em torno de pontos de amostra, existe a função <code>sample_lsm()</code>.
 
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
@@ -140,9 +141,9 @@ minha_amostra_1000 %>%
 
 \newpage
 
-## Buffer with differrent distances
+## Ponto único, distâncias variados
 
-For all 
+Class area for all exten...
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
 # raio 250 metros
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
@@ -226,8 +227,10 @@ amostras_metricas_resumo %>%
   labs(x = "extensão (quilômetros)", y = "porcentagem de floresta")
 ```
 
+\newpage
+
 ## Compare linear and non linear
-```{r}
+```{r create-fig-comp, echo=FALSE, message=FALSE, warning=FALSE}
 amostras_metricas_resumo %>% 
   ggplot(aes(x=(2*raio)/1000, y=porcentagem_floresta)) + 
   geom_point() + 
@@ -246,5 +249,69 @@ amostras_metricas_resumo %>%
        x = "extensão (quilômetros)", 
        y = "porcentagem de floresta") -> fig_gam
 
+pdf("figures/fig_comp_linear.pdf", width=7, height=3)
 grid.arrange(fig_lm, fig_gam, nrow=1)
+invisible(dev.off())
+
+```
+
+include figure
+
+more text
+
+```{r insert-fig-comp, echo=FALSE, message=FALSE, warning=FALSE}
+knitr::include_graphics("figures/fig_comp_linear.pdf")
+```
+
+
+
+see what happens
+
+-------
+
+\newpage
+
+## Ponto único, distâncias variados, métricas variadas
+
+Multiplwe metricas area for all exten...
+
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+
+minhas_metricas <- c("ca", "ed", "pladj", "cohesion")
+
+# raio 250 metros
+sample_lsm(floresta_2020, y = rsm_31976[1, ], 
+           size = 250, shape = "circle", 
+           metric = minhas_metricas) %>% 
+  mutate(raio = 250) -> minha_amostra_250 
+# raio 500 metros
+sample_lsm(floresta_2020, y = rsm_31976[1, ], 
+           size = 500, shape = "circle", 
+           metric = minhas_metricas)  %>% 
+  mutate(raio = 500) -> minha_amostra_500
+# raio 1 km (1000 metros)
+sample_lsm(floresta_2020, y = rsm_31976[1, ], 
+           size = 1000, shape = "circle", 
+           metric = minhas_metricas)  %>% 
+  mutate(raio = 1000) -> minha_amostra_1000
+# raio 2 km
+sample_lsm(floresta_2020, y = rsm_31976[1, ], 
+           size = 2000, shape = "circle", 
+           metric = minhas_metricas) %>% 
+  mutate(raio = 2000) -> minha_amostra_2000
+# raio 4 km
+sample_lsm(floresta_2020, y = rsm_31976[1, ], 
+           size = 4000, shape = "circle", 
+           metric = minhas_metricas)  %>% 
+  mutate(raio = 4000) -> minha_amostra_4000
+# raio 8 km
+sample_lsm(floresta_2020, y = rsm_31976[1, ], 
+           size = 8000, shape = "circle", 
+           metric = minhas_metricas)  %>% 
+  mutate(raio = 8000) -> minha_amostra_8000
+# raio 16 km
+sample_lsm(floresta_2020, y = rsm_31976[1, ], 
+           size = 16000, shape = "circle", 
+           metric = minhas_metricas)  %>% 
+  mutate(raio = 16000) -> minha_amostra_16000
 ```
