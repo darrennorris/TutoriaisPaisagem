@@ -3,20 +3,24 @@ title: "Escala"
 author: "Darren Norris"
 date: "`r Sys.Date()`"
 output:
-  pdf_document:       
-    toc: true
+  bookdown::pdf_document2:
+    toc: yes
     toc_depth: 3
     number_sections: yes
-    extra_dependencies: ["flafter"]
+    extra_dependencies: flafter
+    highlight: tango
     includes:
-      in_header: "preamble.txe"
+      in_header: preamble.txe
   bookdown::html_document2:
-    toc: true    
+    toc: yes
     toc_float: yes
     toc_depth: 3
     fig_caption: yes
 always_allow_html: yes
 urlcolor: blue
+toc-title: Sumário
+header-includes:
+  - \counterwithin{figure}{section}
 ---
 
 ```{r setup, include=FALSE}
@@ -26,7 +30,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Apresentação
+# Apresentação
 Nesta aula (https://rpubs.com/darren75/escala) vamos entender a importância de escala na ecologia da paisagem através cálculos com a proporção de floresta.
 Durante a aula você aprenderá a
 
@@ -37,7 +41,7 @@ Durante a aula você aprenderá a
 <br> 
 É muito importante ficar claro para você o que é escala (e o que não é!) e qual a importância desse conceito na elaboração do desenho amostral, na coleta de dados, nas análises e na tomada de decisão. Nesse tutorial usaremos conteudo baseado no Capítulo 2 do livro [Fletcher & Fortin. 2019. Spatial Ecology and Conservation Modeling: Applications with R](https://link.springer.com/book/10.1007/978-3-030-01989-1)  e ["Tutorial Escala"](https://www.needs.ufscar.br/tutorial_escala.pdf) do Dr. Alexandre Martensen.
 
-## Escala: breve definação
+# Escala: breve definação
 
 Todos os processos e padrões ecológicos têm uma dimensão temporal e espacial. Assim sendo, o conceito de <b>escala</b> não somente representar essas dimensões, mas também, ajudar nos apresentá-los de uma forma que facilite o entendimento sobre os processos e padrões sendo estudados. 
 
@@ -49,14 +53,17 @@ Na ecologia o termo escala refere-se à dimensão ou domínio espaço-temporal d
 
 Resolução e extensão tendem a covariar – estudos com maior extensão tendem a ter resolução maiores também. Parte dessa covariância é prática: é difícil trabalhar em grandes extensões com dados coletados em tamanhos de resolução finos. No entanto, parte dessa covariância também é conceitual: muitas vezes em grandes extensões, podemos esperar que processos operando em resolução muito finos forneçam somente “ruído” e não dados/informações relevantes sobre os sistemas. Como  os desafios computacionais diminuíram e a disponibilidade de dados de alta resolução aumentou, a covariância entre resolução e extensão nas investigações diminuiu.
 
-## Codigo e R
- * Objetivo não é de apresentar detalhes sobre os cálculos/métodos estatísticas ou os funções no [R](https://cran.r-project.org/). Existem diversos exemplos disponíveis [“Ciência de Dados com R–Introdução......”: ](https://cdr.ibpad.com.br/cdr-intro.pdf) e com google "r cran grupo de ajudar tutorial".......
+# Codigo e R
+ * Objetivo não é de apresentar detalhes sobre os cálculos/métodos estatísticas ou os funções no [R](https://cran.r-project.org/). Existem diversos exemplos disponíveis [“Ciência de Dados com R–Introdução......”: ](https://cdr.ibpad.com.br/cdr-intro.pdf) e com google "r cran introdução tutorial".......
+ Alem disso, existem grupos de ajuda, como por exemplo: [R Brasil](https://www.facebook.com/groups/rbrasilprogramadores/)
+ e 
+[Stack Overflow em Português](https://pt.stackoverflow.com/questions/tagged/r)
 
  * O objetivo é  de apresentar um tutorial mostrado os capacidades e opções para desenvolver e integrar pesquisas na ecologia da paisagem no ambiente estatística de [R](https://cran.r-project.org/)
 
 Obviamente, todas as tarefas de geoprocessamento podem ser desenvolvidas anteriormente em um SIG ([QGIS](https://docs.qgis.org/3.22/pt_BR/docs/training_manual/)). Então porque use R? R tem a capacidade (baseada em codigo) para alternar  entre tarefas de processamento, modelagem e visualização de dados geográficos e não geográficos. Alem disso, como é possível importar, modificar, analisar e visualizar dados espaciais no mesmo ambiente com script/codigo, o R permite fluxos de trabalho transparentes e reproduzíveis ([A Ciência Aberta](https://foster.gitbook.io/manual-de-formacao-em-ciencia-aberta/02introducaoacienciaaberta/01conceito_e_principios_da_ciencia_aberta)).
 
-## Primeiros passos com uma raster
+# Primeiros passos com uma raster
 
 Uma raster é um matriz de valores com coordenadas geográficos. Cada pixel de uma raster representa uma região geográfica, e o valor do pixel representa uma característica dessa região (mais sobre [dados raster](https://docs.qgis.org/3.22/pt_BR/docs/gentle_gis_introduction/raster_data.html)).
 
@@ -201,7 +208,7 @@ ggplot(ramostra_df, aes(x=x, y=y)) +
 
 \newpage
 
-## Alterando a resolução
+# Alterando a resolução
  
 Alterando a resolução serve como exemplo mostrando como os passos/etapas/cálculos mude dependendo o tipo de 
 dados. Ou seja, é preciso adotar metodologias diferentes para dados categóricos (por exemplo classificação de cobertura da terra) e dados contínuos  (por exemplo distância até rio).
@@ -216,7 +223,7 @@ ramostra_media <- resample(ramostra, ramostra_media)
 ```
 
 Visualizar. Os valores calculados pela função não fazem sentido para uma classificação categórica.
-```{r, dpi=300, fig.width =5, fig.height = 4, out.height="200px", out.width="250px", fig.cap="Aggregação errado. Uso da média cria valores categóricos errados e impossíveis."}
+```{r, dpi=300, fig.width =5, fig.height = 4, out.height="200px", out.width="250px", fig.cap="Agregação errado para dados categóricos. Uso da média cria valores categóricos errados e impossíveis."}
 # Tidy
 as.data.frame(ramostra_media, xy = TRUE) %>% 
   mutate(mapbiomas_2020 = round(mapbiomas_2020,1)) -> ramostra_media_df
@@ -238,7 +245,7 @@ ramostra_modal <- resample(ramostra, ramostra_modal, method="near")
 ```
 
 Visualizar. Os valores calculados pela função são consistentes com o original e fazem sentido. 
-```{r, dpi=300, fig.width =5, fig.height = 4, out.height="400px", out.width="500px", fig.cap="Aggregação pela mais frequente."}
+```{r, dpi=300, fig.width =5, fig.height = 4, out.height="400px", out.width="500px", fig.cap="Agregação pela mais frequente."}
 # Tidy
 ramostra_modal_df <- as.data.frame(ramostra_modal, xy = TRUE) 
 # Plot
@@ -282,14 +289,14 @@ sf_grids %>%
 ### Pergunta 2
 
 
-`r kableExtra::text_spec("Confira o codigo e os resultados obtidos anteriormente, quando mudamos a resolução da ratser ramostra (por exemplo figuras 4, 5 e 6). Explique o que aconteceu. Como e porque moudou os valores em cada caso (média e modal)?", color = "blue", bold = TRUE)`
+`r kableExtra::text_spec("Confira o codigo e os resultados obtidos anteriormente, quando mudamos a resolução da ratser ramostra (por exemplo figuras 5.1, 5.2 e 5.3). Explique o que aconteceu. Como e porque moudou os valores em cada caso (média e modal)?", color = "blue", bold = TRUE)`
 
 
 ------------------
 
 \newpage
 
-## Escala espacial e desenho amostral
+# Escala espacial e desenho amostral
 Dado o papel que a escala pode desempenhar em nossa compreensão dos padrões  e processos ecológicos, como escala deve ser considerada no desenho do estudo? Claramente, a resposta a esta pergunta irá variar
 dependendo dos fenômenos de interesse, mas ecologistas e estatísticos têm forneceu algumas orientações importantes. As questões-chave incluem o tamanho da unidade de amostragem (resoloção), o tipo de
 unidade de amostra e localizações da unidade de amostra, incluindo o espacamento entre as amostras (distância entre as amostras) e o tamanho da área de estudo.
@@ -299,7 +306,7 @@ Com a disponibilidade de imagens de satélite é possível responder questões i
  O objetivo é criar buffers circulares de diferentes extensões ao redor dos sitios de amostragem (pontos, pixels, manchas, transetos lineares etc). Aqui, vamos entender a escala em que a cobertura de floresta muda ao redor dos rios. Para isso, quantificamos a quantidade de floresta que ocorre em várias distâncias em pontos ao longo dos rios a montante das hidrelétricas no Rio Araguari. Para ilustrar esta abordagem geral, usamos o banco de dados MapBiomas Coleção 6 de 2020, e vincule esses dados de cobertura da terra aos pontos de amostragem em rios.
 
 
-#### Obter e carregar dados (vectores)
+## Obter e carregar dados (vectores)
 
 ```{r, echo=FALSE, eval=TRUE, message=FALSE, warning=FALSE}
 meuSIG <- "C:\\Users\\user\\Documents\\Articles\\gis_layers\\gisdata\\inst\\vector\\rivers.gpkg"
@@ -340,7 +347,7 @@ rsl <- sf::st_read(meuSIG, layer = "centerline")
 \newpage
 
 
-#### Visualizar os arquivos (camadas vector)
+## Visualizar os arquivos (camadas vector)
 Visualizar para verificar.
 Mapa com linha central e pontos de rios em trechos de 5km.
 
@@ -365,7 +372,7 @@ mapview(rsl, zcol = "rio")
 \newpage
 
 
-#### Obter e carregar dados (raster)
+## Obter e carregar dados (raster)
 ```{r echo=FALSE, eval=TRUE, message=FALSE, warning=FALSE}
 meuSIGr <- "C:\\Users\\user\\Documents\\Articles\\gis_layers\\gisdata\\inst\\raster\\mapbiomas_AP_utm_rio\\utm_cover_AP_rio_2020.tif"
 fs2 <- file.size(meuSIGr)/(1024^2)
@@ -385,7 +392,7 @@ mapbiomas_2020 <- rast(meuSIGr)
 ```
 
 
-#### Visualizar os arquivos (camadas raster e vector)
+## Visualizar os arquivos (camadas raster e vector)
 Visualizar para verificar. É possível de visualizar camadas de raster e vetor juntos com funcões no pacote Tmap (https://r-tmap.github.io/tmap-book/index.html).
 
 ```{r fig.width=5, fig.height=5, fig.cap="Cobertura da terra ao redor do Rio Araguari em 2020. Mostrando os pontos de amostragem (pontos amarelas) cada 5 quilômetros ao longo do rio."}
@@ -409,12 +416,12 @@ tm_layout(legend.position = c("right","top"), legend.bg.color="white")
 \newpage
 
 
-#### Reclassificação
+## Reclassificação
 
 <br>
 
 Para simplificar nossa avaliação de escala, reclassificamos a camada mapbiomas_2020 em uma camada binária de floresta/não-floresta. Essa tarefa de geoprocessamento pode ser realizada anteriormente usando SIG ([QGIS](https://docs.qgis.org/3.22/pt_BR/docs/training_manual/rasters/terrain_analysis.html#moderate-fa-reclassifying-the-raster)).
-Aqui vamos reclassificar as categorias de cobertura da terra (agrupando diferentes áreas de cobertura florestal tipos) usando alguns comandos genéricos do R para criar uma nova camada com a cobertura de floresta em toda a região de estudo. Para isso, criamos um mapa do mesmo grão e extensão, e então podemos redefinir os valores do mapa. Neste caso, queremos agrupar a cobertura da terra categorias 3 e 4 (Formação Florestal e Formação Savânica, respectivamente).
+Aqui vamos reclassificar as categorias de cobertura da terra (agrupando diferentes áreas de cobertura florestal tipos) usando alguns comandos genéricos do R para criar uma nova camada com a cobertura de floresta em toda a região de estudo. Para isso, criamos um mapa do mesmo resolução e extensão, e então podemos redefinir os valores do mapa. Neste caso, queremos agrupar a cobertura da terra categorias 3 e 4 (Formação Florestal e Formação Savânica, respectivamente).
 
 ```{r}
 # criar uma nova camada de floresta
@@ -451,7 +458,7 @@ tm_layout(legend.position = c("right","top"),legend.bg.color = "white")
 
 <P style="page-break-before: always">
 
-#### Comparação multiescala
+# Comparação multiescala
 Em seguida, com as coordenadas dos pontos das localizações das amostras calculamos a quantidade de floresta que circunda cada local de amostragem em diferentes extensões.
 
 ```{r}
@@ -680,7 +687,7 @@ Por exemplo, nesse caso, parece que a proporção de floresta aumenta à medida 
 ----------------------
 
 
-## Proximo: repetindo para muitas amostras.
+# Próximos passos: repetindo para muitas amostras.
 
 Neste exemplo comparamos a área de floresta em torno de um único ponto de amostragem. Para calcular o mesmo para todos os 52 pontos, seriam necessárias varias repetições (52 pontos x 5 extensões = 260 repetições).
 
