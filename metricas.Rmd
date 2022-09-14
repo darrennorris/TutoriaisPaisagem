@@ -279,6 +279,148 @@ see what happens
 
 ## Ponto único, distâncias variados, métricas variadas
 
+
+Using the same point 
+
+```{r, echo=FALSE}
+#250 m
+rsm_31976_b250 <- st_buffer(rsm_31976[1, ], dist = 250)
+buffer.forest1.250m <- crop(floresta_2020, rsm_31976_b250, snap="out")
+buffer.forest1.250m <- mask(buffer.forest1.250m, rsm_31976_b250, touches=TRUE)
+# 500 m
+rsm_31976_b500 <- st_buffer(rsm_31976[1, ], dist = 500)
+buffer.forest1.500m <- crop(floresta_2020, snap="out", rsm_31976_b500)
+buffer.forest1.500m <- mask(buffer.forest1.500m, touches=TRUE, rsm_31976_b500)
+# 1000 m
+rsm_31976_b1000 <- st_buffer(rsm_31976[1, ], dist = 1000)
+buffer.forest1.1km <- crop(floresta_2020, rsm_31976_b1000)
+buffer.forest1.1km <- mask(buffer.forest1.1km, rsm_31976_b1000)
+# 2000 m
+rsm_31976_b2000 <- st_buffer(rsm_31976[1, ], dist = 2000)
+buffer.forest1.2000m <- crop(floresta_2020, rsm_31976_b2000)
+buffer.forest1.2000m <- mask(buffer.forest1.2000m, rsm_31976_b2000)
+# 4000 m
+rsm_31976_b4000 <- st_buffer(rsm_31976[1, ], dist = 4000)
+buffer.forest1.4000m <- crop(floresta_2020, rsm_31976_b4000)
+buffer.forest1.4000m <- mask(buffer.forest1.4000m, rsm_31976_b4000)
+#fig 250
+fig_250m <- tm_shape(buffer.forest1.250m) +
+  tm_raster(style = "cat", 
+            palette = c("0" = "#E974ED", 
+                        "1" ="#129912"), legend.show = FALSE) + 
+  tm_shape(rsm_31976[1, ]) + 
+  tm_symbols(shape =21, col = "yellow", 
+            border.col = "black", border.lwd = 0.2, size=0.5) + 
+  tm_shape(rsm_31976_b250) +
+  tm_borders(col = "black", lwd = 4, lty = "dashed") + 
+  tm_add_legend(type = "fill", 
+    labels = c("não-floresta", "floresta"),
+    col = c("#E974ED", "#129912"),
+    title = "Classe") + 
+tm_scale_bar(breaks = c(0, 0.125, 0.25), text.size = 1, position=c("left", "bottom")) +
+tm_layout(title = "raio = 250 m", 
+          legend.position = c("right","top"),
+          legend.bg.color = "white")
+# fig 500 m
+fig_500m <- tm_shape(buffer.forest1.500m) +
+  tm_raster(style = "cat", 
+            palette = c("0" = "#E974ED", 
+                        "1" ="#129912"), legend.show = FALSE) + 
+  tm_shape(rsm_31976[1, ]) + 
+  tm_symbols(shape =21, col = "yellow", 
+            border.col = "black", border.lwd = 0.2, size=0.5) + 
+  tm_shape(rsm_31976_b500) +
+  tm_borders(col = "black", lwd = 4, lty = "dashed") + 
+  tm_add_legend(type = "fill", 
+    labels = c("não-floresta", "floresta"),
+    col = c("#E974ED", "#129912"),
+    title = "Classe") + 
+tm_scale_bar(breaks = c(0, 0.25, 0.5), text.size = 1, 
+             position=c("left", "bottom")) +
+tm_layout(title = "raio = 500 m", 
+          legend.position = c("right","top"),
+          legend.bg.color = "white")
+# fig 1000 m
+fig_1000m <- tm_shape(buffer.forest1.1km) +
+  tm_raster(style = "cat", 
+            palette = c("0" = "#E974ED", 
+                        "1" ="#129912"), legend.show = FALSE) + 
+  tm_shape(rsm_31976[1, ]) + 
+  tm_symbols(shape =21, col = "yellow", 
+            border.col = "black", border.lwd = 0.2, size=0.5) + 
+  tm_shape(rsm_31976_b1000) +
+  tm_borders(col = "black", lwd = 4, lty = "dashed") + 
+  tm_add_legend(type = "fill", 
+    labels = c("não-floresta", "floresta"),
+    col = c("#E974ED", "#129912"),
+    title = "Classe") + 
+tm_scale_bar(breaks = c(0, 0.5, 1), text.size = 1, 
+             position=c("left", "bottom")) +
+tm_layout(title = "raio = 1000 m", 
+legend.position = c("right","top"),
+          legend.bg.color = "white")
+# fig 2000 m
+fig_2000m <- tm_shape(buffer.forest1.2000m) +
+  tm_raster(style = "cat", 
+            palette = c("0" = "#E974ED", 
+                        "1" ="#129912"), legend.show = FALSE) + 
+  tm_shape(rsm_31976[1, ]) + 
+  tm_symbols(shape =21, col = "yellow", 
+            border.col = "black", border.lwd = 0.2, size=0.5) + 
+  tm_shape(rsm_31976_b2000) +
+  tm_borders(col = "black", lwd = 4, lty = "dashed") + 
+  tm_add_legend(type = "fill", 
+    labels = c("não-floresta", "floresta"),
+    col = c("#E974ED", "#129912"),
+    title = "Classe") + 
+tm_scale_bar(breaks = c(0, 1, 2), text.size = 1, 
+             position=c("left", "bottom")) +
+tm_layout(title = "raio = 2000 m", 
+legend.position = c("right","top"),
+          legend.bg.color = "white")
+#fig 4000 m 
+fig_4000m <- tm_shape(buffer.forest1.4000m) +
+  tm_raster(style = "cat", 
+            palette = c("0" = "#E974ED", 
+                        "1" ="#129912"), legend.show = FALSE) + 
+  tm_shape(rsm_31976[1, ]) + 
+  tm_symbols(shape =21, col = "yellow", 
+            border.col = "black", border.lwd = 0.2, size=0.5) + 
+  tm_shape(rsm_31976_b4000) +
+  tm_borders(col = "black", lwd = 4, lty = "dashed") + 
+  tm_add_legend(type = "fill", 
+    labels = c("não-floresta", "floresta"),
+    col = c("#E974ED", "#129912"),
+    title = "Classe") + 
+tm_scale_bar(breaks = c(0, 2, 4), text.size = 1, 
+             position=c("left", "bottom")) +
+tm_layout(title = "raio = 4000 m", 
+legend.position = c("right","top"),
+          legend.bg.color = "white")
+#Export plot
+png("figures/fig_extensions.png", width=15, height=5, 
+    res=600, units="in")
+tmap_arrange(fig_250m, fig_500m, fig_1000m, fig_2000m, fig_4000m, nrow=1)
+invisible(dev.off())
+```
+
+Plot extensions
+nclude figure
+
+more text
+
+```{r insert-fig-exten, echo=FALSE, message=FALSE, warning=FALSE, out.width="90%", out.height="90%", fig.cap="Cobertura florestal em extensões diferentes ao redor de um local de amostragem."}
+knitr::include_graphics("figures/fig_extensions.png")
+```
+
+
+
+see what happens
+
+-------
+
+
+
 Multiplwe metricas area for all exten...
 <code>sample_lsm()</code>
 
