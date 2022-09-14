@@ -30,6 +30,8 @@ knitr::opts_chunk$set(
 )
 ```
 
+\newpage{}
+
 # Apresentação
 Nesta aula (https://rpubs.com/darren75/escala) vamos entender a importância de escala na ecologia da paisagem através cálculos com a proporção de floresta.
 Durante a aula você aprenderá a
@@ -62,6 +64,8 @@ Resolução e extensão tendem a covariar – estudos com maior extensão tendem
  * O objetivo é  de apresentar um tutorial mostrado os capacidades e opções para desenvolver e integrar pesquisas na ecologia da paisagem no ambiente estatística de [R](https://cran.r-project.org/)
 
 Obviamente, todas as tarefas de geoprocessamento podem ser desenvolvidas anteriormente em um SIG ([QGIS](https://docs.qgis.org/3.22/pt_BR/docs/training_manual/)). Então porque use R? R tem a capacidade (baseada em codigo) para alternar  entre tarefas de processamento, modelagem e visualização de dados geográficos e não geográficos. Alem disso, como é possível importar, modificar, analisar e visualizar dados espaciais no mesmo ambiente com script/codigo, o R permite fluxos de trabalho transparentes e reproduzíveis ([A Ciência Aberta](https://foster.gitbook.io/manual-de-formacao-em-ciencia-aberta/02introducaoacienciaaberta/01conceito_e_principios_da_ciencia_aberta)).
+
+Além disso, atualmente a grande maioria dos artigos científicos publicados na revista [Landscape Ecology](https://www.springer.com/journal/10980/) incluir análise usando R.
 
 # Primeiros passos com uma raster
 

@@ -1,5 +1,7 @@
 ---
 title: "Métricas da paisagem"
+author: "Darren Norris"
+date: "`r Sys.Date()`"
 output:
   bookdown::pdf_document2:
     toc: yes
@@ -31,6 +33,23 @@ knit_hooks$set(output = function(x, options) {
 })
 ```
 
+\newpage{}
+
+# Apresentação
+Nesta aula (...) vamos .... na ecologia da paisagem através cálculos com a proporção de floresta.
+Durante a aula você aprenderá a
+
+# Codigo e R
+ * Objetivo não é de apresentar detalhes sobre os cálculos/métodos estatísticas ou os funções no [R](https://cran.r-project.org/). Existem diversos exemplos disponíveis [“Ciência de Dados com R–Introdução......”: ](https://cdr.ibpad.com.br/cdr-intro.pdf) e com google "r cran introdução tutorial".......
+ Alem disso, existem grupos de ajuda, como por exemplo: [R Brasil](https://www.facebook.com/groups/rbrasilprogramadores/)
+ e 
+[Stack Overflow em Português](https://pt.stackoverflow.com/questions/tagged/r)
+
+ * O objetivo é  de apresentar um tutorial mostrado os capacidades e opções para desenvolver e integrar pesquisas na ecologia da paisagem no ambiente estatística de [R](https://cran.r-project.org/)
+
+Porque use R? R tem a capacidade (baseada em codigo) para alternar  entre tarefas de processamento, modelagem e visualização de dados geográficos e não geográficos. Alem disso, como é possível importar, modificar, analisar e visualizar dados espaciais no mesmo ambiente com script/codigo, o R permite fluxos de trabalho transparentes e reproduzíveis ([A Ciência Aberta](https://foster.gitbook.io/manual-de-formacao-em-ciencia-aberta/02introducaoacienciaaberta/01conceito_e_principios_da_ciencia_aberta)).
+
+Além disso, atualmente a grande maioria dos artigos científicos publicados na revista [Landscape Ecology](https://www.springer.com/journal/10980/) incluir análise usando R.
 
 # Packages
 ```{r, message=FALSE, warning=FALSE}
