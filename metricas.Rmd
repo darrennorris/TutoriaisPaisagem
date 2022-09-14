@@ -122,10 +122,17 @@ tm_layout(legend.position = c("right","top"), legend.bg.color="white")
 ##  Ponto único, raio único
 Para amostrar métricas de paisagem dentro de um certo buffer em torno de pontos de amostra, existe a função <code>sample_lsm()</code>.
 
+Através da função <code>sample_lsm()</code> podemos calcular mais de 50 métricas da paisagem, dentro de extensões diferentes.
+
+cpland Core area percentage of landscape (Core area metric)
+C%LAND (percentual de área central ("core") na paisagem) Percentual de áreas centrais (excluídas as bordas de 30 m) em relação à área total da paisagem.
+Métricas de área central ("core") É considerada medida da qualidade de hábitat, uma vez que indica quanto existe realmente de área efetiva de um fragmento, após descontar-se o efeito de borda. 
+
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
 minha_amostra_1000 <- sample_lsm(floresta_2020, y = rsm_31976[1, ], 
                             size = 1000, shape = "circle", 
-                            metric = "ca") 
+                            metric = "cpland", 
+                            edge_depth = 1) 
 ```
 
 Depois que executar ("run"), podemos olhar os dados com o codigo a seguir. 
@@ -144,42 +151,42 @@ minha_amostra_1000 %>%
 
 ## Ponto único, distâncias variados
 
-Class area for all exten...
+Core area for all exten...
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
 # raio 250 metros
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
            size = 250, shape = "circle", 
-           metric = "ca") %>% 
+           metric = "cpland") %>% 
   mutate(raio = 250) -> minha_amostra_250 
 # raio 500 metros
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
            size = 500, shape = "circle", 
-           metric = "ca")  %>% 
+           metric = "cpland")  %>% 
   mutate(raio = 500) -> minha_amostra_500
 # raio 1 km (1000 metros)
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
            size = 1000, shape = "circle", 
-           metric = "ca")  %>% 
+           metric = "cpland")  %>% 
   mutate(raio = 1000) -> minha_amostra_1000
 # raio 2 km
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
            size = 2000, shape = "circle", 
-           metric = "ca") %>% 
+           metric = "cpland") %>% 
   mutate(raio = 2000) -> minha_amostra_2000
 # raio 4 km
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
            size = 4000, shape = "circle", 
-           metric = "ca")  %>% 
+           metric = "cpland")  %>% 
   mutate(raio = 4000) -> minha_amostra_4000
 # raio 8 km
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
            size = 8000, shape = "circle", 
-           metric = "ca")  %>% 
+           metric = "cpland")  %>% 
   mutate(raio = 8000) -> minha_amostra_8000
 # raio 16 km
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
            size = 16000, shape = "circle", 
-           metric = "ca")  %>% 
+           metric = "cpland")  %>% 
   mutate(raio = 16000) -> minha_amostra_16000
 ```
 
@@ -198,57 +205,50 @@ bind_rows(minha_amostra_250,
 
 ```
 
-# calculate proportion
+
+
+### Make a graph
 ```{r}
 amostras_metrica %>% 
-  mutate(floresta_ha = if_else(class == 1, value, 0)) %>% 
-  group_by(raio) %>% 
-  summarise(area_total_ha = round(sum(value), 2), 
-            area_floresta_ha = round(max(floresta_ha), 2)) %>% 
-  mutate(proporcao_floresta = 
-           round(area_floresta_ha / area_total_ha, 3), 
-         porcentagem_floresta = 
-           round((area_floresta_ha / area_total_ha)*100, 1)) -> amostra_metrica_resumo
-```
-
-## Make a graph
-```{r}
-amostra_metrica_resumo %>% 
-  ggplot(aes(x=2*raio, y=porcentagem_floresta)) + 
+  filter(class==1) %>%
+  ggplot(aes(x=2*raio, y=value)) + 
   geom_point() + 
-  labs(x = "extensão (metros)", y = "porcentagem de floresta")
+  labs(x = "Extensão (metros)", y = "Área central (porcentagem da paisagem)")
 ```
 
-## Make a better graph
+### Make a better graph
 ```{r}
-amostra_metrica_resumo %>% 
-  ggplot(aes(x=(2*raio)/1000, y=porcentagem_floresta)) + 
+amostras_metrica %>% 
+  filter(class==1) %>%
+  ggplot(aes(x=(2*raio)/1000, y=value)) + 
   geom_point() + 
   stat_smooth(method = "lm", se = FALSE, color = "green") + 
-  labs(x = "extensão (quilômetros)", y = "porcentagem de floresta")
+  labs(x = "Extensão (quilômetros)", y = "Área central (porcentagem da paisagem)")
 ```
 
 \newpage
 
-## Compare linear and non linear
+### Compare linear and non linear
 ```{r create-fig-comp, echo=FALSE, message=FALSE, warning=FALSE}
-amostra_metrica_resumo %>% 
-  ggplot(aes(x=(2*raio)/1000, y=porcentagem_floresta)) + 
+amostras_metrica %>% 
+  filter(class==1) %>%
+  ggplot(aes(x=(2*raio)/1000, y=value)) + 
   geom_point() + 
   stat_smooth(method = "lm", color = "green") + 
   coord_cartesian(ylim = c(0,100)) +
-  labs(title = "Modelo linear",
-    x = "extensão (quilômetros)", 
-    y = "porcentagem de floresta") -> fig_lm
+  labs(title = "Modelo linear", 
+       x = "Extensão (quilômetros)", 
+       y = "Área central (porcentagem da paisagem)") -> fig_lm
 
-amostra_metrica_resumo %>% 
-  ggplot(aes(x=(2*raio)/1000, y=porcentagem_floresta)) + 
+amostras_metrica %>% 
+  filter(class==1) %>%
+  ggplot(aes(x=(2*raio)/1000, y=value)) + 
   geom_point() + 
   stat_smooth(method = "gam", formula = y ~ s(x, k = 5)) + 
   coord_cartesian(ylim = c(0,100)) +
   labs(title = "Modelo não-linear", 
-       x = "extensão (quilômetros)", 
-       y = "porcentagem de floresta") -> fig_gam
+       x = "Extensão (quilômetros)", 
+       y = "Área central (porcentagem da paisagem)") -> fig_gam
 
 pdf("figures/fig_comp_linear.pdf", width=7, height=3)
 grid.arrange(fig_lm, fig_gam, nrow=1)
@@ -280,10 +280,28 @@ see what happens
 ## Ponto único, distâncias variados, métricas variadas
 
 Multiplwe metricas area for all exten...
+<code>sample_lsm()</code>
+
+Aqui vamos .........
+
+ * Métricas de área e borda. Quantificam a composição da paisagem e fornecem sobre ela informações importantes sobre a dinâmica de populações vegetais e animais  
+    <code>pland</code> = area and edge metric / percentage of landscape 
+percentagem da paisagem Porcentagem de cobertura da classe na paisagem.  
+    <code>ed</code> = area and edge metric / edge density . densidade de borda que é igual à soma dos comprimentos (m) de todos os segmentos de borda que envolvem o fragmento, dividida pela área total da paisagem (m²), sendo posteriormente convertido em hectares.
+
+ * Métricas de área central. Quantificam a composição da paisagem. 
+    <code>cpland</code> = core area metric / core area percentage of landscape / 
+(percentual de área central ("core") na paisagem) Percentual de áreas centrais (excluídas as bordas de 30 m) em relação à área total da paisagem. O termo "Core area" foi traduzido como área central ou área núcleo. Aqui vamos adotar área central.
+
+ * Métricas de contágio e agregação. Quantificam a configuração da paisagem:
+    <code>pd</code> = aggegation metric / patch density
+    <code>cohesion</code> = aggregation metric / patch cohesion index.
+    
+
 
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
 
-minhas_metricas <- c("cpland", "ed", "pladj", "cohesion")
+minhas_metricas <- c("pland", "ed", "cpland", "pd","cohesion")
 
 # raio 250 metros
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
