@@ -49,7 +49,7 @@ Durante a aula você aprenderá a
 
 Porque use R? R tem a capacidade (baseada em codigo) para alternar  entre tarefas de processamento, modelagem e visualização de dados geográficos e não geográficos. Alem disso, como é possível importar, modificar, analisar e visualizar dados espaciais no mesmo ambiente com script/codigo, o R permite fluxos de trabalho transparentes e reproduzíveis ([A Ciência Aberta](https://foster.gitbook.io/manual-de-formacao-em-ciencia-aberta/02introducaoacienciaaberta/01conceito_e_principios_da_ciencia_aberta)).
 
-Além disso, atualmente a grande maioria dos artigos científicos publicados na revista [Landscape Ecology](https://www.springer.com/journal/10980/) incluir análise usando R.
+Além disso, atualmente a grande maioria dos artigos científicos publicados na revista [Landscape Ecology](https://www.springer.com/journal/10980/) incluir análises usando R.
 
 # Packages
 ```{r, message=FALSE, warning=FALSE}
