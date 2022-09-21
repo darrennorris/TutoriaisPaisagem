@@ -3,6 +3,11 @@ title: "Métricas da paisagem"
 author: "Darren Norris"
 date: "`r Sys.Date()`"
 output:
+  bookdown::html_document2:
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+    fig_caption: yes
   bookdown::pdf_document2:
     toc: yes
     toc_depth: 3
@@ -11,11 +16,6 @@ output:
     highlight: tango
     includes:
       in_header: preamble.txe
-  bookdown::html_document2:
-    toc: yes
-    toc_depth: 3
-    toc_float: yes
-    fig_caption: yes
 urlcolor: blue
 toc-title: Sumário
 header-includes:
@@ -51,7 +51,43 @@ Durante a aula você aprenderá a
 
 Porque use R? R tem a capacidade (baseada em codigo) para alternar  entre tarefas de processamento, modelagem e visualização de dados geográficos e não geográficos. Alem disso, como é possível importar, modificar, analisar e visualizar dados espaciais no mesmo ambiente com script/codigo, o R permite fluxos de trabalho transparentes e reproduzíveis ([A Ciência Aberta](https://foster.gitbook.io/manual-de-formacao-em-ciencia-aberta/02introducaoacienciaaberta/01conceito_e_principios_da_ciencia_aberta)).
 
-Além disso, atualmente a grande maioria dos artigos científicos publicados na revista [Landscape Ecology](https://www.springer.com/journal/10980/) incluir análises usando R.
+Aliás, atualmente a grande maioria dos artigos científicos publicados na revista [Landscape Ecology](https://www.springer.com/journal/10980/) incluir análises usando R.
+
+## Organização do codigo no tutorial
+O tutorial está organizado em etapas de processamento, com blocos de código em caixas cinzas:
+```{r, eval=FALSE}
+codigo de R para executar
+```
+
+Para segue os passos, os blocos de código precisam ser executados em sequência. Se você pular uma etapa, ou rodar fora de sequência o próximo bloco de código provavelmente não funcionará.
+
+As linhas de codigo de R dentro de cada caixa tambem preciso ser executados em sequência. O simbolo `r kableExtra::text_spec("#", bold = TRUE)` é usado para incluir comentarios sobre os passos no codgio (ou seja, linhas começando com  `r kableExtra::text_spec("#", bold = TRUE)` não é codigo de executar).
+
+
+
+```{r, eval=FALSE}
+# Passo 1
+codigo de R passo 1 # texto e numeros tem cores diferentes
+# Passo 2
+codigo de R passo 2
+# Passo 3
+codigo de R passo 3
+```
+
+Alem disso, o simbolo `r kableExtra::text_spec("#>", bold = TRUE)` indica o resultado que você verá no console de R.
+
+
+
+```{r, echo=TRUE, message=TRUE, evaluate = TRUE}
+# Passo 1
+1+1
+# Passo 2
+x <- 1 + 1
+# Passo 3
+x
+# Passo 4
+x + 1
+```
 
 ## Métricas da paisagem e pacote "landscapemetrics"
 
