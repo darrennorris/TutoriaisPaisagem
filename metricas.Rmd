@@ -3,17 +3,19 @@ title: "Métricas da paisagem"
 author: "Darren Norris"
 date: "`r Sys.Date()`"
 output:
-  bookdown::html_document2:
-    toc: yes
-    toc_float: yes
-    fig_caption: yes
   bookdown::pdf_document2:
     toc: yes
+    toc_depth: 3
     number_sections: yes
     extra_dependencies: flafter
     highlight: tango
     includes:
       in_header: preamble.txe
+  bookdown::html_document2:
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+    fig_caption: yes
 urlcolor: blue
 toc-title: Sumário
 header-includes:
@@ -51,23 +53,66 @@ Porque use R? R tem a capacidade (baseada em codigo) para alternar  entre tarefa
 
 Além disso, atualmente a grande maioria dos artigos científicos publicados na revista [Landscape Ecology](https://www.springer.com/journal/10980/) incluir análises usando R.
 
-# Packages
+## Métricas da paisagem e pacote "landscapemetrics"
+
+As métricas de paisagem são a forma que os ecólogos de paisagem usam para descrever os padrões espaciais de paisagens para depois avaliar a influência destes padrões espaciais nos padrões e processos ecológicos.
+ 
+
+landscapemetrics é um pacote R para calcular métricas de paisagem para paisagems categóricos em um fluxo de trabalho organizado. O pacote pode ser usado como um substituto do FRAGSTATS (McGarigal et al. 2012), pois oferece um fluxo de trabalho reproduzível para análise de paisagem em um único ambiente. Também permite cálculos de quatro métricas teóricas de complexidade da paisagem:  entropia marginal, entropia condicional, entropia conjunta e informação mútua (Nowosad e Stepinski 2019).
+
+Nesse pacote o formato geral para uma função é o seguinte:
+A primeira parte é sempre lsm_ ("landscapemetric"), seguinda do “nível_” e por fim a “métrica”. Ou seja, todas as funções começam com lsm_ , daí você deve incluir o nível da análise “p” para patch (ou seja, para a mancha ou fragmento), “c” para classe e “l” para landscape ou seja, para métricas para a paisagem como um todo. E daí existem inúmeras métricas, como por exemplo a <code>cpland</code> (percentual de área central [“core area”]) na paisagem, como vimos na aula teórica. Digite o código abaixo e veja o resultado. Leia com atenção e preste particular atenção na organização da página de ajuda.
+
+```{r, message=FALSE, echo=FALSE, eval=TRUE,  warning=FALSE}
+library(landscapemetrics)
+```
+
+```{r, message=FALSE, eval=FALSE, warning=FALSE}
+library(landscapemetrics)
+?landscapemetrics
+```
+
+No final da página você vai encontrar a palavra "Index". Clique nela e você verá todas as funções do pacote. Desca até as lsm_. . . e clique em algumas delas ali. Explorar!
+
+### Pergunta 1
+`r kableExtra::text_spec("Descreva brevemente 2 métricas de cada nível.", color = "blue", bold = TRUE)`
+
+
+--------------------------------------------------
+
+## Pacotes
+
+Além do "landscapemetrics", precisamos carregar alguns pacotes a mais para facilitar a organização e apresentação de dados espaciais (vector e raster) e os resultados.
+
+Carregar pacotes (que deve esta instalado antes): 
 ```{r, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(sf)
 library(terra)
 library(tmap)
-library(landscapemetrics)
 library(gridExtra)
 library(kableExtra)
 library(mgcv)
 ```
 
-# Data
-load raster
+
+# Dados
+
+Precisamos o arquivo com os dados de MapBiomas "amostra_mapbiomas_2020.tif", que voces baixaram no tutorial anterior (Escala https://rpubs.com/darren75/escala).
+Nós podemos carregar os dados de cobertura da terra "amostra_mapbiomas_2020.tif" com a função <code>rast</code>.
+```{r eval=FALSE, echo=TRUE, message=FALSE, warning=FALSE}
+# Selecionar e carregar arquivo ""amostra_mapbiomas_2020.tif"
+ramostra <- rast(file.choose())
+# criar uma nova camada de floresta
+floresta_2020 <- mapbiomas_2020
+# Com valor de 0
+values(floresta_2020) <- 0
+# Atualizar categorias florestais agrupados com valor de 1
+floresta_2020[mapbiomas_2020==3 | mapbiomas_2020==4] <- 1 
+```
+
 ```{r, echo=FALSE}
 rin <- "data/mapbiomas_AP_utm_rio/utm_cover_AP_rio_2020.tif"
-
 mapbiomas_2020 <- rast(rin)
 # criar uma nova camada de floresta
 floresta_2020 <- mapbiomas_2020
@@ -77,14 +122,40 @@ values(floresta_2020) <- 0
 floresta_2020[mapbiomas_2020==3 | mapbiomas_2020==4] <- 1 
 ```
 
-River lines
-```{r, echo=FALSE, eval=TRUE, message=FALSE, warning=FALSE}
-meuSIG <- "data/rivers.gpkg"
-fs <- file.size(meuSIG)/(1024^2)
+Plotar para verificar, incluindo nomes e os cores para classes de floresta (valor = 1) e não-floresta (valor = 0).
+
+```{r, eval = FALSE}
+# Passo necessario para agilizar o processamento
+floresta_2020_modal<-aggregate(floresta_2020, fact=10, fun="modal")
+# Plot
+tm_shape(floresta_2020_modal) +
+  tm_raster(style = "cat", 
+            palette = c("0" = "#E974ED", "1" ="#129912"), legend.show = FALSE) + 
+  tm_add_legend(type = "fill", labels = c("não-floresta", "floresta"),
+    col = c("#E974ED", "#129912"), title = "Classe") + 
+tm_layout(legend.bg.color = "white")
 ```
 
-Load
-```{r, message=FALSE, results = FALSE}
+Se esta todo certo, voces devem ter uma imagem parcida como o segunite:
+
+```{r, echo = FALSE, fig.width=5, fig.height=5, fig.cap="Floresta ao redor do Rio Araguari. MapBiomas 2020 reclassificado em floresta e não-floresta."}
+# Passo necessario para agilizar o processamento
+floresta_2020_modal<-aggregate(floresta_2020, fact=10, fun="modal")
+# Plot
+tm_shape(floresta_2020_modal) +
+  tm_raster(style = "cat", 
+            palette = c("0" = "#E974ED", "1" ="#129912"), legend.show = FALSE) + 
+  tm_add_legend(type = "fill", labels = c("não-floresta", "floresta"),
+    col = c("#E974ED", "#129912"), title = "Classe") + 
+tm_layout(legend.bg.color = "white")
+```
+
+
+Agora temos a paisagem, precisamos tambem os pontos de amostra. Por isso, precisamos carregar os dados de rios e pontos de amostragem que usamos no tutorial Escala - arquivo "rivers.GPKG". Vamos carregar as camadas que voces baixaram no tutorial anterior. Selecionando o arquivo "rivers.GPKG", e carregando as camadas "midpoints" e "centerline".
+
+```{r, echo=FALSE, eval=TRUE, message=FALSE, warning=FALSE, results='hide'}
+meuSIG <- "data/rivers.gpkg"
+fs <- file.size(meuSIG)/(1024^2)
 # pontos cada 5 km
 rsm_31976 <- sf::st_read(meuSIG, layer = "midpoints") %>% 
   st_transform(31976) 
@@ -93,41 +164,53 @@ rsl_31976 <- sf::st_read(meuSIG, layer = "centerline") %>%
   st_transform(31976) 
 ```
 
+
+```{r, eval=FALSE, message=FALSE, results = FALSE}
+#  Selecionar o arquivo "rivers.GPKG",
+meuSIG <- file.choose()
+# Carregar pontos cada 5 km, camada midpoints
+rsm_31976 <- sf::st_read(meuSIG, layer = "midpoints") %>% 
+  st_transform(31976) 
+# Carregar linha central de rios, camada centerline
+rsl_31976 <- sf::st_read(meuSIG, layer = "centerline") %>% 
+  st_transform(31976) 
+```
+
 \newpage
 
-## Plot
+Visulaizer para verificar. 
 ```{r, eval=FALSE}
 # Passo necessario para agilizar o processamento
-mapbiomas_2020_modal<-aggregate(mapbiomas_2020, fact=10, fun="modal")
+floresta_2020_modal<-aggregate(floresta_2020, fact=10, fun="modal")
 # Plot
-tm_shape(mapbiomas_2020_modal) +
-  tm_raster(title = "Classe", style = "cat", palette = "Set3") + 
+tm_shape(floresta_2020_modal) +
+  tm_raster(style = "cat", 
+            palette = c("0" = "#E974ED", "1" ="#129912"), legend.show = FALSE) + 
+  tm_add_legend(type = "fill", labels = c("não-floresta", "floresta"),
+    col = c("#E974ED", "#129912"), title = "Classe") + 
 tm_shape(rsl_31976) + 
   tm_lines(col="blue") + 
 tm_shape(rsm_31976) + 
   tm_dots(size = 0.2, col = "yellow") + 
-tm_compass(position=c("left", "top")) +
-tm_scale_bar(breaks = c(0, 25, 50), text.size = 1, 
-             position=c("left", "bottom")) +
-tm_layout(legend.position = c("right","top"), legend.bg.color="white")
+tm_layout(legend.bg.color="white")
 ```
 
 Depois de executar ("run") o código acima, você deverá ver a figura a seguir.
 
-```{r, echo=FALSE, fig.width=5, fig.height=5, fig.cap="Cobertura da terra ao redor do Rio Araguari em 2020. Mostrando os pontos de amostragem (pontos amarelas) cada 5 quilômetros ao longo do rio."}
+```{r, echo=FALSE, fig.width=5, fig.height=5, fig.cap="Cobertura da terra ao redor do Rio Araguari em 2020. Mostrando os pontos de amostragem (pontos amarelas) cada 5 quilômetros ao longo do rio (linha azul)."}
 # Passo necessario para agilizar o processamento
 mapbiomas_2020_modal<-aggregate(mapbiomas_2020, fact=10, fun="modal")
 # Plot
-tm_shape(mapbiomas_2020_modal) +
-  tm_raster(title = "Classe", style = "cat", palette = "Set3") + 
+tm_shape(floresta_2020_modal) +
+  tm_raster(style = "cat", 
+            palette = c("0" = "#E974ED", "1" ="#129912"), legend.show = FALSE) + 
+  tm_add_legend(type = "fill", labels = c("não-floresta", "floresta"),
+    col = c("#E974ED", "#129912"), title = "Classe") + 
 tm_shape(rsl_31976) + 
   tm_lines(col="blue") + 
 tm_shape(rsm_31976) + 
   tm_dots(size = 0.2, col = "yellow") + 
-tm_compass(position=c("left", "top")) +
-tm_scale_bar(breaks = c(0, 25, 50), text.size = 1, 
-             position=c("left", "bottom")) +
-tm_layout(legend.position = c("right","top"), legend.bg.color="white")
+tm_layout(legend.bg.color="white")
 ```
 
 --------------------------------------------
@@ -136,16 +219,20 @@ tm_layout(legend.position = c("right","top"), legend.bg.color="white")
 \newpage
 
 
-# Area within buffer
+# Calculo de métricas
+Para ilustrar como rodar as funções na landscapemetrics, vamos calcular a área central na paisagem que usamos no tutorial de escala. Estamos olhando uma classe (floresta), portanto vamos incluir as métricas para nível de classe. Alem disso, as métricas de paisagem em nível de classe são mais eficazes na definição de processos ecológicos (Tischendorf, L. Can landscape indices predict ecological processes consistently?. Landscape Ecology 16, 235–254 (2001). 
+https://doi.org/10.1023/A:1011112719782.).
 
-##  Ponto único, raio único
-Para amostrar métricas de paisagem dentro de um certo buffer em torno de pontos de amostra, existe a função <code>sample_lsm()</code>.
+Para calcular as métricas de paisagem dentro de um certo buffer em torno de pontos de amostra, existe a função <code>sample_lsm()</code>. Através da função <code>sample_lsm()</code> podemos calcular mais de 50 métricas da paisagem, dentro de extensões diferentes.
 
-Através da função <code>sample_lsm()</code> podemos calcular mais de 50 métricas da paisagem, dentro de extensões diferentes.
+Para a função <code>sample_lsm()</code> funcionar, precisamos informar 
+(i) a paisagem (arquivo de raster), (ii) ponto (vector), 
+(iii) raio, e por final (iv) a métrica  desejada.
 
-cpland Core area percentage of landscape (Core area metric)
-C%LAND (percentual de área central ("core") na paisagem) Percentual de áreas centrais (excluídas as bordas de 30 m) em relação à área total da paisagem.
-Métricas de área central ("core") É considerada medida da qualidade de hábitat, uma vez que indica quanto existe realmente de área efetiva de um fragmento, após descontar-se o efeito de borda. 
+##  Ponto único, raio único, métrica única
+
+Métricas de área central ("core") são consideradas medidas da qualidade de hábitat, uma vez que indica quanto existe realmente de área efetiva de um fragmento, após descontar-se o efeito de borda. Vamos calcular a percentual de área central ("core area") no entorno de um ponto de amostragem. Isso seria, a percentual de áreas centrais (excluídas as bordas de 30 m) em relação à área total da paisagem.
+
 
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
 minha_amostra_1000 <- sample_lsm(floresta_2020, y = rsm_31976[1, ], 
@@ -166,9 +253,14 @@ minha_amostra_1000 %>%
   kable_styling(full_width = F,  latex_options = "hold_position")
 ```
 
+### Pergunta
+
+`r kableExtra::text_spec("O modelo mancha-corredor-matriz é frequentemente adotado na ecologia da paisagem. Com base nas aulas teóricas e usando os valores no objeto minha_amostra_1000 apresentados na tabela acima, identificar qual classe representar a matriz na paisagem. Há alguma informação faltando que limita a sua capacidade de identificar qual classe representar a matriz? Se sim, o que precisa ser adicionado? Justifique as suas respostas de forma clara e concisa.", color = "blue", bold = TRUE)`
+
+
 \newpage
 
-## Ponto único, distâncias variados
+## Ponto único, distâncias variados, métrica única
 
 Core area for all exten...
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
@@ -232,7 +324,8 @@ amostras_metrica %>%
   filter(class==1) %>%
   ggplot(aes(x=2*raio, y=value)) + 
   geom_point() + 
-  labs(x = "Extensão (metros)", y = "Área central (porcentagem da paisagem)")
+  labs(x = "Extensão (metros)", 
+       y = "Área central de floresta (porcentagem da paisagem)")
 ```
 
 ### Make a better graph
@@ -242,7 +335,8 @@ amostras_metrica %>%
   ggplot(aes(x=(2*raio)/1000, y=value)) + 
   geom_point() + 
   stat_smooth(method = "lm", se = FALSE, color = "green") + 
-  labs(x = "Extensão (quilômetros)", y = "Área central (porcentagem da paisagem)")
+  labs(x = "Extensão (quilômetros)", 
+       y = "Área central de floresta\n(porcentagem da paisagem)")
 ```
 
 \newpage
@@ -257,7 +351,7 @@ amostras_metrica %>%
   coord_cartesian(ylim = c(0,100)) +
   labs(title = "Modelo linear", 
        x = "Extensão (quilômetros)", 
-       y = "Área central (porcentagem da paisagem)") -> fig_lm
+       y = "Área central de floresta\n(porcentagem da paisagem)") -> fig_lm
 
 amostras_metrica %>% 
   filter(class==1) %>%
@@ -267,7 +361,7 @@ amostras_metrica %>%
   coord_cartesian(ylim = c(0,100)) +
   labs(title = "Modelo não-linear", 
        x = "Extensão (quilômetros)", 
-       y = "Área central (porcentagem da paisagem)") -> fig_gam
+       y = "Área central de floresta\n(porcentagem da paisagem)") -> fig_gam
 
 pdf("figures/fig_comp_linear.pdf", width=7, height=3)
 grid.arrange(fig_lm, fig_gam, nrow=1)
@@ -284,13 +378,14 @@ include figure
 
 more text
 
-```{r insert-fig-comp, echo=FALSE, message=FALSE, warning=FALSE}
+```{r insert-fig-comp, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Comparação de padrões lineares e não-lineares."}
 knitr::include_graphics("figures/fig_comp_linear.png")
 ```
 
 
 
-see what happens
+### Pergunta
+`r kableExtra::text_spec("Comparar os resultados apresentados nas figuras com modelos lineares e não-lineares. Qual modelo seria mais adequado para identificar limiares no padrão de área central de floresta?", color = "blue", bold = TRUE)`
 
 -------
 
@@ -298,8 +393,7 @@ see what happens
 
 ## Ponto único, distâncias variados, métricas variadas
 
-
-Using the same point 
+Como as mudanças na estrutura da paisagem caracterizam-se por serem não-lineares, para desenvolver análises estatísticas e evidências robustos pode (i) aplicar uma transformação (por exemplo, "log") ou (ii) adotar modelos não-lineares. Aqui, usaremos modelos não lineares para comparar padrões em diferentes métricas da paisagem  em diferentes extensões.
 
 ```{r, echo=FALSE}
 #250 m
@@ -537,3 +631,8 @@ amostras_metricas_floresta %>%
     y = "metric value")
 ```
 
+### Pergunta 
+
+`r kableExtra::text_spec("Usando como base o conteudo das aulas, leitura disponivel no Google Classroom (Base teórica 4 Dados, métricas, analises), e/ou exemplos apresentados aqui no tutorial, selecione seis métricas de nível classe para caracterizar a paisagem de estudo e objectivos da sua projeto. Justifique sua seleção de forma clara e concisa, apoie sua escolha com exemplos da literatura científica.", color = "blue", bold = TRUE)`
+
+----------------------------------------------------------
