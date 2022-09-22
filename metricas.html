@@ -1759,7 +1759,7 @@ codigo de R passo 1 # texto e numeros tem cores diferentes
 codigo de R passo 2
 # Passo 3
 codigo de R passo 3</code></pre>
-<p>Alem disso, os simbolos <span style=" font-weight: bold;    ">#&gt;</span> e/ou <span style=" font-weight: bold;    ">[1]</span> no início de uma linha indica o resultado que você verá no console de R.</p>
+<p>Alem disso, os simbolos <span style=" font-weight: bold;    ">#&gt;</span> e/ou <span style=" font-weight: bold;    ">[1]</span> no início de uma linha indica o resultado que você verá no console de R, como no proximo exemplo.</p>
 <pre class="r"><code># Passo 1
 1+1</code></pre>
 <p>[1] 2</p>
@@ -1777,7 +1777,7 @@ x + 1</code></pre>
 <div id="métricas-da-paisagem-e-pacote-landscapemetrics" class="section level2" number="2.2">
 <h2><span class="header-section-number">2.2</span> Métricas da paisagem e pacote “landscapemetrics”</h2>
 <p>As métricas de paisagem são a forma que os ecólogos de paisagem usam para descrever os padrões espaciais de paisagens para depois avaliar a influência destes padrões espaciais nos padrões e processos ecológicos.</p>
-<p>landscapemetrics é um pacote R para calcular métricas de paisagem para paisagems categóricos em um fluxo de trabalho organizado. O pacote pode ser usado como um substituto do FRAGSTATS (McGarigal et al. 2012), pois oferece um fluxo de trabalho reproduzível para análise de paisagem em um único ambiente. Também permite cálculos de quatro métricas teóricas de complexidade da paisagem: entropia marginal, entropia condicional, entropia conjunta e informação mútua (Nowosad e Stepinski 2019).</p>
+<p>landscapemetrics é um pacote R para calcular métricas de paisagem em paisagems categóricos (onde tem uma classificação de cobertura de terra/habitat), em um fluxo de trabalho organizado. O pacote pode ser usado como um substituto do FRAGSTATS (<a href="https://doi.org/10.2737/PNW-GTR-351">McGarigal et al. 1995</a> <a href="https://doi.org/10.2737/PNW-GTR-351" class="uri">https://doi.org/10.2737/PNW-GTR-351</a>), pois oferece um fluxo de trabalho reproduzível para análise de paisagem em um único ambiente. Também permite cálculos de quatro métricas teóricas de complexidade da paisagem: entropia marginal, entropia condicional, entropia conjunta e informação mútua (<a href="https://doi.org/10.1007/s10980-019-00830-x">Nowosad e Stepinski 2019</a> <a href="https://doi.org/10.1007/s10980-019-00830-x" class="uri">https://doi.org/10.1007/s10980-019-00830-x</a>).</p>
 <p>Nesse pacote o formato geral para uma função é o seguinte:
 A primeira parte é sempre lsm_ (“landscapemetric”), seguinda do “nível_” e por fim a “métrica”. Ou seja, todas as funções começam com lsm_ , daí você deve incluir o nível da análise “p” para patch (ou seja, para a mancha ou fragmento), “c” para classe e “l” para landscape ou seja, para métricas para a paisagem como um todo. E daí existem inúmeras métricas, como por exemplo a <code>cpland</code> (percentual de área central [“core area”]) na paisagem, como vimos na aula teórica. Digite o código abaixo e veja o resultado. Leia com atenção e preste particular atenção na organização da página de ajuda.</p>
 <pre class="r"><code>library(landscapemetrics)
