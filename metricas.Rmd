@@ -3,11 +3,6 @@ title: "Métricas da paisagem"
 author: "Darren Norris"
 date: "`r Sys.Date()`"
 output:
-  bookdown::html_document2:
-    toc: yes
-    toc_depth: 3
-    toc_float: yes
-    fig_caption: yes
   bookdown::pdf_document2:
     toc: yes
     toc_depth: 3
@@ -16,6 +11,11 @@ output:
     highlight: tango
     includes:
       in_header: preamble.txe
+  bookdown::html_document2:
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+    fig_caption: yes
 urlcolor: blue
 toc-title: Sumário
 header-includes:
@@ -53,6 +53,8 @@ Porque use R? R tem a capacidade (baseada em codigo) para alternar  entre tarefa
 
 Aliás, atualmente a grande maioria dos artigos científicos publicados na revista [Landscape Ecology](https://www.springer.com/journal/10980/) incluir análises usando R.
 
+\newpage
+
 ## Organização do codigo no tutorial
 O tutorial está organizado em etapas de processamento, com blocos de código em caixas cinzas:
 ```{r, eval=FALSE}
@@ -74,19 +76,21 @@ codigo de R passo 2
 codigo de R passo 3
 ```
 
-Alem disso, o simbolo `r kableExtra::text_spec("#>", bold = TRUE)` indica o resultado que você verá no console de R.
+Alem disso, os simbolos `r kableExtra::text_spec("#>", bold = TRUE)` e/ou `r kableExtra::text_spec("[1]", bold = TRUE)` no início de uma linha indica o resultado que você verá no console de R.
 
 
-
-```{r, echo=TRUE, message=TRUE, evaluate = TRUE}
+```{r, echo=TRUE, results='asis', evaluate = TRUE, collapse = TRUE}
 # Passo 1
 1+1
+
 # Passo 2
 x <- 1 + 1
 # Passo 3
 x
+
 # Passo 4
 x + 1
+
 ```
 
 ## Métricas da paisagem e pacote "landscapemetrics"
