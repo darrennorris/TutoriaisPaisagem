@@ -3,11 +3,6 @@ title: "Métricas da paisagem"
 author: "Darren Norris"
 date: "`r Sys.Date()`"
 output:
-  bookdown::html_document2:
-    toc: yes
-    toc_depth: 3
-    toc_float: yes
-    fig_caption: yes
   bookdown::pdf_document2:
     toc: yes
     toc_depth: 3
@@ -16,6 +11,11 @@ output:
     highlight: tango
     includes:
       in_header: preamble.txe
+  bookdown::html_document2:
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+    fig_caption: yes
 urlcolor: blue
 toc-title: Sumário
 header-includes:
@@ -76,7 +76,7 @@ codigo de R passo 2
 codigo de R passo 3
 ```
 
-Alem disso, os simbolos `r kableExtra::text_spec("#>", bold = TRUE)` e/ou `r kableExtra::text_spec("[1]", bold = TRUE)` no início de uma linha indica o resultado que você verá no console de R, como no proximo exemplo.
+Alem disso, os simbolos `r kableExtra::text_spec("#>", bold = TRUE)` e/ou `r kableExtra::text_spec("[1]", bold = TRUE)` no início de uma linha indica o resultado que você verá no console de R depois de rodar o codigo, como no proximo exemplo.
 
 
 ```{r, echo=TRUE, results='asis', evaluate = TRUE, collapse = TRUE}
@@ -84,7 +84,7 @@ Alem disso, os simbolos `r kableExtra::text_spec("#>", bold = TRUE)` e/ou `r kab
 1+1
 
 # Passo 2
-x <- 1 + 1
+x <- 1+1
 # Passo 3
 x
 
@@ -141,7 +141,7 @@ library(mgcv)
 Precisamos o arquivo com os dados de MapBiomas "amostra_mapbiomas_2020.tif", que voces baixaram no tutorial anterior (Escala https://rpubs.com/darren75/escala).
 Nós podemos carregar os dados de cobertura da terra "amostra_mapbiomas_2020.tif" com a função <code>rast</code>.
 ```{r eval=FALSE, echo=TRUE, message=FALSE, warning=FALSE}
-# Selecionar e carregar arquivo ""amostra_mapbiomas_2020.tif"
+# Selecionar e carregar arquivo "amostra_mapbiomas_2020.tif"
 ramostra <- rast(file.choose())
 # criar uma nova camada de floresta
 floresta_2020 <- mapbiomas_2020
@@ -218,7 +218,7 @@ rsl_31976 <- sf::st_read(meuSIG, layer = "centerline") %>%
 
 \newpage
 
-Visulaizer para verificar. 
+Visualizer para verificar. 
 ```{r, eval=FALSE}
 # Passo necessario para agilizar o processamento
 floresta_2020_modal<-aggregate(floresta_2020, fact=10, fun="modal")
@@ -271,7 +271,7 @@ Para a função <code>sample_lsm()</code> funcionar, precisamos informar
 
 ##  Ponto único, raio único, métrica única
 
-Métricas de área central ("core") são consideradas medidas da qualidade de hábitat, uma vez que indica quanto existe realmente de área efetiva de um fragmento, após descontar-se o efeito de borda. Vamos calcular a percentual de área central ("core area") no entorno de um ponto de amostragem. Isso seria, a percentual de áreas centrais (excluídas as bordas de 30 m) em relação à área total da paisagem.
+Métricas de área central ("core area") são consideradas medidas da qualidade de hábitat, uma vez que indica quanto existe realmente de área efetiva de um fragmento, após descontar-se o efeito de borda. Vamos calcular a percentual de área central ("core area") no entorno de um ponto de amostragem. Isso seria, a percentual de áreas centrais (excluídas as bordas de 30 m) em relação à área total da paisagem.
 
 
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
@@ -297,10 +297,59 @@ minha_amostra_1000 %>%
 
 `r kableExtra::text_spec("O modelo mancha-corredor-matriz é frequentemente adotado na ecologia da paisagem. Com base nas aulas teóricas e usando os valores no objeto minha_amostra_1000 apresentados na tabela acima, identificar qual classe representar a matriz na paisagem. Há alguma informação faltando que limita a sua capacidade de identificar qual classe representar a matriz? Se sim, o que precisa ser adicionado? Justifique as suas respostas de forma clara e concisa.", color = "blue", bold = TRUE)`
 
+----------------------------------------------------------------
+
 
 \newpage
 
 ## Ponto único, distâncias variados, métrica única
+
+```{r, echo=FALSE, message=FALSE, out.width="90%", out.height="90%",fig.cap="Cobertura florestal em extensões diferentes ao redor de um local de amostragem."}
+# 1000 m
+rsm_31976_b1000 <- st_buffer(rsm_31976[1, ], dist = 1000)
+# 2000 m
+rsm_31976_b2000 <- st_buffer(rsm_31976[1, ], dist = 2000)
+# 4000 m
+rsm_31976_b4000 <- st_buffer(rsm_31976[1, ], dist = 4000)
+# 8000 m
+rsm_31976_b8000 <- st_buffer(rsm_31976[1, ], dist = 8000)
+# 16000 m
+rsm_31976_b16000 <- st_buffer(rsm_31976[1, ], dist = 16000)
+buffer.forest1.16000m <- crop(floresta_2020, rsm_31976_b16000)
+buffer.forest1.16000m <- mask(buffer.forest1.16000m, rsm_31976_b16000)
+
+#fig all together
+line_col <- "black"
+fig_together <- tm_shape(buffer.forest1.16000m) +
+  tm_raster(style = "cat", 
+            palette = c("0" = "#E974ED", 
+                        "1" ="#129912"), legend.show = FALSE) + 
+  tm_shape(rsm_31976[1, ]) + 
+    tm_symbols(shape =21, col = "yellow", 
+            border.col = "black", border.lwd = 0.2, size=0.5) + 
+  tm_shape(rsm_31976_b1000) +
+    tm_borders(col = line_col, lwd = 4, lty = "dashed") + 
+  tm_shape(rsm_31976_b2000) +
+    tm_borders(col = line_col, lwd = 4, lty = "dashed") + 
+  tm_shape(rsm_31976_b4000) +
+    tm_borders(col = line_col, lwd = 4, lty = "dashed") + 
+  tm_shape(rsm_31976_b8000) +
+    tm_borders(col = line_col, lwd = 4, lty = "dashed") + 
+  tm_shape(rsm_31976_b16000) +
+    tm_borders(col = line_col, lwd = 4, lty = "dashed") + 
+  tm_add_legend(type = "fill", 
+    labels = c("não-floresta", "floresta"),
+    col = c("#E974ED", "#129912"),
+    title = "Classe") + 
+tm_scale_bar(breaks = c(0, 2, 4), text.size = 1, 
+             position=c("left", "bottom")) +
+tm_layout(legend.position = c("right","top"),
+          legend.bg.color = "white")
+fig_together
+```
+
+
+Para uma comparação multiescala, vamos calcular a mesma métrica, no mesmo ponto, mas agora com extensões diferentes. Continuando o exemplo no tutorial anteriio (Escala), vamos repetir o mesmo processo, mas agora com distancias de 250, 500, 1000, 2000, 4000, 8000 e 16000 metros, doubrando a escala (extensão) em cada passo. 
 
 Core area for all exten...
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
