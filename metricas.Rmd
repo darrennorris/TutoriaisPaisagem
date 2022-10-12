@@ -42,12 +42,12 @@ Nesta aula (...) vamos .... na ecologia da paisagem através cálculos com a pro
 Durante a aula você aprenderá a
 
 # Codigo e R
- * Objetivo não é de apresentar detalhes sobre os cálculos/métodos estatísticas ou os funções no [R](https://cran.r-project.org/). Existem diversos exemplos disponíveis [“Ciência de Dados com R–Introdução......”: ](https://cdr.ibpad.com.br/cdr-intro.pdf) e com google "r cran introdução tutorial".......
+ * Objetivo não é de apresentar detalhes sobre os métodos ou os funções no [R](https://cran.r-project.org/). Existem diversos exemplos disponíveis [“Ciência de Dados com R–Introdução......”: ](https://cdr.ibpad.com.br/cdr-intro.pdf) e com google "r cran introdução tutorial".......
  Alem disso, existem grupos de ajuda, como por exemplo: [R Brasil](https://www.facebook.com/groups/rbrasilprogramadores/)
  e 
 [Stack Overflow em Português](https://pt.stackoverflow.com/questions/tagged/r)
 
- * O objetivo é  de apresentar um tutorial mostrado os capacidades e opções para desenvolver e integrar pesquisas na ecologia da paisagem no ambiente estatística de [R](https://cran.r-project.org/)
+ * O objetivo é  de apresentar um tutorial mostrado os capacidades e opções para desenvolver e integrar pesquisas de ecologia da paisagem no ambiente estatística de [R](https://cran.r-project.org/)
 
 Porque use R? R tem a capacidade (baseada em codigo) para alternar  entre tarefas de processamento, modelagem e visualização de dados geográficos e não geográficos. Alem disso, como é possível importar, modificar, analisar e visualizar dados espaciais no mesmo ambiente com script/codigo, o R permite fluxos de trabalho transparentes e reproduzíveis ([A Ciência Aberta](https://foster.gitbook.io/manual-de-formacao-em-ciencia-aberta/02introducaoacienciaaberta/01conceito_e_principios_da_ciencia_aberta)).
 
@@ -552,11 +552,38 @@ knitr::include_graphics("figures/fig_comp_linear.png")
 Como as mudanças na estrutura da paisagem caracterizam-se por serem não-lineares, para desenvolver análises estatísticas e evidências robustos pode (i) aplicar uma transformação (por exemplo, "log") ou (ii) adotar modelos não-lineares. Aqui, usaremos modelos não lineares para comparar padrões em diferentes métricas da paisagem  em diferentes extensões.
 
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-
-# nearest neighbour lsm_p_enn()
-
+```{r insert-fig-buffmetrics, fig.cap="Ilustração da determinação de métricas da paisagem diferentes ao redor de um ponto. Exemplo com a estrutura da paisagem representado com trés caracteristicas (A) Área central, (B) Borda e (C) Vizinho mais próximo. O habitat de interesse (classe) é isolado. Um buffer (linha tracejada) é colocado ao redor de um ponto (amarela) e as métricas calculadas.", echo=FALSE, warning=FALSE, message=FALSE}
 ragg <- aggregate(buffer.forest1.16000m, fact=5, fun="median")
+ragg_forest <- ragg
+# Com valor de NA
+values(ragg_forest) <- NA
+# Atualizar categorias florestais agrupados com valor de 1
+ragg_forest[ragg==1] <- 1 
+
+#ragg10 <- aggregate(buffer.forest1.16000m, fact=10, fun="median")
+# nearest neighbour lsm_p_enn()/ lsm_c_enn_mn
+my_metric_r_all = spatialize_lsm(ragg_forest, level = "patch", metric = "enn")
+r_enn <- my_metric_r_all$layer_1$lsm_p_enn
+
+fig_enn <- tm_shape(r_enn) +
+  tm_raster(title = "distância", n=9, palette = "-viridis") + 
+tm_shape(rsm_31976[1, ]) + 
+    tm_symbols(shape =21, col = "yellow", 
+            border.col = "black", border.lwd = 0.2, size=0.5) + 
+tm_shape(rsm_31976_b1000) +
+    tm_borders(col = line_col, lwd = 4, lty = "dashed") + 
+tm_shape(rsm_31976_b2000) +
+    tm_borders(col = line_col, lwd = 4, lty = "dashed") + 
+tm_shape(rsm_31976_b4000) +
+    tm_borders(col = line_col, lwd = 4, lty = "dashed") + 
+tm_shape(rsm_31976_b8000) +
+    tm_borders(col = line_col, lwd = 4, lty = "dashed") + 
+tm_shape(rsm_31976_b16000) +
+    tm_borders(col = line_col, lwd = 4, lty = "dashed") + 
+tm_scale_bar(breaks = c(0, 2, 4), text.size = 1, 
+             position=c("left", "bottom")) + 
+tm_layout(main.title = "(C) Vizinho mais próximo", main.title.size = 1)
+
 classpoly <- as.polygons(ragg)
 # https://gis.stackexchange.com/questions/392505/can-i-use-r-to-do-a-buffer-inside-polygons-shrink-polygons-negative-buffer/392525
 shrinkIfPossible <- function(sf, size) {
@@ -598,7 +625,8 @@ tm_add_legend(type = "fill",
 tm_scale_bar(breaks = c(0, 2, 4), text.size = 1, 
              position=c("left", "bottom")) +
   tm_layout(legend.position = c("right","top"),
-          legend.bg.color = "white")
+          legend.bg.color = "white") + 
+tm_layout(main.title = "(A) Área central", main.title.size = 1)
 
 fig_edge <- tm_shape(buffer.forest1.16000m) +
   tm_raster(style = "cat", 
@@ -625,10 +653,21 @@ tm_add_legend(type = "fill",
 tm_scale_bar(breaks = c(0, 2, 4), text.size = 1, 
              position=c("left", "bottom")) +
   tm_layout(legend.position = c("right","top"),
-          legend.bg.color = "white")
+          legend.bg.color = "white") + 
+tm_layout(main.title = "(B) Borda", main.title.size = 1)
 
-tmap_arrange(fig_core, fig_edge, nrow=1)
+tmap_arrange(fig_core, fig_edge, fig_enn, nrow=1)
+
 ```
+
+include text 
+
+```{r}
+
+```
+
+
+more here
 
 
 
