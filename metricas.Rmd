@@ -701,61 +701,74 @@ Multiplwe metricas area for all exten...
 Aqui vamos .........
 
  * Métricas de área e borda. Quantificam a composição da paisagem e fornecem sobre ela informações importantes sobre a dinâmica de populações vegetais e animais  
-    <code>pland</code> = area and edge metric / percentage of landscape 
-percentagem da paisagem Porcentagem de cobertura da classe na paisagem.  
-    <code>ed</code> = area and edge metric / edge density . densidade de borda que é igual à soma dos comprimentos (m) de todos os segmentos de borda que envolvem o fragmento, dividida pela área total da paisagem (m²), sendo posteriormente convertido em hectares.
-
- * Métricas de área central. Quantificam a composição da paisagem. 
-    <code>cpland</code> = core area metric / core area percentage of landscape / 
-(percentual de área central ("core") na paisagem) Percentual de áreas centrais (excluídas as bordas de 30 m) em relação à área total da paisagem. O termo "Core area" foi traduzido como área central ou área núcleo. Aqui vamos adotar área central.
+    *  <code>pland</code> = area and edge metric / percentage of landscape percentagem da paisagem Porcentagem de cobertura da classe na paisagem.  
+    * <code>ed</code> = area and edge metric / edge density . densidade de borda que é igual à soma dos comprimentos (m) de todos os segmentos de borda que envolvem o fragmento, dividida pela área total da paisagem (m²), sendo posteriormente convertido em hectares.
+    * <code>cpland</code> = core area metric / core area percentage of landscape / (percentual de área central ("core") na paisagem) Percentual de áreas centrais (excluídas as bordas de 30 m) em relação à área total da paisagem. O termo "Core area" foi traduzido como área central ou área núcleo. Aqui vamos adotar área central.
 
  * Métricas de agregação. Quantificam a configuração da paisagem:
-    <code>enn</code> = aggegation metric / euclidian nearest neighbour distance distância euclidiana do vizinho mais próximo. 
-    <code>enn_cv</code> = aggegation metric. Coeficiente de variação da distância euclidiana do vizinho mais próximo. A métrica resume cada classe como o Coeficiente de variação das distâncias euclidianas do vizinho mais próximo entre as manchas pertencentes à classe. O valor de enn_cv = 0 se a distância euclidiana do vizinho mais próximo for idêntica para todas as manchas. Aumenta, sem limite, à medida que a variação do ENN aumenta.
-    <code>pd</code> = aggegation metric / patch density densidade das manchas
-    <code>cohesion</code> = aggregation metric / índice de coesão das manchas.
+    * <code>enn</code> = aggegation metric / euclidian nearest neighbour distance distância euclidiana do vizinho mais próximo. 
+    * <code>enn_cv</code> = aggegation metric. Coeficiente de variação da distância euclidiana do vizinho mais próximo. A métrica resume cada classe como o Coeficiente de variação das distâncias euclidianas do vizinho mais próximo entre as manchas pertencentes à classe. O valor de enn_cv = 0 se a distância euclidiana do vizinho mais próximo for idêntica para todas as manchas. Aumenta, sem limite, à medida que a variação do ENN aumenta.
+    * <code>enn_sd</code> = aggegation metric.
+    * <code>pd</code> = aggegation metric / patch density densidade das manchas
+    * <code>cohesion</code> = aggregation metric / índice de coesão das manchas.
     
 
 
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
-
+# Objeto com os nomes das funções para calcular as métricas desejadas.
 minhas_metricas <- c("lsm_c_pland", "lsm_c_ed", "lsm_c_cpland", "lsm_c_enn_mn", "lsm_c_enn_sd", "lsm_c_enn_cv", "lsm_c_pd","lsm_c_cohesion")
+metricas_composicao <- c("pland", "ed", "cpland")
 
+# Métricas calculadas para cada extensão
 # raio 250 metros
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
            size = 250, shape = "circle", 
            what = minhas_metricas) %>% 
-  mutate(raio = 250) -> metricas_amostra_250 
+  mutate(raio = 250, 
+         met_cat = if_else(metric %in% metricas_composicao, 
+                           "composição", "configuração")) -> metricas_amostra_250 
 # raio 500 metros
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
            size = 500, shape = "circle", 
            what = minhas_metricas)  %>% 
-  mutate(raio = 500) -> metricas_amostra_500
+   mutate(raio = 500, 
+         met_cat = if_else(metric %in% metricas_composicao, 
+                           "composição", "configuração")) -> metricas_amostra_500
 # raio 1 km (1000 metros)
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
            size = 1000, shape = "circle", 
            what = minhas_metricas)  %>% 
-  mutate(raio = 1000) -> metricas_amostra_1000
-# raio 2 km
+   mutate(raio = 1000, 
+         met_cat = if_else(metric %in% metricas_composicao, 
+                           "composição", "configuração")) -> metricas_amostra_1000
+# raio 2 km (2000 metros)
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
            size = 2000, shape = "circle", 
            what = minhas_metricas) %>% 
-  mutate(raio = 2000) -> metricas_amostra_2000
-# raio 4 km
+  mutate(raio = 2000, 
+         met_cat = if_else(metric %in% metricas_composicao, 
+                           "composição", "configuração")) -> metricas_amostra_2000
+# raio 4 km (4000 metros)
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
            size = 4000, shape = "circle", 
            what = minhas_metricas)  %>% 
-  mutate(raio = 4000) -> metricas_amostra_4000
-# raio 8 km
+  mutate(raio = 4000, 
+         met_cat = if_else(metric %in% metricas_composicao, 
+                           "composição", "configuração"))  -> metricas_amostra_4000
+# raio 8 km (8000 metros)
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
            size = 8000, shape = "circle", 
            what = minhas_metricas)  %>% 
-  mutate(raio = 8000) -> metricas_amostra_8000
-# raio 16 km
+  mutate(raio = 8000, 
+         met_cat = if_else(metric %in% metricas_composicao, 
+                           "composição", "configuração")) -> metricas_amostra_8000
+# raio 16 km (16000 metros)
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
            size = 16000, shape = "circle", 
            what = minhas_metricas)  %>% 
-  mutate(raio = 16000) -> metricas_amostra_16000
+  mutate(raio = 16000, 
+         met_cat = if_else(metric %in% metricas_composicao, 
+                           "composição", "configuração")) -> metricas_amostra_16000
 ```
 
 join
@@ -782,13 +795,15 @@ Best to include forest metrics 250 as 0 or NA?
 
 Plot
 
-```{r}
+```{r insert-fig-multiplemetrics}
 amostras_metricas_floresta %>% 
-  ggplot(aes(x=(2*raio)/1000, y=value)) + 
+  mutate(ext_km = (2*raio)/1000) %>%
+  ggplot(aes(x=ext_km, y=value)) + 
   geom_point() + 
-  stat_smooth(method = "gam", formula = y ~ s(x, k = 5), 
-               se=FALSE) + 
-  facet_wrap(~metric, scales = "free_y") +
+  #stat_smooth(method = "gam", formula = y ~ s(x, k = 6), 
+  #             se=FALSE) + 
+  stat_smooth(method = "loess", se=FALSE) + 
+  facet_wrap(met_cat~metric, scales = "free_y") +
   labs(title = "Multiple metris",
     x = "extensão (quilômetros)", 
     y = "metric value")
