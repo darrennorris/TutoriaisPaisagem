@@ -478,6 +478,7 @@ amostras_metrica %>%
   mutate(ext_m = 2*raio) %>%
   ggplot(aes(x=ext_m, y=value)) + 
   geom_point() + 
+  geom_line() +
   labs(x = "Extensão (metros)", 
        y = "Área central de floresta (porcentagem da paisagem)")
 ```
@@ -499,7 +500,9 @@ amostras_metrica %>%
          ext_km = (2*raio)/1000) %>%
   ggplot(aes(x=ext_km, y=value)) + 
   geom_point(size = 4) + 
-  stat_smooth(method = "lm", se = FALSE, color = "green") + 
+  geom_line() +
+  stat_smooth(method = "lm", se = FALSE, color = "green", 
+              linetype = "dashed") + 
   labs(x = "Extensão (quilômetros)", 
        y = "Área central de floresta\n(porcentagem da paisagem)") + 
   theme(text = element_text(size = 18)) 
@@ -520,29 +523,51 @@ amostras_metrica %>%
   filter(class==1) %>%
   ggplot(aes(x=(2*raio)/1000, y=value)) + 
   geom_point() + 
-  stat_smooth(method = "lm", color = "green") + 
+  geom_line() +
+  stat_smooth(method = "lm", color = "green", 
+              linetype="dashed") + 
   coord_cartesian(ylim = c(0,100)) +
-  labs(title = "Modelo linear", 
+  labs(title = "(A) Modelo linear", 
+       subtitle = "dados sem transformação",
        x = "Extensão (quilômetros)", 
-       y = "Área central de floresta\n(porcentagem da paisagem)") -> fig_lm
+       y = "Área central de floresta\n(porcentagem da paisagem)") + 
+  theme_bw() -> fig_lm
+
+amostras_metrica %>% 
+  filter(class==1) %>%
+  ggplot(aes(x=log((2*raio)/1000), y=value)) + 
+  geom_point() + 
+  geom_line() +
+  stat_smooth(method = "lm", color = "green", 
+              linetype="dashed") + 
+  coord_cartesian(ylim = c(0,100)) +
+  labs(title = "(B) Modelo linear", 
+       subtitle = "dados com transformação",
+       x = "Extensão (quilômetros - logaritmo natural)", 
+       y = "Área central de floresta\n(porcentagem da paisagem)") + 
+  theme_bw() -> fig_lmtrans
 
 amostras_metrica %>% 
   filter(class==1) %>%
   ggplot(aes(x=(2*raio)/1000, y=value)) + 
   geom_point() + 
-  stat_smooth(method = "gam", formula = y ~ s(x, k = 5)) + 
+  geom_line() +
+  stat_smooth(method = "gam", formula = y ~ s(x, k = 5), 
+              linetype="dashed") + 
   coord_cartesian(ylim = c(0,100)) +
-  labs(title = "Modelo não-linear", 
+  labs(title = "(C) Modelo não-linear", 
+       subtitle = "dados sem transformação",
        x = "Extensão (quilômetros)", 
-       y = "Área central de floresta\n(porcentagem da paisagem)") -> fig_gam
+       y = "Área central de floresta\n(porcentagem da paisagem)") + 
+  theme_bw() -> fig_gam
 
 pdf("figures/fig_comp_linear.pdf", width=7, height=3)
 grid.arrange(fig_lm, fig_gam, nrow=1)
 invisible(dev.off())
 
-png("figures/fig_comp_linear.png", width=7, height=3, 
+png("figures/fig_comp_linear.png", width=11, height=3, 
     units="in", res = 600)
-grid.arrange(fig_lm, fig_gam, nrow=1)
+grid.arrange(fig_lm, fig_lmtrans, fig_gam, nrow=1)
 invisible(dev.off())
 
 ```
@@ -795,14 +820,15 @@ Best to include forest metrics 250 as 0 or NA?
 
 Plot
 
-```{r insert-fig-multiplemetrics}
+```{r insert-fig-multiplemetrics, message=FALSE, warning=FALSE}
 amostras_metricas_floresta %>% 
   mutate(ext_km = (2*raio)/1000) %>%
   ggplot(aes(x=ext_km, y=value)) + 
   geom_point() + 
+  geom_line() +
   #stat_smooth(method = "gam", formula = y ~ s(x, k = 6), 
   #             se=FALSE) + 
-  stat_smooth(method = "loess", se=FALSE) + 
+  #stat_smooth(method = "loess", se=FALSE) + 
   facet_wrap(met_cat~metric, scales = "free_y") +
   labs(title = "Multiple metris",
     x = "extensão (quilômetros)", 
@@ -811,6 +837,6 @@ amostras_metricas_floresta %>%
 
 ### Pergunta 
 
-`r kableExtra::text_spec("Usando como base o conteudo das aulas, leitura disponivel no Google Classroom (Base teórica 4 Dados, métricas, analises), e/ou exemplos apresentados aqui no tutorial, selecione seis métricas de nível classe para caracterizar a paisagem de estudo e objectivos da sua projeto. Justifique sua seleção de forma clara e concisa, apoie sua escolha com exemplos da literatura científica.", color = "blue", bold = TRUE)`
+`r kableExtra::text_spec("Usando como base o conteudo das aulas, leitura disponivel no Google Classroom (Base teórica 4 Dados, métricas, analises), e/ou exemplos apresentados aqui no tutorial, selecione pelo menos seis métricas de nível classe para caracterizar a paisagem de estudo e objectivos da sua projeto. Justifique sua seleção de forma clara e concisa, apoie sua escolha com exemplos da literatura científica.", color = "blue", bold = TRUE)`
 
 ----------------------------------------------------------
