@@ -42,14 +42,14 @@ Nesta aula (...) vamos .... na ecologia da paisagem através cálculos com a pro
 Durante a aula você aprenderá a
 
 # Codigo e R
-O tutorial segue exemplos 
-geocomputation with R, see this excellent Gitbook: https://geocompr.robinlovelace.net/index.html.
-com capitulo focado na ecologia: https://geocompr.robinlovelace.net/eco.html
-lansdscapemetrics : https://bookdown.org/hhwagner1/LandGenCourse_book/WE_2.html
-
-E exemplos com foco em https://bookdown.org/hhwagner1/LandGenCourse_book/
-
  * Objetivo não é de apresentar detalhes sobre os métodos ou os funções no [R](https://cran.r-project.org/). Existem diversos exemplos disponíveis [“Ciência de Dados com R–Introdução......”: ](https://cdr.ibpad.com.br/cdr-intro.pdf) e com google "r cran introdução tutorial".......
+ 
+ geocomputation with R, see this excellent Gitbook: https://geocompr.robinlovelace.net/index.html.
+com capitulo focado na ecologia: https://geocompr.robinlovelace.net/eco.html
+landscapemetrics : https://bookdown.org/hhwagner1/LandGenCourse_book/WE_2.html
+
+E exemplos com foco em genética das paisagems https://bookdown.org/hhwagner1/LandGenCourse_book/
+ 
  Alem disso, existem grupos de ajuda, como por exemplo: [R Brasil](https://www.facebook.com/groups/rbrasilprogramadores/)
  e 
 [Stack Overflow em Português](https://pt.stackoverflow.com/questions/tagged/r)
@@ -199,7 +199,9 @@ tm_layout(legend.bg.color = "white")
 ```
 
 
-Agora temos a paisagem, precisamos tambem os pontos de amostra. Por isso, precisamos carregar os dados de rios e pontos de amostragem que usamos no tutorial Escala - arquivo "rivers.GPKG". Vamos carregar as camadas que voces baixaram no tutorial anterior. Selecionando o arquivo "rivers.GPKG", e carregando as camadas "midpoints" e "centerline".
+Agora temos a paisagem, precisamos tambem os pontos de amostra. Por isso, precisamos carregar os dados de rios e pontos de amostragem que usamos no tutorial Escala - arquivo "rivers.GPKG". Vamos carregar as camadas que voces baixaram no tutorial anterior. Selecionando o arquivo "rivers.GPKG", e carregando primeiramente a camadas "midpoints" e depois "centerline".
+
+No exemplo, usamos `r kableExtra::text_spec("%>%", bold = TRUE)`, que estabelece a ligação entre os passos do processo. Onde primeiramente carregamos os dados e em seguida converter as coordenadas para o mesmo sistema de referência que o arquivo raster (com a função st_transform). 
 
 ```{r, echo=FALSE, eval=TRUE, message=FALSE, warning=FALSE, results='hide'}
 meuSIG <- "data/rivers.gpkg"
@@ -363,6 +365,7 @@ Para uma comparação multiescala, vamos calcular a mesma métrica, no mesmo pon
 
 Para obter resultados com extensões diferentes, precisamos primeiramente repetir o código, ajustando para cada extensão, e depois juntar os resultados. 
 O código a seguir calculará a mesma métrica para as diferentes distâncias.
+No exemplo, usamos `r kableExtra::text_spec("%>%", bold = TRUE)`, que estabelece a ligação entre os passos do processo. Neste caso, para incluir uma coluna nova (raio) para manter o valor das diferentes distâncias.
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
 # raio 250 metros
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
@@ -444,7 +447,7 @@ O ggplot2 faz parte do conjunto "tidyverse", e é um pacote de visualização de
 
 O ggplot2 exige que os dados a serem plotados estejam em um data frame. Ou seja, sempre teremos que transformar os dados para data frame ou construir um data frame com os dados que possuímos.
 
-O comando principal função a ser utilizado se chama ggplot (sem o "2").
+O comando principal função a ser utilizado se chama ggplot.
 
 Para ggplot, precisamos os dados (data frame), e depois cria o “mapeamento” das variáveis, normalmente usando "aes" (de aesthetics). Ou seja, você especifica quais são as variáveis dos eixos x e y dentro de aes. Através dele vamos definir qual é a variável preditora/explanatora (eixo x) e qual é a variável resposta (eixo y) em nosso conjunto de dados. 
 
@@ -454,11 +457,14 @@ livro e sempre exemplos no google, por exemplo digitando: ggplot2 grafico de bar
 Note que adicionamos um geom com um “+”. No ggplot2, nós criamos gráficos em camadas, e adicionamos camada a camada com um “+”. assim, é posivel ajustar qualquer elemento do grafico.
 
 Aqui vamos fazer um gráfico com valores de extensão no eixo x e proporção da floresta central no eixo y.
-Assim sendo, com o codigo a segir, vamos informar (i) os dados (selecionando classe de floresta atraves de um filtro), (ii) as colunas para os eixos x e y, (iii) tipo de grafico (grafico de pontos), (iv) nomes para os eixos.
+Assim sendo, com o codigo a segir, vamos informar (i) os dados, selecionando classe de floresta atraves de um filtro e acresentando uma coluna nova ("ext_m") com a extensão em metros, (ii) as colunas para os eixos x e y, (iii) tipo de grafico (grafico de pontos - geom_point() ), (iv) nomes para os eixos. No exemplo, usamos `r kableExtra::text_spec("%>%", bold = TRUE)`, que estabelece a ligação entre os passos do processo.
 ```{r, eval=FALSE}
+# arrumar os dados
 amostras_metrica %>% 
-  filter(class==1) %>%
-  ggplot(aes(x=2*raio, y=value)) + 
+  filter(class==1) %>% 
+  mutate(ext_m = 2*raio) %>%
+# fazer o grafico
+  ggplot(aes(x=ext_m, y=value)) + 
   geom_point() + 
   labs(x = "Extensão (metros)", 
        y = "Área central de floresta (porcentagem da paisagem)")
@@ -469,7 +475,8 @@ Depois de executar (“run”) o código acima, você deverá ver o grafico a se
 ```{r, echo=FALSE, out.width="60%", out.height="60%"}
 amostras_metrica %>% 
   filter(class==1) %>%
-  ggplot(aes(x=2*raio, y=value)) + 
+  mutate(ext_m = 2*raio) %>%
+  ggplot(aes(x=ext_m, y=value)) + 
   geom_point() + 
   labs(x = "Extensão (metros)", 
        y = "Área central de floresta (porcentagem da paisagem)")
@@ -487,8 +494,10 @@ amostras_metrica %>%
 Podemos ajustar qualquer elemento do grafico. Agora, vamos mudar as unidades de metros para quilometros, aumentar o tamanho dos pontos, incluir uma linha reta para ilustrar a tendência geral, colocar o titulo longo do eixo y em duas linhas, e aumentar o tamanho da fonte para o texto ficar mais claro. 
 ```{r, out.width="60%", out.height="60%", fig.cap="Comparação da área central de floresta em diferentes extensões." }
 amostras_metrica %>% 
-  filter(class==1) %>%
-  ggplot(aes(x=(2*raio)/1000, y=value)) + 
+  filter(class==1) %>% 
+  mutate(ext_m = 2*raio, 
+         ext_km = (2*raio)/1000) %>%
+  ggplot(aes(x=ext_km, y=value)) + 
   geom_point(size = 4) + 
   stat_smooth(method = "lm", se = FALSE, color = "green") + 
   labs(x = "Extensão (quilômetros)", 
@@ -700,16 +709,17 @@ percentagem da paisagem Porcentagem de cobertura da classe na paisagem.
     <code>cpland</code> = core area metric / core area percentage of landscape / 
 (percentual de área central ("core") na paisagem) Percentual de áreas centrais (excluídas as bordas de 30 m) em relação à área total da paisagem. O termo "Core area" foi traduzido como área central ou área núcleo. Aqui vamos adotar área central.
 
- * Métricas de contágio e agregação. Quantificam a configuração da paisagem:
-    <code>enn</code> = aggegation metric / 
-    <code>pd</code> = aggegation metric / patch density
-    <code>cohesion</code> = aggregation metric / patch cohesion index.
+ * Métricas de agregação. Quantificam a configuração da paisagem:
+    <code>enn</code> = aggegation metric / euclidian nearest neighbour distance distância euclidiana do vizinho mais próximo. 
+    <code>enn_cv</code> = aggegation metric. Coeficiente de variação da distância euclidiana do vizinho mais próximo. A métrica resume cada classe como o Coeficiente de variação das distâncias euclidianas do vizinho mais próximo entre as manchas pertencentes à classe. O valor de enn_cv = 0 se a distância euclidiana do vizinho mais próximo for idêntica para todas as manchas. Aumenta, sem limite, à medida que a variação do ENN aumenta.
+    <code>pd</code> = aggegation metric / patch density densidade das manchas
+    <code>cohesion</code> = aggregation metric / índice de coesão das manchas.
     
 
 
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
 
-minhas_metricas <- c("lsm_c_pland", "lsm_c_ed", "lsm_c_cpland", "lsm_c_enn_mn", "lsm_c_pd","lsm_c_cohesion")
+minhas_metricas <- c("lsm_c_pland", "lsm_c_ed", "lsm_c_cpland", "lsm_c_enn_mn", "lsm_c_enn_sd", "lsm_c_enn_cv", "lsm_c_pd","lsm_c_cohesion")
 
 # raio 250 metros
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
