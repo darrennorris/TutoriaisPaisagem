@@ -1742,15 +1742,24 @@ div.tocify {
 </div>
 <div id="codigo-e-r" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> Codigo e R</h1>
+<p>Objetivo não é de apresentar detalhes sobre os métodos ou os funções no <a href="https://cran.r-project.org/">R</a>. Existem diversos exemplos disponíveis, por exemplo:</p>
 <ul>
-<li>Objetivo não é de apresentar detalhes sobre os métodos ou os funções no <a href="https://cran.r-project.org/">R</a>. Existem diversos exemplos disponíveis <a href="https://cdr.ibpad.com.br/cdr-intro.pdf">“Ciência de Dados com R–Introdução……”:</a> e com google “r cran introdução tutorial”…….</li>
-</ul>
-<p>Alem disso, existem grupos de ajuda, como por exemplo: <a href="https://www.facebook.com/groups/rbrasilprogramadores/">R Brasil</a>
-e
-<a href="https://pt.stackoverflow.com/questions/tagged/r">Stack Overflow em Português</a></p>
+<li><p>livros online:</p>
 <ul>
-<li>O objetivo é de apresentar um tutorial mostrado os capacidades e opções para desenvolver e integrar pesquisas de ecologia da paisagem no ambiente estatística de <a href="https://cran.r-project.org/">R</a></li>
+<li><p><a href="https://cdr.ibpad.com.br/cdr-intro.pdf">Ciência de Dados com R</a></p></li>
+<li><p><a href="https://analises-ecologicas.com/index.html">Análises Ecológicas no R</a></p></li>
+</ul></li>
+<li><p>Com Google “r cran introdução tutorial”….. onde tem mais de 50 mil resultados com exemplos, imagens e videos ……<br />
+</p></li>
+<li><p>Grupos de ajuda, como por exemplo:</p>
+<ul>
+<li><p><a href="https://www.facebook.com/groups/rbrasilprogramadores/">R Brasil</a></p></li>
+<li><p><a href="https://pt.stackoverflow.com/questions/tagged/r">Stack Overflow em Português</a></p></li>
+</ul></li>
 </ul>
+<blockquote>
+<p>O objetivo é de apresentar um tutorial mostrado os capacidades e opções para desenvolver e integrar pesquisas de ecologia da paisagem no ambiente estatística de <a href="https://cran.r-project.org/">R</a></p>
+</blockquote>
 <p>Porque use R? R tem a capacidade (baseada em codigo) para alternar entre tarefas de processamento, modelagem e visualização de dados geográficos e não geográficos. Alem disso, como é possível importar, modificar, analisar e visualizar dados espaciais no mesmo ambiente com script/codigo, o R permite fluxos de trabalho transparentes e reproduzíveis (<a href="https://foster.gitbook.io/manual-de-formacao-em-ciencia-aberta/02introducaoacienciaaberta/01conceito_e_principios_da_ciencia_aberta">A Ciência Aberta</a>).</p>
 <blockquote>
 <p>Aliás, atualmente a grande maioria dos artigos científicos publicados na revista <a href="https://www.springer.com/journal/10980/">Landscape Ecology</a> incluir análises usando R.</p>
@@ -2491,8 +2500,15 @@ e é um pacote de visualização de dados. “gg” se refere a uma gramática d
 <p>O ggplot2 exige que os dados a serem plotados estejam em um data frame. Ou seja, sempre teremos que transformar os dados para data frame ou construir um data frame com os dados que possuímos.</p>
 <p>O principal função a ser utilizado é <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">ggplot()</span>.</p>
 <p>Para ggplot, precisamos os dados (data frame), e depois cria o “mapeamento” das variáveis, normalmente usando <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">aes</span> (de aesthetics). Ou seja, você especifica quais são as variáveis dos eixos x e y dentro de <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">aes()</span>. Através dele vamos definir qual é a variável preditora/explanatora (eixo x) e qual é a variável resposta (eixo y) em nosso conjunto de dados.</p>
-<p>Depois da função <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">ggplot()</span>, na sequencia no codigo nós especificamos qual tipo de grafico com um “geom”. Por exemplo, <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">geom_point()</span> para plotar pontos, <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">geom_boxplot()</span> para um boxplot, etc. Para a lista completa de geoms e todas as outras opções do pacote, visite a página do projeto ggplot2 <a href="https://ggplot2.tidyverse.org/index.html" class="uri">https://ggplot2.tidyverse.org/index.html</a>,
-livro <a href="https://r-graphics.org/" class="uri">https://r-graphics.org/</a> . E sempre pode buscar exemplos no Google, por exemplo digitando: ggplot2 grafico de barra no Google, tem mais de 50 mil resultados com paginas de imagens, codigo pronto e exemplos no YouTube.</p>
+<p>Depois da função <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">ggplot()</span>, na sequencia no codigo nós especificamos qual tipo de grafico com um “geom”. Por exemplo, <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">geom_point()</span> para plotar pontos, <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">geom_boxplot()</span> para um boxplot, etc. Para a lista completa de geoms e todas as outras opções do pacote, visite a página do projeto ggplot2 <a href="https://ggplot2.tidyverse.org/index.html" class="uri">https://ggplot2.tidyverse.org/index.html</a> .</p>
+<p>Maais detalhes nos livros:</p>
+<ul>
+<li><a href="http://sillasgonzaga.com/material/cdr/ggplot2.html">Ciência de Dados com R</a><br />
+</li>
+<li><a href="https://analises-ecologicas.com/cap6.html">Análises Ecológicas no R</a></li>
+</ul>
+<p>Livro em ingles <a href="https://r-graphics.org/">R Graphics Cookbook</a> .</p>
+<p>E sempre pode buscar exemplos no Google, por exemplo digitando: ggplot2 grafico de barra no Google, tem mais de 50 mil resultados com paginas de imagens, codigo pronto e exemplos no YouTube.</p>
 <p>Note que no codigo a seguir, que, adicionamos um geom com um “+”. No ggplot2, nós criamos gráficos em camadas, e adicionamos camada a camada com um “+”. Assim, é posivel ajustar qualquer elemento do grafico.</p>
 <p>Aqui vamos fazer um gráfico com valores de extensão no eixo x e proporção da floresta central no eixo y.
 Assim sendo, com o codigo a segir, vamos informar (i) os dados, selecionando classe de floresta atraves de um filtro e acresentando uma coluna nova (“ext_m”) com a extensão em metros, (ii) as colunas para os eixos x e y, (iii) tipo de grafico (grafico de pontos - <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">geom_point()</span> e grafico de linha - <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">geom_line()</span>), (iv) nomes para os eixos. No exemplo, usamos <span style=" font-weight: bold;    ">%&gt;%</span>, que estabelece a ligação entre os passos do processo, ligando os dados (amostras_metrica) e o grafico <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">ggplot</span>.</p>
@@ -2511,17 +2527,19 @@ amostras_metrica %&gt;%
 </div>
 <div id="pergunta-3" class="section level3" number="4.2.2">
 <h3><span class="header-section-number">4.2.2</span> Pergunta 3</h3>
-<p><span style=" font-weight: bold;    color: blue !important;">Em vez de extensão, você preciso incluir o tamanho (área) correspondente a cada raio. Incluir uma cópia do código ajustado para produzir uma figura com tamanho (área em quilômetros quadrados) no eixo x e a percentual de área central de floresta no eixo y.</span></p>
+<p><span style=" font-weight: bold;    color: blue !important;">Em vez de extensão, você preciso incluir o tamanho (área) correspondente a cada raio (<a href="https://www.ensinobasico.com/blogue/1482-area-e-perimetro-de-um-circulo">área de um circulo</a>). Incluir uma cópia do código ajustado para produzir uma figura com tamanho (área em quilômetros quadrados) no eixo x e a percentual de área central de floresta no eixo y.</span></p>
 <hr />
 <div style="page-break-after: always;"></div>
 </div>
 <div id="faça-um-gráfico-elegante" class="section level3" number="4.2.3">
 <h3><span class="header-section-number">4.2.3</span> Faça um gráfico elegante</h3>
 <p>Podemos ajustar qualquer elemento do grafico. Agora, vamos mudar as unidades de metros para quilometros, aumentar o tamanho dos pontos, incluir uma linha reta para ilustrar a tendência geral, colocar o titulo longo do eixo y em duas linhas, e aumentar o tamanho da fonte para o texto ficar mais claro.</p>
-<pre class="r"><code>amostras_metrica %&gt;% 
+<pre class="r"><code># arrumar os dados
+amostras_metrica %&gt;% 
   filter(class==1) %&gt;% 
   mutate(ext_m = 2*raio, 
          ext_km = (2*raio)/1000) %&gt;%
+# fazer o grafico
   ggplot(aes(x=ext_km, y=value)) + 
   geom_point(size = 4) + 
   geom_line() +
