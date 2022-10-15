@@ -3,11 +3,6 @@ title: "Métricas da paisagem"
 author: "Darren Norris"
 date: "`r Sys.Date()`"
 output:
-  bookdown::html_document2:
-    toc: yes
-    toc_depth: 3
-    toc_float: yes
-    fig_caption: yes
   bookdown::pdf_document2:
     toc: yes
     toc_depth: 3
@@ -16,6 +11,11 @@ output:
     highlight: tango
     includes:
       in_header: preamble.txe
+  bookdown::html_document2:
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+    fig_caption: yes
 urlcolor: blue
 toc-title: Sumário
 header-includes:
@@ -52,13 +52,18 @@ Durante a aula você aprenderá a:
 # Codigo e R
 Objetivo não é de apresentar detalhes sobre os métodos ou os funções no [R](https://cran.r-project.org/). Existem diversos exemplos disponíveis, por exemplo:  
 
- * livros online:    
+ * livros online:  
+  
+    * [Introdução ao R](https://bookdown.org/wevsena/curso_r_tce/curso_r_tce.html)  curso de capacitação para servidores do Tribunal de Contas do Estado da Paraíba.
  
-    * [Ciência de Dados com R](https://cdr.ibpad.com.br/cdr-intro.pdf)     
+    * [Ciência de Dados com R](https://cdr.ibpad.com.br/)  desenvolvido pelo  Instituto Brasileiro de Pesquisa e Análise de Dados (IBPAD).  
+    
+    * [Ciência de Dados em R](https://livro.curso-r.com/index.html) desenvolvido durante Cursos de Verão do Instituto de Matemática e Estatística da Universidade de São Paulo (IME-USP).
 
-    * [Análises Ecológicas no R](https://analises-ecologicas.com/index.html)
+    * [Análises Ecológicas no R](https://analises-ecologicas.com/index.html) desenvolvidos pelos professores durante aulas de graduação e cursos de pós-graduação nas universidades de UNESP, UFSCAR, UFRPE, UFMS, e UFRN.
 
  * Com Google "r cran introdução tutorial"..... onde tem mais de 50 mil resultados com exemplos, imagens e videos ......  
+ 
  * Grupos de ajuda, como por exemplo:  
  
     * [R Brasil](https://www.facebook.com/groups/rbrasilprogramadores/)  
@@ -110,7 +115,10 @@ x + 1
 
 ```
 
-## Métricas da paisagem e pacote "landscapemetrics"
+
+\newpage
+
+# Métricas da paisagem e pacote "landscapemetrics"
 
 As métricas de paisagem são a forma que os ecólogos de paisagem usam para descrever os padrões espaciais de paisagens para depois avaliar a influência destes padrões espaciais nos padrões e processos ecológicos.
  
@@ -176,6 +184,8 @@ library(kableExtra)
 library(mgcv)
 ```
 
+
+\newpage
 
 # Dados
 
@@ -475,6 +485,13 @@ amostras_metrica %>%
 
 ### Faça um gráfico
 
+
+```{r, insert-fig-logo, echo=FALSE, message=FALSE, warning=FALSE, out.width="65%", out.height="65%", fig.align="center"}
+knitr::include_graphics("www/logo_gg_lsm.png")
+
+
+```
+
 Uma imagem vale mais que mil palavras. Portanto, gráficos/figuras/imagens são uma das mais importantes formas de comunicar a ciência. Os dados apresentados em uma tabela podem ser difíceis de entender. Portanto, a primeira pergunta que você deve se fazer é se você pode transformar aquela tabela (chata e feia) em algum tipo de gráfico. Lembrando, sempre pode incluir a tabela como anexo. 
 
 Aqui, vamos fazer um grafico com os dados amostras_metrica,
@@ -487,63 +504,53 @@ Isto nos permite construir gráficos tão complexos quanto quisermos. Os gráfic
  * [Ciência de Dados com R](http://sillasgonzaga.com/material/cdr/ggplot2.html)  
  * [Análises Ecológicas no R](https://analises-ecologicas.com/cap6.html)
 
-No livro em ingles [R Graphics Cookbook](https://r-graphics.org/) . 
+ * No livro em ingles [R Graphics Cookbook](https://r-graphics.org/) . 
 
-E sempre pode buscar exemplos no Google, por exemplo digitando: ggplot2 grafico de barra no Google, tem mais de 50 mil resultados com  paginas de imagens, codigo pronto e exemplos no YouTube.
+ * E sempre pode buscar exemplos no Google, por exemplo digitando: ggplot2 grafico de barra no Google, tem mais de 50 mil resultados com  paginas de imagens, codigo pronto e exemplos no YouTube.
 
-O ggplot2 exige que os dados a serem plotados estejam em um data frame. Ou seja, sempre teremos que transformar os dados para data frame ou construir um data frame com os dados que possuímos.
+O ggplot2 exige que os dados a serem plotados estejam em um "dataframe" ([tabela de dados](https://bookdown.org/wevsena/curso_r_tce/curso_r_tce.html#data-frames-e-tibbles)). Ou seja, sempre teremos que transformar os dados para dataframe ou construir um dataframe com os dados que possuímos. Dataframe é um formato comum e fácil de trabalhar. Por exemplo, se você importar uma planilha de dados, o resultado seria como dataframe (para mais detalhes veja [Estrutura e manipulação de objetos](https://analises-ecologicas.com/cap4.html#estrutura-e-manipula%C3%A7%C3%A3o-de-objetos) e [lendo dados](http://sillasgonzaga.com/material/cdr/lendo-os-dados.html) ). Além disso, o resultado dos funções de [landscapemetrics](https://r-spatialecology.github.io/landscapemetrics/) é sempre um dataframe, ou seja os resultados da função `r kableExtra::text_spec("sample_lsm()", background = "#dedede")` são prontos para um grafico.
 
-O principal função a ser utilizado é `r kableExtra::text_spec("ggplot()", background = "#dedede")`.
-
-Para ggplot, precisamos os dados (data frame), e depois cria o “mapeamento” das variáveis, normalmente usando `r kableExtra::text_spec("aes", background = "#dedede")` (de aesthetics). Ou seja, você especifica quais são as variáveis dos eixos x e y dentro de `r kableExtra::text_spec("aes()", background = "#dedede")`. Através dele vamos definir qual é a variável preditora/explanatora (eixo x) e qual é a variável resposta (eixo y) em nosso conjunto de dados. 
-
+\newpage
+O principal função a ser utilizado é `r kableExtra::text_spec("ggplot()", background = "#dedede")`. 
+Para ggplot, precisamos os dados (dataframe), e depois cria o “mapeamento” das variáveis, normalmente usando `r kableExtra::text_spec("aes", background = "#dedede")` (de aesthetics). Ou seja, você especifica quais são as variáveis dos eixos x e y dentro de `r kableExtra::text_spec("aes()", background = "#dedede")`. Através dele vamos definir qual é a variável preditora/explanatora (eixo x) e qual é a variável resposta (eixo y) em nosso conjunto de dados.
 Depois da função `r kableExtra::text_spec("ggplot()", background = "#dedede")`, na sequencia no codigo nós especificamos qual tipo de grafico com um "geom". Por exemplo, `r kableExtra::text_spec("geom_point()", background = "#dedede")` para plotar pontos, `r kableExtra::text_spec("geom_boxplot()", background = "#dedede")`  para um boxplot, etc. Para a lista completa de geoms e todas as outras opções do pacote, visite a página do projeto ggplot2 https://ggplot2.tidyverse.org/index.html .
 
-Note que no codigo a seguir, que, adicionamos um geom com um “+”. No ggplot2, nós criamos gráficos em camadas, e adicionamos camada a camada com um “+”. Assim, é posivel ajustar qualquer elemento do grafico.
-
 Aqui vamos fazer um gráfico com valores de extensão no eixo x e proporção da floresta central no eixo y.
-Assim sendo, com o codigo a segir, vamos informar (i) os dados, selecionando classe de floresta atraves de um filtro e acresentando uma coluna nova ("ext_m") com a extensão em metros, (ii) as colunas para os eixos x e y, (iii) tipo de grafico (grafico de pontos - `r kableExtra::text_spec("geom_point()", background = "#dedede")` e grafico de linha - `r kableExtra::text_spec("geom_line()", background = "#dedede")`), (iv) nomes para os eixos. No exemplo, usamos `r kableExtra::text_spec("%>%", bold = TRUE)`, que estabelece a ligação entre os passos do processo, ligando os dados (amostras_metrica) e o grafico `r kableExtra::text_spec("ggplot", background = "#dedede")`.
+Assim sendo, com o codigo a segir, vamos informar (i) os dados, selecionando classe de floresta atraves de um filtro e acresentando uma coluna nova ("ext_m") com a extensão em metros, (ii) as colunas para os eixos x e y, (iii) tipo de grafico (grafico de pontos - `r kableExtra::text_spec("geom_point()", background = "#dedede")` e grafico de linha - `r kableExtra::text_spec("geom_line()", background = "#dedede")`), (iv) nomes para os eixos. No exemplo, usamos `r kableExtra::text_spec("%>%", bold = TRUE)`, que estabelece a ligação entre os passos do processo, ligando os dados (amostras_metrica) e o grafico `r kableExtra::text_spec("ggplot", background = "#dedede")`. Note que no codigo a seguir, adicionamos um geom com um “+”. No ggplot2, nós criamos gráficos em camadas, e adicionamos camada a camada com um “+”. Assim, é posivel ajustar qualquer elemento do grafico.
 ```{r, eval=FALSE}
 # arrumar os dados
 amostras_metrica %>% 
-  filter(class==1) %>% 
-  mutate(ext_m = 2*raio) %>%
+  filter(class==1) %>% mutate(ext_m = 2*raio) %>%
 # fazer o grafico
   ggplot(aes(x=ext_m, y=value)) + 
-  geom_point() + 
-  geom_line() +
+  geom_point() +  geom_line() +
   labs(x = "Extensão (metros)", 
        y = "Área central de floresta (porcentagem da paisagem)")
 ```
 
 Depois de executar (“run”) o código acima, você deverá ver o grafico a seguir.
-
-```{r, echo=FALSE, out.width="60%", out.height="60%"}
+```{r, echo=FALSE, out.width="50%", out.height="50%", fig.align="center"}
 amostras_metrica %>% 
-  filter(class==1) %>%
-  mutate(ext_m = 2*raio) %>%
+  filter(class==1) %>% mutate(ext_m = 2*raio) %>%
   ggplot(aes(x=ext_m, y=value)) + 
-  geom_point() + 
-  geom_line() +
+  geom_point() + geom_line() +
   labs(x = "Extensão (metros)", 
-       y = "Área central de floresta (porcentagem da paisagem)")
+       y = "Área central de floresta (porcentagem da paisagem)") + 
+  theme(text = element_text(size = 14))
 ```
 
-
 ### Pergunta 3
-
-`r kableExtra::text_spec("Em vez de extensão, você preciso incluir o tamanho (área) correspondente a cada raio ([área de um circulo](https://www.ensinobasico.com/blogue/1482-area-e-perimetro-de-um-circulo)). Incluir uma cópia do código ajustado para produzir uma figura com tamanho (área em quilômetros quadrados) no eixo x e a percentual de área central de floresta no eixo y.", color = "blue", bold = TRUE)`
+`r kableExtra::text_spec("Em vez de extensão, você preciso incluir o tamanho (área do circulo) correspondente a cada raio. Incluir uma cópia do código ajustado para produzir uma figura com tamanho (área em quilômetros quadrados) no eixo x.", color = "blue", bold = TRUE)`
 
 --------------------------------------------
-
 
 \newpage
 
 
 ### Faça um gráfico elegante
 
-Podemos ajustar qualquer elemento do grafico. Agora, vamos mudar as unidades de metros para quilometros, aumentar o tamanho dos pontos, incluir uma linha reta para ilustrar a tendência geral, colocar o titulo longo do eixo y em duas linhas, e aumentar o tamanho da fonte para o texto ficar mais claro. 
-```{r, out.width="60%", out.height="60%", fig.cap="Comparação da área central de floresta em diferentes extensões." }
+Podemos ajustar qualquer elemento do grafico com ggplot2. Agora, vamos mudar as unidades de metros para quilometros, aumentar o tamanho dos pontos, incluir uma linha reta para ilustrar a tendência geral, colocar o titulo longo do eixo y em duas linhas, e aumentar o tamanho da fonte para o texto ficar mais claro. 
+```{r, out.width="55%", out.height="55%", fig.cap="Comparação da área central de floresta em diferentes extensões.", fig.align="center" }
 # arrumar os dados
 amostras_metrica %>% 
   filter(class==1) %>% 
@@ -562,14 +569,27 @@ amostras_metrica %>%
 
 ### Pergunta 4
 
-`r kableExtra::text_spec("Em menos de 200 palavras apresente a sua interpretação do gráfico em figura 4.2.", color = "blue", bold = TRUE)`
+`r kableExtra::text_spec("Em menos de 200 palavras apresente a sua interpretação do gráfico em figura 5.2.", color = "blue", bold = TRUE)`
 
 -----------------------------------------
 
 
 \newpage
 
-### Compare linear and non linear
+### Modelos linear e não linear
+
+Um dos desafios mais frequentes é como melhor representar os dados observados para gerar evidências científicas robustas e informações confiáveis. Nós vimos que as mudancas na métrica porcentagem de área central de floresta não segue uma linha reta em relação de escala (extensão). Para ir além de uma descrição simplista dos padrões observados, na ecologia da paisagem uma variedade de modelos estatísticos são usados.
+
+Por exemplo, modelos de regressão são amplamente usados em diversas aplicações
+para descrever a relação entre uma variável resposta Y e uma variável
+explicativa x. Os modelos lineares são uma generalização dos testes de hipótese clássicos mais simples ([Modelos linear](http://sillasgonzaga.com/material/cdr/modelos.html#modelo-linear) e [ Modelos lineares](https://analises-ecologicas.com/cap7.html)). Uma regressão linear, por exemplo, só pode ser aplicada para dados em que tanto a variável preditora quanto a resposta são contínuas, enquanto uma análise de variância é utilizada quando a variável preditora/explicativa é categórica. Os modelos lineares generalizados não têm essa limitação, podemos usar variáveis contínuas ou categóricas indistintamente ([Modelos Lineares Generalizados](https://analises-ecologicas.com/cap8.html)).
+
+Mas, no caso de padroes ecologicas, sera que um modelo linear é o melhor modelo para representar a relação que explica “y” em função de “x”?  Um número crescente de pesquisadores compartilham o sentimento de que as relações entre variáveis biológicas/ecologicas são melhores descritas por funções não lineares. Processos como crescimento, nascimento, mortalidade, abundância, dispersão, competição e produção raramente são relacionadas linearmente às variáveis explicativas. 
+
+A principal vantagem do modelo não linear sobre o linear é que 1) sua
+escolha está associada à conhecimento prévio sobre a relação a ser modelada e 2) geralmente apresenta interpretação prática para os parâmetros. Em modelos não-linear dados observados de uma variável resposta são descritos por uma função de uma ou mais variáveis explicativas que é não linear seus parâmetros. Assim como nos modelos lineares o objetivo é identificar e estabelecer a relação entre variáveis explicativas e resposta. Entretanto, enquanto os modelos lineares definem, em geral, relações empíricas/teoricas, os modelos não-lineares são, em grande parte das vezes, motivados pelo conhecimento do tipo de relação entre as variáveis. Desta forma, as aplicações surgem nas diversas áreas onde relações físicas, biológicas, cinéticas, químicas, fisiológicas, dentre outras, são estabelecidas por funções não lineares que devem ter coeficientes (parâmetros) identificados (estimados) a partir de dados observados, dados experimentais e/ou dados simulados.
+
+Como as mudanças na estrutura da paisagem caracterizam-se por serem não-lineares, para desenvolver análises estatísticas robustos pode (i) aplicar uma transformação (por exemplo, "log") ou (ii) adotar modelos não-lineares. 
 ```{r create-fig-comp, echo=FALSE, message=FALSE, warning=FALSE}
 amostras_metrica %>% 
   filter(class==1) %>%
@@ -624,10 +644,7 @@ invisible(dev.off())
 
 ```
 
-include figure
-
-more text
-
+Olhando a figura a seguir.....
 ```{r insert-fig-comp, echo=FALSE, message=FALSE, warning=FALSE, out.width="98%", out.height="98%", fig.cap="Comparação de padrões lineares e não-lineares."}
 knitr::include_graphics("figures/fig_comp_linear.png")
 ```
@@ -643,7 +660,7 @@ knitr::include_graphics("figures/fig_comp_linear.png")
 
 ## Ponto único, distâncias variados, métricas variadas
 
-Como as mudanças na estrutura da paisagem caracterizam-se por serem não-lineares, para desenvolver análises estatísticas robustos pode (i) aplicar uma transformação (por exemplo, "log") ou (ii) adotar modelos não-lineares. Aqui, usaremos modelos não lineares para comparar padrões em diferentes métricas da paisagem  em diferentes extensões.
+text hrerererer
 
  > Não deve calcular todas as métricas disponíveis, mas sim, escolher aquelas que podem ser realmente adequadas para sua pergunta de pesquisa.
 
@@ -891,3 +908,20 @@ amostras_metricas_floresta %>%
 `r kableExtra::text_spec("Usando como base o conteudo das aulas, leitura disponivel no Google Classroom (Base teórica 4 Dados, métricas, analises), e/ou exemplos apresentados aqui no tutorial, selecione pelo menos seis métricas de nível classe para caracterizar a paisagem de estudo e objectivos da sua projeto. Justifique sua seleção de forma clara e concisa, apoie sua escolha com exemplos da literatura científica.", color = "blue", bold = TRUE)`
 
 ----------------------------------------------------------
+
+```{r, echo=FALSE, eval=FALSE}
+#https://bnu-landscape-ecology.netlify.app/post/2020-10-23-lsm/
+#example so no need to repeat by different sizes
+
+buffer_sizes=c(500,750,1000,2000,3000) #we want buffers for this sizes
+buffer_results = buffer_sizes %>% #buffer data
+  set_names() %>% #use the given names
+  map_dfr(~sample_lsm(list(beijing_meters), #map_dfr() return a data frame created by row-binding and column-binding respectively
+                      what=c("lsm_c_pd","lsm_c_area_mn",
+                             "lsm_l_shei","lsm_l_frac_mn"), #metrics 
+                      y = sample_points, #locations
+                      size = .),  #from each element of the data
+          .id = "buffer") #the variable name for each element of buffer_size
+
+```
+

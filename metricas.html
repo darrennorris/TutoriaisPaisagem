@@ -11,7 +11,7 @@
 
 <meta name="author" content="Darren Norris" />
 
-<meta name="date" content="2022-10-14" />
+<meta name="date" content="2022-10-15" />
 
 <title>Métricas da paisagem</title>
 
@@ -1724,7 +1724,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Métricas da paisagem</h1>
 <h4 class="author">Darren Norris</h4>
-<h4 class="date">2022-10-14</h4>
+<h4 class="date">2022-10-15</h4>
 
 </div>
 
@@ -1746,8 +1746,10 @@ div.tocify {
 <ul>
 <li><p>livros online:</p>
 <ul>
-<li><p><a href="https://cdr.ibpad.com.br/cdr-intro.pdf">Ciência de Dados com R</a></p></li>
-<li><p><a href="https://analises-ecologicas.com/index.html">Análises Ecológicas no R</a></p></li>
+<li><p><a href="https://bookdown.org/wevsena/curso_r_tce/curso_r_tce.html">Introdução ao R</a> curso de capacitação para servidores do Tribunal de Contas do Estado da Paraíba.</p></li>
+<li><p><a href="https://cdr.ibpad.com.br/">Ciência de Dados com R</a> desenvolvido pelo Instituto Brasileiro de Pesquisa e Análise de Dados (IBPAD).</p></li>
+<li><p><a href="https://livro.curso-r.com/index.html">Ciência de Dados em R</a> desenvolvido durante Cursos de Verão do Instituto de Matemática e Estatística da Universidade de São Paulo (IME-USP).</p></li>
+<li><p><a href="https://analises-ecologicas.com/index.html">Análises Ecológicas no R</a> desenvolvidos pelos professores durante aulas de graduação e cursos de pós-graduação.</p></li>
 </ul></li>
 <li><p>Com Google “r cran introdução tutorial”….. onde tem mais de 50 mil resultados com exemplos, imagens e videos ……<br />
 </p></li>
@@ -2494,21 +2496,18 @@ cpland
 <p>Uma imagem vale mais que mil palavras. Portanto, gráficos/figuras/imagens são uma das mais importantes formas de comunicar a ciência. Os dados apresentados em uma tabela podem ser difíceis de entender. Portanto, a primeira pergunta que você deve se fazer é se você pode transformar aquela tabela (chata e feia) em algum tipo de gráfico. Lembrando, sempre pode incluir a tabela como anexo.</p>
 <p>Aqui, vamos fazer um grafico com os dados amostras_metrica,
 usando o pacote <a href="https://ggplot2.tidyverse.org/index.html">ggplot2</a>.</p>
-<p>O ggplot2 faz parte do conjunto <a href="https://tidyverse.tidyverse.org/articles/paper.html">tidyverse</a>,<br />
-e é um pacote de visualização de dados. “gg” se refere a uma gramática de gráficos. A ideia principal é criar um gráfico como se fosse uma frase de uma língua, onde cada elemento do gráfico seria uma palavra, organizados em uma sequencia logica para construir uma frase completo (gráfico final). Você fornece os dados, informa ao ggplot2 como mapear variáveis para estética, quais tipos/formatos gráficas usar e ele cuida dos detalhes.</p>
-<p>Isto nos permite construir gráficos tão complexos quanto quisermos. Os gráficos criados com ggplot2 são, em geral, mais elegantes do que os gráficos tradicionais do R.</p>
-<p>O ggplot2 exige que os dados a serem plotados estejam em um data frame. Ou seja, sempre teremos que transformar os dados para data frame ou construir um data frame com os dados que possuímos.</p>
-<p>O principal função a ser utilizado é <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">ggplot()</span>.</p>
-<p>Para ggplot, precisamos os dados (data frame), e depois cria o “mapeamento” das variáveis, normalmente usando <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">aes</span> (de aesthetics). Ou seja, você especifica quais são as variáveis dos eixos x e y dentro de <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">aes()</span>. Através dele vamos definir qual é a variável preditora/explanatora (eixo x) e qual é a variável resposta (eixo y) em nosso conjunto de dados.</p>
-<p>Depois da função <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">ggplot()</span>, na sequencia no codigo nós especificamos qual tipo de grafico com um “geom”. Por exemplo, <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">geom_point()</span> para plotar pontos, <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">geom_boxplot()</span> para um boxplot, etc. Para a lista completa de geoms e todas as outras opções do pacote, visite a página do projeto ggplot2 <a href="https://ggplot2.tidyverse.org/index.html" class="uri">https://ggplot2.tidyverse.org/index.html</a> .</p>
-<p>Maais detalhes nos livros:</p>
+<p>O ggplot2 faz parte do conjunto <a href="https://tidyverse.tidyverse.org/articles/paper.html">tidyverse</a>, e é um pacote de visualização de dados. “gg” se refere a uma gramática de gráficos. A ideia principal é criar um gráfico como se fosse uma frase de uma língua, onde cada elemento do gráfico seria uma palavra, organizados em uma sequencia logica para construir uma frase completo (gráfico final). Você fornece os dados, informa ao ggplot2 como mapear variáveis para estética, quais tipos/formatos gráficas usar e ele cuida dos detalhes.</p>
+<p>Isto nos permite construir gráficos tão complexos quanto quisermos. Os gráficos criados com ggplot2 são, em geral, mais elegantes do que os gráficos tradicionais do R. Para mais exemplos e tutoriais com mais detalhes veja os capitulos sobre ggplot2 nos livros:</p>
 <ul>
-<li><a href="http://sillasgonzaga.com/material/cdr/ggplot2.html">Ciência de Dados com R</a><br />
-</li>
-<li><a href="https://analises-ecologicas.com/cap6.html">Análises Ecológicas no R</a></li>
+<li><p><a href="http://sillasgonzaga.com/material/cdr/ggplot2.html">Ciência de Dados com R</a><br />
+</p></li>
+<li><p><a href="https://analises-ecologicas.com/cap6.html">Análises Ecológicas no R</a></p></li>
+<li><p>No livro em ingles <a href="https://r-graphics.org/">R Graphics Cookbook</a> .</p></li>
+<li><p>E sempre pode buscar exemplos no Google, por exemplo digitando: ggplot2 grafico de barra no Google, tem mais de 50 mil resultados com paginas de imagens, codigo pronto e exemplos no YouTube.</p></li>
 </ul>
-<p>Livro em ingles <a href="https://r-graphics.org/">R Graphics Cookbook</a> .</p>
-<p>E sempre pode buscar exemplos no Google, por exemplo digitando: ggplot2 grafico de barra no Google, tem mais de 50 mil resultados com paginas de imagens, codigo pronto e exemplos no YouTube.</p>
+<p>O ggplot2 exige que os dados a serem plotados estejam em um dataframe (<a href="https://bookdown.org/wevsena/curso_r_tce/curso_r_tce.html#data-frames-e-tibbles">tabela de dados</a>). Ou seja, sempre teremos que transformar os dados para data frame ou construir um data frame com os dados que possuímos. Dataframe é um formato comum e fácil de trabalhar. Por exemplo se você importar uma planilha de dados, o resultado seria como dataframe (para mais detalhes veja <a href="https://analises-ecologicas.com/cap4.html#estrutura-e-manipula%C3%A7%C3%A3o-de-objetos">Estrutura e manipulação de objetos</a> e <a href="http://sillasgonzaga.com/material/cdr/lendo-os-dados.html">lendo dados</a> ). Além disso, o resultado dos funções de <a href="https://r-spatialecology.github.io/landscapemetrics/">landscapemetrics</a> é sempre um dataframe, ou seja os resultados da função <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">sample_lsm()</span> são prontos para um grafico.</p>
+<p>O principal função a ser utilizado é <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">ggplot()</span>. Para ggplot, precisamos os dados (data frame), e depois cria o “mapeamento” das variáveis, normalmente usando <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">aes</span> (de aesthetics). Ou seja, você especifica quais são as variáveis dos eixos x e y dentro de <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">aes()</span>. Através dele vamos definir qual é a variável preditora/explanatora (eixo x) e qual é a variável resposta (eixo y) em nosso conjunto de dados.</p>
+<p>Depois da função <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">ggplot()</span>, na sequencia no codigo nós especificamos qual tipo de grafico com um “geom”. Por exemplo, <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">geom_point()</span> para plotar pontos, <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">geom_boxplot()</span> para um boxplot, etc. Para a lista completa de geoms e todas as outras opções do pacote, visite a página do projeto ggplot2 <a href="https://ggplot2.tidyverse.org/index.html" class="uri">https://ggplot2.tidyverse.org/index.html</a> .</p>
 <p>Note que no codigo a seguir, que, adicionamos um geom com um “+”. No ggplot2, nós criamos gráficos em camadas, e adicionamos camada a camada com um “+”. Assim, é posivel ajustar qualquer elemento do grafico.</p>
 <p>Aqui vamos fazer um gráfico com valores de extensão no eixo x e proporção da floresta central no eixo y.
 Assim sendo, com o codigo a segir, vamos informar (i) os dados, selecionando classe de floresta atraves de um filtro e acresentando uma coluna nova (“ext_m”) com a extensão em metros, (ii) as colunas para os eixos x e y, (iii) tipo de grafico (grafico de pontos - <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">geom_point()</span> e grafico de linha - <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">geom_line()</span>), (iv) nomes para os eixos. No exemplo, usamos <span style=" font-weight: bold;    ">%&gt;%</span>, que estabelece a ligação entre os passos do processo, ligando os dados (amostras_metrica) e o grafico <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">ggplot</span>.</p>
