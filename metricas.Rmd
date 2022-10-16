@@ -38,7 +38,7 @@ knit_hooks$set(output = function(x, options) {
 \newpage{}
 
 # Apresentação
-As métricas da paisagem nos ajudam a entender as mudanças na paisagem de diferentes perspectivas (visual, ecológica, cultural). Asssim sendo, análises com métricas de paisagem é um atividade fundamental na ecologia da paisagem. Nesta aula aprenderemos sobre como analisar a cobertura da terra com métricas de paisagem em R. As tecnicas será ilustrada através cálculos usando a cobertura florestal ao redor do Rio Araguari. Ao longo do caminho, revisaremos modelos lineares e não lineares, aprenderemos sobre manipulação de dados em R e aprenderemos como criar gráficos com o pacote ggplot2.
+As métricas da paisagem nos ajudam a entender as mudanças na paisagem de diferentes perspectivas (visual, ecológica, cultural). Asssim sendo, análises com métricas de paisagem é um atividade fundamental na ecologia da paisagem. Nesta aula (https://rpubs.com/darren75/metricas) aprenderemos sobre como analisar a cobertura da terra com métricas de paisagem em R. As tecnicas será ilustrada através cálculos usando a cobertura florestal ao redor do Rio Araguari. Ao longo do caminho, revisaremos modelos lineares e não lineares, aprenderemos sobre manipulação de dados em R e aprenderemos como criar gráficos com o pacote ggplot2.
 
 Durante a aula você aprenderá a:  
 
@@ -800,7 +800,7 @@ Percentual de áreas centrais (excluídas as bordas de 30 m) em relação à ár
     * `r kableExtra::text_spec("pd", background = "#dedede")` = Patch density. Densidade das manchas.
     * `r kableExtra::text_spec("cohesion", background = "#dedede")` = Cohesion index. Índice de coesão das manchas.
     
-Para incluir cálculos de diferentes métricas de paisagem ao mesmo tempo, precisamos somente acrescentar uma linha de codigo, que cria um objeto com os nomes das métricas que queremos calcular..... Assim, tambem precisamos usar a opção "what" na função para aceitar os nomes. 
+Para incluir cálculos de diferentes métricas de paisagem ao mesmo tempo, precisamos  acrescentar somente uma nova linha de codigo. Uma nova linha, que cria um objeto com os nomes das funções para as métricas que queremos calcular..... Também precisamos usar a opção "what" na função para aceitar os nomes das funções. 
 
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
 # Objeto com os nomes das funções para calcular as métricas desejadas.
@@ -846,7 +846,7 @@ sample_lsm(floresta_2020, y = rsm_31976[1, ],
   mutate(raio = 16000) -> metricas_amostra_16000
 ```
 
-join
+E agora, o código a seguir juntará os resultados das diferentes extensões.
 
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
 bind_rows(metricas_amostra_250, 
@@ -859,9 +859,22 @@ bind_rows(metricas_amostra_250,
 
 ```
 
+Depois que executar ("run"), podemos olhar os dados com o codigo a seguir. 
+```{r, eval=FALSE}
+amostras_metricas
+```
 
+Os dados deve ter os valores (coluna value) das métricas (coluna metric) 
+de cada classe (coluna class) para cada distância (coluna raio):
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+head(amostras_metricas, n=10) %>% 
+  mutate(value = round(value,2), 
+         percentage_inside = round(percentage_inside,1)) %>%
+  kbl() %>%
+  kable_styling(full_width = F,  latex_options = "hold_position")
+```
 
-Plot
+Agorta, vamos fazer um grafico com os dados amostras_metricas, usando o pacote ggplot2. Para ajudar na visualização incluímos quais métricas são para composição e configuração e nomes que são mais fáceis de entender.
 
 ```{r insert-fig-multiplemetrics, message=FALSE, warning=FALSE}
 metricas_composicao <- c("pland", "ed", "cpland")
@@ -876,7 +889,7 @@ amostras_metricas %>%
   geom_point() + 
   geom_line() +
   facet_wrap(met_cat~metric, scales = "free_y") +
-  labs(title = "Resultados de várias métricas",
+  labs(title = "Comparação multiescala de várias métricas",
     x = "extensão (quilômetros)", 
     y = "metric value")
 ```
@@ -900,7 +913,8 @@ amostras_metricas %>%
 buffer_sizes=c(500,750,1000,2000,3000) #we want buffers for this sizes
 buffer_results = buffer_sizes %>% #buffer data
   set_names() %>% #use the given names
-  map_dfr(~sample_lsm(list(beijing_meters), #map_dfr() return a data frame created by row-binding and column-binding respectively
+  #map_dfr() return a data frame created by row-binding
+  map_dfr(~sample_lsm(list(beijing_meters), 
                       what=c("lsm_c_pd","lsm_c_area_mn",
                              "lsm_l_shei","lsm_l_frac_mn"), #metrics 
                       y = sample_points, #locations
