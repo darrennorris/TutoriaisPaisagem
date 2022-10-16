@@ -651,7 +651,7 @@ knitr::include_graphics("figures/fig_comp_linear.png")
 
 
 ### Pergunta 5
-`r kableExtra::text_spec("Comparar os resultados apresentados nas figuras com modelos lineares e não-lineares. Qual modelo seria mais adequado para identificar limiares no padrão de área central de floresta?", color = "blue", bold = TRUE)`
+`r kableExtra::text_spec("Comparar os resultados apresentados nas figuras com modelos lineares e não-lineares. Como podemos estabelecer qual seria o melhor modelo? Qual modelo seria mais adequado para identificar limiares no padrão de área central de floresta?", color = "blue", bold = TRUE)`
 
 -------
 
@@ -772,19 +772,10 @@ tmap_arrange(fig_core, fig_edge, fig_enn, nrow=1)
 
 ```
 
-include text 
 
 
 
-more here
 
-Plot extensions nclude figure
-
-more text
-
-
-
-see what happens
 
 -------
 
@@ -869,7 +860,6 @@ bind_rows(metricas_amostra_250,
 ```
 
 
-Best to include forest metrics 250 as 0 or NA?
 
 Plot
 
@@ -891,7 +881,13 @@ amostras_metricas %>%
     y = "metric value")
 ```
 
-### Pergunta 
+
+### Pergunta 6
+
+`r kableExtra::text_spec("Com base nos resultados apresentados (figura e tabela) caracterisar as mudançãs na paisagem em função de extensões diferentes. Olhando os graficos prever como seria o padrão para extensões maiores (lembrando que valores são doubrados). Seria relevante repetir incluindo calculos para extensões maiores (por exemplo 64 km e 128 km). Justifique sua caracterização e previsões de forma clara e concisa, apoie sua escolha com exemplos da literatura científica.", color = "blue", bold = TRUE)`
+
+
+### Pergunta 7
 
 `r kableExtra::text_spec("Usando como base o conteudo das aulas, leitura disponivel no Google Classroom (Base teórica 4 Dados, métricas, analises), e/ou exemplos apresentados aqui no tutorial, selecione pelo menos seis métricas de nível classe para caracterizar a paisagem de estudo e objectivos da sua projeto. Justifique sua seleção de forma clara e concisa, apoie sua escolha com exemplos da literatura científica.", color = "blue", bold = TRUE)`
 
