@@ -578,13 +578,13 @@ amostras_metrica %>%
 
 ### Modelos linear e não linear
 
-Um dos desafios mais frequentes é como melhor representar os dados observados para gerar evidências científicas robustas e informações confiáveis. Nós vimos que as mudancas na métrica porcentagem de área central de floresta não segue uma linha reta em relação de escala (extensão). Para ir além de uma descrição simplista dos padrões observados, na ecologia da paisagem uma variedade de modelos estatísticos são usados.
+Um dos desafios mais frequentes é como melhor representar os dados observados para gerar evidências científicas robustas e informações confiáveis. Nós vimos que as mudancas na métrica porcentagem de área central de floresta não segue uma linha reta em relação de escala (extensão). Para ir além de uma descrição simplista dos padrões observados, na ecologia da paisagem uma variedade de modelos estatísticos são usados.Não vamos rodar modelos (ainda), mas é importante entender algumas das opções disponíveis ao interpretar os gráficos.
 
 Por exemplo, modelos de regressão são amplamente usados em diversas aplicações
 para descrever a relação entre uma variável resposta Y e uma variável
-explicativa x. Os modelos lineares são uma generalização dos testes de hipótese clássicos mais simples ([Modelos linear](http://sillasgonzaga.com/material/cdr/modelos.html#modelo-linear) e [ Modelos lineares](https://analises-ecologicas.com/cap7.html)). Uma regressão linear, por exemplo, só pode ser aplicada para dados em que tanto a variável preditora quanto a resposta são contínuas, enquanto uma análise de variância é utilizada quando a variável preditora/explicativa é categórica. Os modelos lineares generalizados não têm essa limitação, podemos usar variáveis contínuas ou categóricas indistintamente ([Modelos Lineares Generalizados](https://analises-ecologicas.com/cap8.html)).
+explicativa x. Os modelos lineares são uma generalização dos testes de hipótese clássicos mais simples ([Modelos linear](http://sillasgonzaga.com/material/cdr/modelos.html#modelo-linear) e [ Modelos lineares](https://analises-ecologicas.com/cap7.html)). Uma regressão linear, só pode ser aplicada para dados em que tanto a variável preditora quanto a resposta são contínuas, enquanto uma análise de variância é utilizada quando a variável preditora/explicativa é categórica. Os modelos lineares generalizados não têm essa limitação, podemos usar variáveis contínuas ou categóricas indistintamente ([Modelos Lineares Generalizados](https://analises-ecologicas.com/cap8.html)).
 
-Mas, no caso de padroes ecologicas, sera que um modelo linear é o melhor modelo para representar a relação que explica “y” em função de “x”?  Um número crescente de pesquisadores compartilham o sentimento de que as relações entre variáveis biológicas/ecologicas são melhores descritas por funções não lineares. Processos como crescimento, nascimento, mortalidade, abundância, dispersão, competição e produção raramente são relacionadas linearmente às variáveis explicativas. 
+Mas, no caso de padroes ecologicas, sera que um modelo linear é o melhor modelo para representar a relação que explica “y” em função de “x”?  Um número crescente de pesquisadores compartilham o sentimento de que as relações entre variáveis biológicas/ecologicas são melhores descritas por funções não lineares. Processos ecologicas (como por exemplo crescimento, mortalidade, dispersão, e competição) raramente são relacionadas linearmente às variáveis explicativas. 
 
 A principal vantagem do modelo não linear sobre o linear é que 1) sua
 escolha está associada à conhecimento prévio sobre a relação a ser modelada e 2) geralmente apresenta interpretação prática para os parâmetros. Em modelos não-linear dados observados de uma variável resposta são descritos por uma função de uma ou mais variáveis explicativas que é não linear seus parâmetros. Assim como nos modelos lineares o objetivo é identificar e estabelecer a relação entre variáveis explicativas e resposta. Entretanto, enquanto os modelos lineares definem, em geral, relações empíricas/teoricas, os modelos não-lineares são, em grande parte das vezes, motivados pelo conhecimento do tipo de relação entre as variáveis. Desta forma, as aplicações surgem nas diversas áreas onde relações físicas, biológicas, cinéticas, químicas, fisiológicas, dentre outras, são estabelecidas por funções não lineares que devem ter coeficientes (parâmetros) identificados (estimados) a partir de dados observados, dados experimentais e/ou dados simulados.
@@ -644,11 +644,10 @@ invisible(dev.off())
 
 ```
 
-Olhando a figura a seguir.....
+
 ```{r insert-fig-comp, echo=FALSE, message=FALSE, warning=FALSE, out.width="98%", out.height="98%", fig.cap="Comparação de padrões lineares e não-lineares."}
 knitr::include_graphics("figures/fig_comp_linear.png")
 ```
-
 
 
 ### Pergunta 5
@@ -660,9 +659,9 @@ knitr::include_graphics("figures/fig_comp_linear.png")
 
 ## Ponto único, distâncias variados, métricas variadas
 
-text hrerererer
+No exemplo anterior comparamos uma métrica da paisagem em torno de um único ponto de amostragem. Mas sabemos que uma combinação de várias métricas de paisagem diferentes é necessária para entender os padrões na paisagem.
+Aqui mostraremos como incluir cálculos de diferentes métricas de paisagem ao mesmo tempo.
 
- > Não deve calcular todas as métricas disponíveis, mas sim, escolher aquelas que podem ser realmente adequadas para sua pergunta de pesquisa.
 
 
 ```{r insert-fig-buffmetrics, fig.cap="Ilustração da determinação de métricas da paisagem diferentes ao redor de um ponto. Exemplo com a estrutura da paisagem representado com trés caracteristicas (A) Área central, (B) Borda e (C) Vizinho mais próximo. O habitat de interesse (classe) é isolado. Um buffer (linha tracejada) é colocado ao redor de um ponto (amarela) e as métricas calculadas. E em seguida o processo é repetido em diferentes extensões.", echo=FALSE, warning=FALSE, message=FALSE}
@@ -791,80 +790,69 @@ see what happens
 
 \newpage
 
-Multiplwe metricas area for all exten...
-<code>sample_lsm()</code>
+ > Não deve calcular todas as métricas disponíveis, mas sim, escolher aquelas que podem ser realmente adequadas para sua pergunta de pesquisa.
+ 
+Calculando todas as métricas se chama um "tiro no escuro", algo cujo resultado se desconhece ou é imprevisível. Isso não é recomendado. Para fazer uma escolha melhor (mais robusta), seguindo princípios básicos da ciência, precisamos ler os estudos anteriores (artigos) para obter as métricas mais relevantes para nosso objetivo, pergunta e/ou a hipótese a ser testada.
+Aqui, como exemplo illustrativa vamos calcular alguns das métricas mais comums. Mas, isso não representa necessariamente as métricas mais adequados ou recommendadas.
 
-Aqui vamos .........
-
- * Métricas de área e borda. Quantificam a composição da paisagem e fornecem sobre ela informações importantes sobre a dinâmica de populações vegetais e animais  
-    *  <code>pland</code> = area and edge metric / percentage of landscape percentagem da paisagem Porcentagem de cobertura da classe na paisagem.  
-    * <code>ed</code> = area and edge metric / edge density . densidade de borda que é igual à soma dos comprimentos (m) de todos os segmentos de borda que envolvem o fragmento, dividida pela área total da paisagem (m²), sendo posteriormente convertido em hectares.
-    * <code>cpland</code> = core area metric / core area percentage of landscape / (percentual de área central ("core") na paisagem) Percentual de áreas centrais (excluídas as bordas de 30 m) em relação à área total da paisagem. O termo "Core area" foi traduzido como área central ou área núcleo. Aqui vamos adotar área central.
+ * Métricas de área e borda (area and edge metrics). Quantificam a composição da paisagem:  
+ 
+    *  `r kableExtra::text_spec("pland", background = "#dedede")` =  percentage of landscape. Percentagem da paisagem. Porcentagem de cobertura da classe na paisagem.
+    * `r kableExtra::text_spec("ed", background = "#dedede")` = edge density . Densidade de borda que é igual à soma dos comprimentos (m) de todos os segmentos de borda que envolvem o fragmento, dividida pela área total da paisagem (m²), sendo posteriormente convertido em hectares.
+    * `r kableExtra::text_spec("cpland", background = "#dedede")` = core area percentage of landscape. Percentual de área central ("core") na paisagem.
+Percentual de áreas centrais (excluídas as bordas de 30 m) em relação à área total da paisagem. O termo "Core area" foi traduzido como área central ou área núcleo. Aqui vamos adotar área central.
 
  * Métricas de agregação. Quantificam a configuração da paisagem:
-    * <code>enn</code> = aggegation metric / euclidian nearest neighbour distance distância euclidiana do vizinho mais próximo. 
-    * <code>enn_cv</code> = aggegation metric. Coeficiente de variação da distância euclidiana do vizinho mais próximo. A métrica resume cada classe como o Coeficiente de variação das distâncias euclidianas do vizinho mais próximo entre as manchas pertencentes à classe. O valor de enn_cv = 0 se a distância euclidiana do vizinho mais próximo for idêntica para todas as manchas. Aumenta, sem limite, à medida que a variação do ENN aumenta.
-    * <code>enn_sd</code> = aggegation metric.
-    * <code>pd</code> = aggegation metric / patch density densidade das manchas
-    * <code>cohesion</code> = aggregation metric / índice de coesão das manchas.
+    * `r kableExtra::text_spec("enn", background = "#dedede")` = euclidian nearest neighbour distance. Distância euclidiana do vizinho mais próximo. 
+    * `r kableExtra::text_spec("enn_cv", background = "#dedede")` = Coefficient of variation of euclidean nearest-neighbor distance. Coeficiente de variação da distância euclidiana do vizinho mais próximo. A métrica resume cada classe como o Coeficiente de variação das distâncias euclidianas do vizinho mais próximo entre as manchas pertencentes à classe. O valor de enn_cv = 0 se a distância euclidiana do vizinho mais próximo for idêntica para todas as manchas. Aumenta, sem limite, à medida que a variação do ENN aumenta.
+    * `r kableExtra::text_spec("enn_sd", background = "#dedede")` = Standard deviation of euclidean nearest-neighbor distance. Desvio padrão da distância euclidiana do vizinho mais próximo. 
+    * `r kableExtra::text_spec("pd", background = "#dedede")` = Patch density. Densidade das manchas.
+    * `r kableExtra::text_spec("cohesion", background = "#dedede")` = Cohesion index. Índice de coesão das manchas.
     
-
+Para incluir cálculos de diferentes métricas de paisagem ao mesmo tempo, precisamos somente acrescentar uma linha de codigo, que cria um objeto com os nomes das métricas que queremos calcular..... Assim, precisamos usar a opção 
+"what" na função para aceitar os nomes. 
 
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
 # Objeto com os nomes das funções para calcular as métricas desejadas.
-minhas_metricas <- c("lsm_c_pland", "lsm_c_ed", "lsm_c_cpland", "lsm_c_enn_mn", "lsm_c_enn_sd", "lsm_c_enn_cv", "lsm_c_pd","lsm_c_cohesion")
-metricas_composicao <- c("pland", "ed", "cpland")
+minhas_metricas <- c("lsm_c_pland", "lsm_c_ed", "lsm_c_cpland", 
+                     "lsm_c_enn_mn", "lsm_c_enn_sd", "lsm_c_enn_cv", "lsm_c_pd","lsm_c_cohesion")
 
-# Métricas calculadas para cada extensão
+# 8 Métricas calculadas para cada extensão
 # raio 250 metros
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
            size = 250, shape = "circle", 
            what = minhas_metricas) %>% 
-  mutate(raio = 250, 
-         met_cat = if_else(metric %in% metricas_composicao, 
-                           "composição", "configuração")) -> metricas_amostra_250 
+  mutate(raio = 250) -> metricas_amostra_250 
 # raio 500 metros
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
            size = 500, shape = "circle", 
            what = minhas_metricas)  %>% 
-   mutate(raio = 500, 
-         met_cat = if_else(metric %in% metricas_composicao, 
-                           "composição", "configuração")) -> metricas_amostra_500
+   mutate(raio = 500) -> metricas_amostra_500
 # raio 1 km (1000 metros)
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
            size = 1000, shape = "circle", 
            what = minhas_metricas)  %>% 
-   mutate(raio = 1000, 
-         met_cat = if_else(metric %in% metricas_composicao, 
-                           "composição", "configuração")) -> metricas_amostra_1000
+   mutate(raio = 1000) -> metricas_amostra_1000
 # raio 2 km (2000 metros)
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
            size = 2000, shape = "circle", 
            what = minhas_metricas) %>% 
-  mutate(raio = 2000, 
-         met_cat = if_else(metric %in% metricas_composicao, 
-                           "composição", "configuração")) -> metricas_amostra_2000
+  mutate(raio = 2000) -> metricas_amostra_2000
 # raio 4 km (4000 metros)
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
            size = 4000, shape = "circle", 
            what = minhas_metricas)  %>% 
-  mutate(raio = 4000, 
-         met_cat = if_else(metric %in% metricas_composicao, 
-                           "composição", "configuração"))  -> metricas_amostra_4000
+  mutate(raio = 4000)  -> metricas_amostra_4000
 # raio 8 km (8000 metros)
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
            size = 8000, shape = "circle", 
            what = minhas_metricas)  %>% 
-  mutate(raio = 8000, 
-         met_cat = if_else(metric %in% metricas_composicao, 
-                           "composição", "configuração")) -> metricas_amostra_8000
+  mutate(raio = 8000) -> metricas_amostra_8000
 # raio 16 km (16000 metros)
 sample_lsm(floresta_2020, y = rsm_31976[1, ], 
            size = 16000, shape = "circle", 
            what = minhas_metricas)  %>% 
-  mutate(raio = 16000, 
-         met_cat = if_else(metric %in% metricas_composicao, 
-                           "composição", "configuração")) -> metricas_amostra_16000
+  mutate(raio = 16000) -> metricas_amostra_16000
 ```
 
 join
@@ -880,25 +868,25 @@ bind_rows(metricas_amostra_250,
 
 ```
 
-get forest 
-```{r, echo=TRUE, message=FALSE, warning=FALSE}
-amostras_metricas %>% 
-  filter(class==1) -> amostras_metricas_floresta
-
-```
 
 Best to include forest metrics 250 as 0 or NA?
 
 Plot
 
 ```{r insert-fig-multiplemetrics, message=FALSE, warning=FALSE}
-amostras_metricas_floresta %>% 
-  mutate(ext_km = (2*raio)/1000) %>%
+metricas_composicao <- c("pland", "ed", "cpland")
+# arrumar dados
+amostras_metricas %>% 
+  filter(class==1) %>%
+  mutate(ext_km = (2*raio)/1000, 
+         met_cat = if_else(metric %in% metricas_composicao, 
+                           "composição", "configuração")) %>%
+# fazer grafico
   ggplot(aes(x=ext_km, y=value)) + 
   geom_point() + 
   geom_line() +
   facet_wrap(met_cat~metric, scales = "free_y") +
-  labs(title = "Multiple metris",
+  labs(title = "Resultados de várias métricas",
     x = "extensão (quilômetros)", 
     y = "metric value")
 ```
