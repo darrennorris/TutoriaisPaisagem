@@ -809,13 +809,13 @@ Percentual de áreas centrais (excluídas as bordas de 30 m) em relação à ár
     * `r kableExtra::text_spec("pd", background = "#dedede")` = Patch density. Densidade das manchas.
     * `r kableExtra::text_spec("cohesion", background = "#dedede")` = Cohesion index. Índice de coesão das manchas.
     
-Para incluir cálculos de diferentes métricas de paisagem ao mesmo tempo, precisamos somente acrescentar uma linha de codigo, que cria um objeto com os nomes das métricas que queremos calcular..... Assim, precisamos usar a opção 
-"what" na função para aceitar os nomes. 
+Para incluir cálculos de diferentes métricas de paisagem ao mesmo tempo, precisamos somente acrescentar uma linha de codigo, que cria um objeto com os nomes das métricas que queremos calcular..... Assim, tambem precisamos usar a opção "what" na função para aceitar os nomes. 
 
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
 # Objeto com os nomes das funções para calcular as métricas desejadas.
 minhas_metricas <- c("lsm_c_pland", "lsm_c_ed", "lsm_c_cpland", 
-                     "lsm_c_enn_mn", "lsm_c_enn_sd", "lsm_c_enn_cv", "lsm_c_pd","lsm_c_cohesion")
+                     "lsm_c_enn_mn", "lsm_c_enn_sd", "lsm_c_enn_cv", 
+                     "lsm_c_pd","lsm_c_cohesion")
 
 # 8 Métricas calculadas para cada extensão
 # raio 250 metros
