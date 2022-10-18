@@ -3,11 +3,6 @@ title: "Métricas da paisagem"
 author: "Darren Norris"
 date: "`r Sys.Date()`"
 output:
-  bookdown::html_document2:
-    toc: yes
-    toc_depth: 3
-    toc_float: yes
-    fig_caption: yes
   bookdown::pdf_document2:
     toc: yes
     toc_depth: 3
@@ -16,6 +11,11 @@ output:
     highlight: tango
     includes:
       in_header: preamble.txe
+  bookdown::html_document2:
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+    fig_caption: yes
 urlcolor: blue
 toc-title: Sumário
 header-includes:

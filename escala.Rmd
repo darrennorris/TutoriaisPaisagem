@@ -3,11 +3,6 @@ title: "Escala"
 author: "Darren Norris"
 date: "`r Sys.Date()`"
 output:
-  bookdown::html_document2:
-    toc: yes
-    toc_float: yes
-    toc_depth: 3
-    fig_caption: yes
   bookdown::pdf_document2:
     toc: yes
     toc_depth: 3
@@ -16,6 +11,11 @@ output:
     highlight: tango
     includes:
       in_header: preamble.txe
+  bookdown::html_document2:
+    toc: yes
+    toc_float: yes
+    toc_depth: 3
+    fig_caption: yes
 always_allow_html: yes
 urlcolor: blue
 toc-title: Sumário
@@ -379,7 +379,7 @@ Primeira, avisar R sobre onde ficar o arquivo. O código abaixo vai abrir uma no
 meuSIG <- file.choose()
 ```
 
-Agora vamos olhar o que tem no arquivo. Depois que voces rodar o codigo `r kableExtra::text_spec( "sf::st_layers(meuSIG)", background = " #d3d3d3", bold = TRUE)`, o resultado mostra que o arquivo rivers.GPKG  inclui camadas diferentes com pontos ("Point"), linhas ("Line String ") e polígonos ("Polygon"). Alem disso, a coluna "crs_name" mostrar que a sistema de coordenadas é geográfica (WGS84, (EPSG: 4326)[https://epsg.io/4326], e é diferente do arquivo raster:
+Agora vamos olhar o que tem no arquivo. Depois que voces rodar o codigo `r kableExtra::text_spec( "st_layers(meuSIG)", background = "#d3d3d3", bold = TRUE)`, o resultado mostra que o arquivo rivers.GPKG  inclui camadas diferentes com pontos ("Point"), linhas ("Line String ") e polígonos ("Polygon"). Alem disso, a coluna "crs_name" mostrar que a sistema de coordenadas é geográfica (WGS84, (EPSG: 4326)[https://epsg.io/4326], e é diferente do arquivo raster:
 ```{r }
 sf::st_layers(meuSIG)
 ```
