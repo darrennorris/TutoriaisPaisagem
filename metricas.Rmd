@@ -196,7 +196,7 @@ Link: [https://github.com/darrennorris/gisdata/blob/master/inst/raster/mapbiomas
 
 Lembrando-se de salvar o arquivo ("utm_cover_AP_rio_2020.tif") em um local conhecido no seu computador. Agora, nós podemos carregar os dados de cobertura da terra "utm_cover_AP_rio_2020.tif" com a função <code>rast</code>.
 ```{r eval=FALSE, echo=TRUE, message=FALSE, warning=FALSE}
-# Selecionar e carregar arquivo "amostra_mapbiomas_2020.tif"
+# Selecionar e carregar arquivo "utm_cover_AP_rio_2020.tif"
 mapbiomas_2020 <- rast(file.choose())
 # criar uma nova camada de floresta
 floresta_2020 <- mapbiomas_2020
