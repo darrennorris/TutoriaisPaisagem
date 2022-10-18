@@ -3,6 +3,11 @@ title: "Métricas da paisagem"
 author: "Darren Norris"
 date: "`r Sys.Date()`"
 output:
+  bookdown::html_document2:
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+    fig_caption: yes
   bookdown::pdf_document2:
     toc: yes
     toc_depth: 3
@@ -11,11 +16,6 @@ output:
     highlight: tango
     includes:
       in_header: preamble.txe
-  bookdown::html_document2:
-    toc: yes
-    toc_depth: 3
-    toc_float: yes
-    fig_caption: yes
 urlcolor: blue
 toc-title: Sumário
 header-includes:
@@ -246,7 +246,11 @@ tm_layout(legend.bg.color = "white")
 ```
 
 ## Exibir dados raster e sobreposição com locais de amostragem
-Agora temos a paisagem, precisamos tambem os pontos de amostra. Por isso, precisamos carregar os dados de rios e pontos de amostragem que usamos no tutorial Escala - arquivo "rivers.GPKG". Vamos carregar as camadas que voces baixaram no tutorial anterior. Selecionando o arquivo "rivers.GPKG", e carregando primeiramente a camadas "midpoints" e depois "centerline".
+Agora temos a paisagem, precisamos tambem os pontos de amostra. Por isso, precisamos carregar os dados de rios e pontos de amostragem que usamos no tutorial Escala - arquivo "rivers.GPKG". Vamos carregar as camadas que voces baixaram no tutorial anterior. 
+Baixar o arquivo Link: [https://github.com/darrennorris/gisdata/blob/master/inst/vector/rivers.GPKG](https://github.com/darrennorris/gisdata/blob/master/inst/vector/rivers.GPKG){target="_blank"} .
+Lembrando-se de salvar o arquivo ("rivers.GPKG")  em um local conhecido no seu computador. 
+
+Agora, com o proximo bloco de codigo, podemos selecionar o arquivo "rivers.GPKG", e carregar primeiramente a camada "midpoints" e depois "centerline".
 
 No exemplo, usamos `r kableExtra::text_spec("%>%", bold = TRUE)`, que estabelece a ligação entre os passos do processo. Ou seja, `r kableExtra::text_spec("%>%", bold = TRUE)` passa o objeto resultante automaticamente para a próxima função como primeiro argumento. 
 Primeiramente carregamos os dados e em seguida converter as coordenadas para o mesmo sistema de referência que o arquivo raster (com a função st_transform). 
@@ -346,7 +350,7 @@ Depois que executar ("run"), podemos olhar os dados com o codigo a seguir.
 minha_amostra_1000
 ```
 
-Os dados deve ter os valores:
+Os dados deve ter os valores (coluna value) da métrica (coluna metric) de cada classe (coluna class):
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 minha_amostra_1000 %>% 
   kbl() %>%
