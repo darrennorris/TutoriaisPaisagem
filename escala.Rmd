@@ -156,7 +156,7 @@ Agora vamos olhar um exemplo do mundo real. Uma pequena amostra do Rio Araguari,
 
 O arquivo raster tem uma pequena amostra com a classificação da terra feito pela [MapBiomas](https://mapbiomas.org/), que produz mapeamento anual da cobertura e uso da terra no Brasil desde 1985.
 
-Baixar arquivo com os dados (formato ".tif"), link: [https://github.com/darrennorris/gisdata/blob/master/inst/raster/amostra_mapbiomas_2020.tif](https://github.com/darrennorris/gisdata/blob/master/inst/raster/amostra_mapbiomas_2020.tif) .
+Baixar arquivo com os dados (formato ".tif"), link: [https://github.com/darrennorris/gisdata/blob/master/inst/raster/amostra_mapbiomas_2020.tif](https://github.com/darrennorris/gisdata/blob/master/inst/raster/amostra_mapbiomas_2020.tif){target="_blank"} .
 Lembrando-se de salvar o arquivo ("amostra_mapbiomas_2020.tif") em um local conhecido no seu computador. 
 
 ```{r eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
@@ -431,7 +431,7 @@ meuSIGr <- "C:\\Users\\user\\Documents\\Articles\\gis_layers\\gisdata\\inst\\ras
 fs2 <- file.size(meuSIGr)/(1024^2)
 ```
 Mais uma vez vamos aproveitar os dados de MapBiomas. Agora baixar arquivo raster com cobertura de terra no entorno dos rios em 2020, (formato ".tif", tamanho `r round(fs2,1)` MB). 
-Link: [https://github.com/darrennorris/gisdata/blob/master/inst/raster/mapbiomas_AP_utm_rio/utm_cover_AP_rio_2020.tif](https://github.com/darrennorris/gisdata/blob/master/inst/raster/mapbiomas_AP_utm_rio/utm_cover_AP_rio_2020.tif) .
+Link: [https://github.com/darrennorris/gisdata/blob/master/inst/raster/mapbiomas_AP_utm_rio/utm_cover_AP_rio_2020.tif](https://github.com/darrennorris/gisdata/blob/master/inst/raster/mapbiomas_AP_utm_rio/utm_cover_AP_rio_2020.tif){target="_blank"} .
 Lembrando-se de salvar o arquivo ("utm_cover_AP_rio_2020.tif") em um local conhecido no seu computador. Agora avisar R sobre onde ficar o arquivo. O código abaixo vai abrir uma nova janela, e você deve buscar e selecionar o arquivo "utm_cover_AP_rio_2020.tif": 
 ```{r echo=TRUE, eval=FALSE}
 meuSIGr <- file.choose()
