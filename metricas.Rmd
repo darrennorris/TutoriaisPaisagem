@@ -198,7 +198,7 @@ Lembrando-se de salvar o arquivo ("utm_cover_AP_rio_2020.tif") em um local conhe
 ```{r eval=FALSE, echo=TRUE, message=FALSE, warning=FALSE}
 # Selecionar e carregar arquivo "utm_cover_AP_rio_2020.tif"
 mapbiomas_2020 <- rast(file.choose())
-# criar uma nova camada de floresta
+# Reclassificação - criar uma nova camada de floresta
 floresta_2020 <- mapbiomas_2020
 # Com valor de 0
 values(floresta_2020) <- 0
