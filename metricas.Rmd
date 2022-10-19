@@ -231,7 +231,7 @@ tm_shape(floresta_2020_modal) +
 tm_layout(legend.bg.color = "white")
 ```
 
-Se esta todo certo, voces devem ter uma imagem parcida como o segunite:
+Se esta todo certo, voces devem ter uma imagem assim:
 
 ```{r, echo = FALSE, fig.width=5, fig.height=5, fig.cap="Floresta ao redor do Rio Araguari. MapBiomas 2020 reclassificado em floresta e não-floresta."}
 # Passo necessario para agilizar o processamento
