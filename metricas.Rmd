@@ -177,6 +177,7 @@ Carregar pacotes (que deve esta instalado antes):
 ```{r, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(sf)
+library(raster)
 library(terra)
 library(tmap)
 library(gridExtra)
@@ -916,17 +917,18 @@ amostras_metricas %>%
 ```{r, echo=FALSE, eval=FALSE}
 #https://bnu-landscape-ecology.netlify.app/post/2020-10-23-lsm/
 #example so no need to repeat by different sizes
-
-buffer_sizes=c(500,750,1000,2000,3000) #we want buffers for this sizes
-buffer_results = buffer_sizes %>% #buffer data
+# 5 minutos para rodar 5 pontos * 8 metricas * 7 distancias * 2 classes
+buffer_sizes <- c(250,500,1000, 2000, 4000, 8000, 16000) 
+r <- raster(floresta_2020)
+buffer_results <- buffer_sizes %>% #buffer data
   set_names() %>% #use the given names
   #map_dfr() return a data frame created by row-binding
-  map_dfr(~sample_lsm(list(beijing_meters), 
-                      what=c("lsm_c_pd","lsm_c_area_mn",
-                             "lsm_l_shei","lsm_l_frac_mn"), #metrics 
-                      y = sample_points, #locations
+  map_dfr(~sample_lsm(list(r), 
+                      what=minhas_metricas, #metrics 
+                      y = rsm_31976[1:5, ], #locations
+                      plot_id = data.frame(rsm_31976)[1:5, 'subz_id'],
                       size = .),  #from each element of the data
-          .id = "buffer") #the variable name for each element of buffer_size
+          .id = "raio") #the variable name for each element of buffer_size
 
 ```
 
