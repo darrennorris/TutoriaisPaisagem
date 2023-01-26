@@ -166,7 +166,7 @@ rin <- "C:/Users/user/Documents/Articles/gis_layers/gisdata/inst/raster/amostra_
 ramostra <- rast(rin)
 ```
 
-Carregar o arquivo trabalhamos com o pacote [terra](https://CRAN.R-project.org/package=terra). O pacote tem varios funçoes para a análise e modelagem de dados geográficos. Nós podemos ler os dados de cobertura da terra com a função `r kableExtra::text_spec( "rast", background = "#d3d3d3")`.
+Carregar o arquivo trabalhamos com o pacote [terra](https://CRAN.R-project.org/package=terra). O pacote tem varios funçoes para a análise e modelagem de dados geográficos. Nós podemos ler os dados de cobertura da terra no arquivo ".tif" com a função `r kableExtra::text_spec( "rast", background = "#d3d3d3")`.
 ```{r eval=FALSE, echo=TRUE, message=FALSE, warning=FALSE}
 #
 ramostra <- rast(file.choose())
