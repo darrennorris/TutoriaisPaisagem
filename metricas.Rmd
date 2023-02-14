@@ -3,6 +3,11 @@ title: "Métricas da paisagem"
 author: "Darren Norris"
 date: "`r Sys.Date()`"
 output:
+  bookdown::html_document2:
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+    fig_caption: yes
   bookdown::pdf_document2:
     toc: yes
     toc_depth: 3
@@ -11,11 +16,6 @@ output:
     highlight: tango
     includes:
       in_header: preamble.txe
-  bookdown::html_document2:
-    toc: yes
-    toc_depth: 3
-    toc_float: yes
-    fig_caption: yes
 urlcolor: blue
 toc-title: Sumário
 header-includes:
@@ -42,27 +42,32 @@ As métricas da paisagem nos ajudam a entender as mudanças na paisagem de difer
 
 Durante a aula você aprenderá a:  
 
- * Importar e plotar dados raster em R e sobrepor locais de amostragem.  
+ * Importar e plotar dados raster em R e mapear locais de amostragem com os pacotes [terra](https://rspatial.org/pkg/index.html), [sf](https://cran.r-project.org/web/packages/sf/vignettes/sf1.html) e [tmap](https://r-tmap.github.io/tmap/).  
  
- * Calcular métricas de paisagem.  
+ * Calcular métricas de paisagem com o pacote [landscapemetrics](https://r-spatialecology.github.io/landscapemetrics/).  
  
- * Extrair dados de paisagem em locais de amostragem e dentro de um buffer ao redor deles.  
+ * Calcular métricas de paisagem em locais de amostragem e dentro de um buffer ao redor deles (comparação multiescala).  
+ 
+ * Construir gráficos com o pacote [ggplot2](https://ggplot2.tidyverse.org/).
+ 
+ * Comparação de padrões lineares e não-lineares.
  
 
 # Codigo e R
-Objetivo não é de apresentar detalhes sobre os métodos ou os funções no [R](https://cran.r-project.org/). Existem diversos exemplos disponíveis, por exemplo:  
+Objetivo não é de apresentar detalhes sobre os métodos ou os funções no [R](https://cran.r-project.org/). Existem diversos exemplos disponíveis para que vocês podem obter ajudar e mais detalhes sobre manipulação, visualização de dados e análises no R, por exemplo:  
 
  * livros online:  
   
+    * [Análises Ecológicas no R](https://analises-ecologicas.com/index.html) desenvolvidos pelos professores durante aulas de graduação e cursos de pós-graduação nas universidades de UNESP, UFSCAR, UFRPE, UFMS, e UFRN. Capitulo 15 [Dados geoespaciais](https://analises-ecologicas.com/cap15.html) tem exemplos de geoprocessamento passo a passo com o pacote mais antiga "raster", visualização de dados geoespaciais e exemplos de aplicações de análises geoespaciais para dados ecológicos.
+    
     * [Introdução ao R](https://bookdown.org/wevsena/curso_r_tce/curso_r_tce.html)  curso de capacitação para servidores do Tribunal de Contas do Estado da Paraíba.
  
     * [Ciência de Dados com R](https://cdr.ibpad.com.br/)  desenvolvido pelo  Instituto Brasileiro de Pesquisa e Análise de Dados (IBPAD).  
     
     * [Ciência de Dados em R](https://livro.curso-r.com/index.html) desenvolvido durante Cursos de Verão do Instituto de Matemática e Estatística da Universidade de São Paulo (IME-USP).
 
-    * [Análises Ecológicas no R](https://analises-ecologicas.com/index.html) desenvolvidos pelos professores durante aulas de graduação e cursos de pós-graduação nas universidades de UNESP, UFSCAR, UFRPE, UFMS, e UFRN.
 
- * Com Google "r cran introdução tutorial"..... onde tem mais de 50 mil resultados com exemplos, imagens e videos ......  
+ * Tutoriais e exemplos online através buscas com Google, sempre da preferência para exemplos mais recentes porque o código e os pacotes estão sempre avançando. Exemplo buscando com "r cran introdução tutorial".....  tem mais de 50 mil resultados com exemplos, imagens e videos ......  
  
  * Grupos de ajuda, como por exemplo:  
  
@@ -72,7 +77,7 @@ Objetivo não é de apresentar detalhes sobre os métodos ou os funções no [R]
 
  > O objetivo é  de apresentar um tutorial mostrado os capacidades e opções para desenvolver e integrar pesquisas de ecologia da paisagem no ambiente estatística de [R](https://cran.r-project.org/)
 
-Porque use R? R tem a capacidade (baseada em codigo) para alternar  entre tarefas de processamento, modelagem e visualização de dados geográficos e não geográficos. Alem disso, como é possível importar, modificar, analisar e visualizar dados espaciais no mesmo ambiente com script/codigo, o R permite fluxos de trabalho transparentes e reproduzíveis ([A Ciência Aberta](https://foster.gitbook.io/manual-de-formacao-em-ciencia-aberta/02introducaoacienciaaberta/01conceito_e_principios_da_ciencia_aberta)).
+Porque use R? R tem a capacidade (baseada em codigo) para alternar  entre tarefas de processamento, modelagem e visualização de dados geográficos e não geográficos. Além disso, como é possível importar, modificar, analisar e visualizar dados espaciais no mesmo ambiente com script/código, o R permite fluxos de trabalho transparentes e reproduzíveis ([A Ciência Aberta](https://foster.gitbook.io/manual-de-formacao-em-ciencia-aberta/02introducaoacienciaaberta/01conceito_e_principios_da_ciencia_aberta)).
 
 
 > Aliás, atualmente a grande maioria dos artigos científicos publicados na revista [Landscape Ecology](https://www.springer.com/journal/10980/) incluir análises usando R.
@@ -123,7 +128,7 @@ x + 1
 As métricas de paisagem são a forma que os ecólogos de paisagem usam para descrever os padrões espaciais de paisagens para depois avaliar a influência destes padrões espaciais nos padrões e processos ecológicos.
  
 
-[landscapemetrics](https://r-spatialecology.github.io/landscapemetrics/) é um pacote R para calcular métricas de paisagem em paisagems categóricos (onde tem uma classificação de cobertura de terra/habitat), em um fluxo de trabalho organizado. O pacote pode ser usado como um substituto do FRAGSTATS ([McGarigal et al. 1995](https://doi.org/10.2737/PNW-GTR-351),  https://doi.org/10.2737/PNW-GTR-351), pois oferece um fluxo de trabalho reproduzível para análise de paisagem em um único ambiente (Professor McGarigal se aposentou, então o software original não é mais suportado).
+[landscapemetrics](https://r-spatialecology.github.io/landscapemetrics/) tem funções para calcular métricas de paisagem em paisagems categóricos (onde tem uma classificação de cobertura de terra/habitat - modelo mancha-corredor-matriz), em um fluxo de trabalho organizado. O pacote pode ser usado como um substituto do FRAGSTATS ([McGarigal et al. 1995](https://doi.org/10.2737/PNW-GTR-351),  https://doi.org/10.2737/PNW-GTR-351), pois oferece um fluxo de trabalho reproduzível para análise de paisagem em um único ambiente (Professor McGarigal se aposentou, então FRAGSTATS não é mais apoiado).
 [landscapemetrics](https://r-spatialecology.github.io/landscapemetrics/) também permite cálculos de quatro métricas teóricas de complexidade da paisagem:  entropia marginal, entropia condicional, entropia conjunta e informação mútua ([Nowosad e Stepinski 2019](https://doi.org/10.1007/s10980-019-00830-x) https://doi.org/10.1007/s10980-019-00830-x).
 
 Nesse pacote o formato geral para uma função é o seguinte "lsm_nível_métrica":  
@@ -131,9 +136,9 @@ Nesse pacote o formato geral para uma função é o seguinte "lsm_nível_métric
  * A primeira parte é sempre lsm_ ("landscapemetric"), seguinda do “nível_” e por fim a “métrica”. Ou seja, todas as funções que calculam métricas 
  começam com lsm_ .......   
 
- * Daí você deve incluir o nível da análise “p” para patch (ou seja, para a mancha ou fragmento), “c” para classe e “l” para landscape ou seja, para métricas para a paisagem como um todo.   
+ * Daí você deve incluir o nível da análise “p” para patch (ou seja, para a mancha/fragmento), “c” para classe e “l” para landscape ou seja, métricas para a paisagem como um todo.  
 
- * E daí existem inúmeras métricas, como por exemplo a `r kableExtra::text_spec("cpland", background = "#dedede")` que é o percentual de área central - “core area” na paisagem, como vimos na aula teórica. Assim sendo, a função `r kableExtra::text_spec("lsm_c_cpland", background = "#dedede")` vai calacular a métrica porcentagem da área central em cada classe.  
+ * E daí existem inúmeras métricas, como por exemplo a `r kableExtra::text_spec("cpland", background = "#dedede")` que é o percentual de área central - “core area” na paisagem, como vimos na aula teórica. Assim sendo, a função `r kableExtra::text_spec("lsm_c_cpland", background = "#dedede")` vai calacular a métrica porcentagem da área central em cada classe. Lembrando existem metricas que podem se calculados nos trés niveis, e metricas que so pode se calculados somente para um nivel espcifco.  
 
 Digite o código abaixo e veja o resultado. Leia com atenção e preste particular atenção na organização da página de ajuda.
 
@@ -191,7 +196,7 @@ library(mgcv)
 # Dados
 
 Existem varios formas de importar e exportar dados geoespaciais.
-Aqui, precisamos o arquivo com os dados de MapBiomas "utm_cover_AP_rio_2020.tif", que voces baixaram no tutorial anterior (você pode baixar novamente seguindo tutorial Escala https://rpubs.com/darren75/escala).
+Aqui, precisamos o arquivo com os dados de MapBiomas "utm_cover_AP_rio_2020.tif", que voces baixaram no tutorial anterior (tutorial Escala https://rpubs.com/darren75/escala).
 
 Link: [https://github.com/darrennorris/gisdata/blob/master/inst/raster/mapbiomas_AP_utm_rio/utm_cover_AP_rio_2020.tif](https://github.com/darrennorris/gisdata/blob/master/inst/raster/mapbiomas_AP_utm_rio/utm_cover_AP_rio_2020.tif){target="_blank"} 
 
@@ -199,22 +204,26 @@ Lembrando-se de salvar o arquivo ("utm_cover_AP_rio_2020.tif") em um local conhe
 ```{r eval=FALSE, echo=TRUE, message=FALSE, warning=FALSE}
 # Selecionar e carregar arquivo "utm_cover_AP_rio_2020.tif"
 mapbiomas_2020 <- rast(file.choose())
-# Reclassificação - criar uma nova camada de floresta
+# Reclassificação - 
+# Criar uma nova camada de floresta (novo objeto de raster copiando mapbiomas_2020, 
+# assim para ter os mesmos coordenados, resolução e extensão)
 floresta_2020 <- mapbiomas_2020
-# Com valor de 0
+# Todos os pixels com valor de 0
 values(floresta_2020) <- 0
-# Atualizar categorias florestais agrupados com valor de 1
+# Atualizar com valor de 1 quando pixels originais são de floresta (classe 3 e 4)
 floresta_2020[mapbiomas_2020==3 | mapbiomas_2020==4] <- 1 
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 rin <- "data/mapbiomas_AP_utm_rio/utm_cover_AP_rio_2020.tif"
 mapbiomas_2020 <- rast(rin)
-# criar uma nova camada de floresta
+# Reclassificação - 
+# Criar uma nova camada de floresta (novo objeto de raster copiando mapbiomas_2020, 
+# assim para ter os mesmos coordenados, resolução e extensão)
 floresta_2020 <- mapbiomas_2020
-# Com valor de 0
+# Todos os pixels com valor de 0
 values(floresta_2020) <- 0
-# Atualizar categorias florestais agrupados com valor de 1
+# Atualizar com valor de 1 quando pixels originais são de floresta (classe 3 e 4)
 floresta_2020[mapbiomas_2020==3 | mapbiomas_2020==4] <- 1 
 ```
 
@@ -254,7 +263,7 @@ Lembrando-se de salvar o arquivo ("rivers.GPKG")  em um local conhecido no seu c
 Agora, com o proximo bloco de codigo, podemos selecionar o arquivo "rivers.GPKG", e carregar primeiramente a camada "midpoints" e depois "centerline".
 
 No exemplo, usamos `r kableExtra::text_spec("%>%", bold = TRUE)`, que estabelece a ligação entre os passos do processo. Ou seja, `r kableExtra::text_spec("%>%", bold = TRUE)` passa o objeto resultante automaticamente para a próxima função como primeiro argumento. 
-Primeiramente carregamos os dados e em seguida converter as coordenadas para o mesmo sistema de referência que o arquivo raster (com a função st_transform). 
+Primeiramente carregamos os dados e em seguida converter (reprojeção) as coordenadas para o mesmo sistema de referência que o arquivo raster (com a função st_transform). 
 
 ```{r, echo=FALSE, eval=TRUE, message=FALSE, warning=FALSE, results='hide'}
 meuSIG <- "data/rivers.gpkg"
@@ -323,10 +332,10 @@ tm_layout(legend.bg.color="white")
 
 
 # Calculo de métricas
-Para ilustrar como rodar as funções e cálculos com landscapemetrics, vamos calcular a área central na paisagem que usamos no tutorial de Escala. Vamos estudar uma classe (floresta), portanto vamos incluir as métricas para nível de classe. Além disso, as métricas de paisagem em nível de classe são mais eficazes na definição de processos ecológicos (Tischendorf, L. Can landscape indices predict ecological processes consistently?. Landscape Ecology 16, 235–254 (2001). 
+Para ilustrar como rodar as funções e cálculos com landscapemetrics, vamos calcular a área central na paisagem. Vamos estudar uma classe (floresta), portanto vamos incluir as métricas para nível de classe. Além disso, as métricas de paisagem em nível de classe são mais eficazes na definição de processos ecológicos (Tischendorf, L. Can landscape indices predict ecological processes consistently?. Landscape Ecology 16, 235–254 (2001). 
 https://doi.org/10.1023/A:1011112719782.).
 
-Para calcular as métricas de paisagem dentro de um certo buffer em torno de pontos de amostra, existe a função `r kableExtra::text_spec("sample_lsm()", background = "#dedede")`. Através da função `r kableExtra::text_spec("sample_lsm()", background = "#dedede")` podemos calcular mais de 50 métricas da paisagem, dentro de extensões diferentes.
+Para calcular as métricas de paisagem dentro de um certo buffer em torno de pontos de amostra, existe a função `r kableExtra::text_spec("sample_lsm()", background = "#dedede")`. Através da função `r kableExtra::text_spec("sample_lsm()", background = "#dedede")` podemos calcular mais de 50 métricas da paisagem, dentro de extensões (raios/distancias) diferentes.
 
 
 ##  Ponto único, raio único, métrica única
@@ -334,8 +343,8 @@ Para calcular as métricas de paisagem dentro de um certo buffer em torno de pon
 Métricas de área central ("core area") são consideradas medidas da qualidade de hábitat, uma vez que indica quanto existe realmente de área efetiva de um fragmento, após descontar-se o efeito de borda. Vamos calcular a percentual de área central ("core area") no entorno de um ponto de amostragem. Isso seria, a percentual de áreas centrais (excluídas as bordas de 30 m) de cada classe em relação à área total da paisagem.
 
 Para a função `r kableExtra::text_spec("sample_lsm()", background = "#dedede")` funcionar, precisamos informar 
-(i) a paisagem (arquivo de raster), (ii) ponto (vector), 
-(iii) raio, (iv) forma do buffer (círculo ou quadrado) e por final (v) a métrica  desejada.
+(i) a paisagem (arquivo de raster), (ii) ponto (arquivo vector), 
+(iii) raio, (iv) forma do buffer (círculo ou quadrado) e por final (v) a métrica  desejada. Cada opção tem especificações particulares assim para que a função pode receber dados em formatos diferentes e produzir resultados confiorme necessidades de diversos casos. 
 
 
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
@@ -505,7 +514,7 @@ Uma imagem vale mais que mil palavras. Portanto, gráficos/figuras/imagens são 
 Aqui, vamos fazer um grafico com os dados amostras_metrica,
 usando o pacote [ggplot2](https://ggplot2.tidyverse.org/index.html).
 
-O ggplot2 faz parte do conjunto [tidyverse](https://tidyverse.tidyverse.org/articles/paper.html), e é um pacote de visualização de dados. "gg" se refere a uma gramática de gráficos. A ideia principal é criar um gráfico como se fosse uma frase de uma língua, onde cada elemento do gráfico seria uma palavra, organizados em uma sequencia logica para construir uma frase completo (gráfico final). Você fornece os dados, informa ao ggplot2 como mapear variáveis para estética, quais tipos/formatos gráficas usar e ele cuida dos detalhes.
+O ggplot2 faz parte do conjunto de pacotes [tidyverse](https://tidyverse.tidyverse.org/articles/paper.html), e é um pacote de visualização de dados. "gg" se refere a uma gramática de gráficos. A ideia principal é criar um gráfico como se fosse uma frase, onde cada elemento do gráfico seria uma palavra, organizados em uma sequencia logica para construir uma frase completo (gráfico final). Você fornece os dados, informa ao ggplot2 como mapear variáveis para estética, quais tipos/formatos gráficas usar e ele cuida dos detalhes.
 
 Isto nos permite construir gráficos tão complexos quanto quisermos. Os gráficos criados com ggplot2 são, em geral, mais elegantes do que os gráficos tradicionais do R. Para mais exemplos e tutoriais com mais detalhes veja os capitulos sobre ggplot2 nos livros:  
 
@@ -905,7 +914,7 @@ amostras_metricas %>%
 
 ### Pergunta 6
 
-`r kableExtra::text_spec("Com base nos resultados apresentados (figura e tabela) caracterisar as mudançãs na paisagem em função de extensões diferentes. Olhando os graficos prever como seria o padrão para extensões maiores (lembrando que valores são doubrados). Seria relevante repetir incluindo calculos para extensões maiores (por exemplo 64 km e 128 km). Justifique sua caracterização e previsões de forma clara e concisa, apoie sua escolha com exemplos da literatura científica.", color = "blue", bold = TRUE)`
+`r kableExtra::text_spec("Com base nos resultados apresentados (figura e tabela) caracterisar as mudançãs na paisagem em função de extensões diferentes. Olhando os graficos prever como seria o padrão para extensões maiores (lembrando que valores são doubrados - por exemplo raio de 250 metros gerar uma extensão de 500 metros). Seria relevante repetir incluindo calculos para extensões maiores (por exemplo 64 km e 128 km)? Justifique sua caracterização e previsões de forma clara e concisa, apoie sua escolha com exemplos da literatura científica.", color = "blue", bold = TRUE)`
 
 
 ### Pergunta 7
