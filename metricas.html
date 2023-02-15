@@ -11,7 +11,7 @@
 
 <meta name="author" content="Darren Norris" />
 
-<meta name="date" content="2023-02-14" />
+<meta name="date" content="2023-02-15" />
 
 <title>Métricas da paisagem</title>
 
@@ -1699,7 +1699,7 @@ border-radius: 0px;
 
 <h1 class="title toc-ignore">Métricas da paisagem</h1>
 <h4 class="author">Darren Norris</h4>
-<h4 class="date">2023-02-14</h4>
+<h4 class="date">2023-02-15</h4>
 
 </div>
 
@@ -1821,7 +1821,7 @@ library(mgcv)</code></pre>
 <div id="dados" class="section level1" number="4">
 <h1><span class="header-section-number">4</span> Dados</h1>
 <p>Existem varios formas de importar e exportar dados geoespaciais.
-Aqui, precisamos o arquivo com os dados de MapBiomas “utm_cover_AP_rio_2020.tif”, que voces baixaram no tutorial anterior (você pode baixar novamente seguindo tutorial Escala <a href="https://rpubs.com/darren75/escala" class="uri">https://rpubs.com/darren75/escala</a>).</p>
+Aqui, precisamos o arquivo com os dados de MapBiomas “utm_cover_AP_rio_2020.tif”, que voces baixaram no tutorial anterior (tutorial Escala <a href="https://rpubs.com/darren75/escala" class="uri">https://rpubs.com/darren75/escala</a>).</p>
 <p>Link: <a href="https://github.com/darrennorris/gisdata/blob/master/inst/raster/mapbiomas_AP_utm_rio/utm_cover_AP_rio_2020.tif" target="_blank">https://github.com/darrennorris/gisdata/blob/master/inst/raster/mapbiomas_AP_utm_rio/utm_cover_AP_rio_2020.tif</a></p>
 <p>Lembrando-se de salvar o arquivo (“utm_cover_AP_rio_2020.tif”) em um local conhecido no seu computador. Agora, nós podemos carregar os dados de cobertura da terra “utm_cover_AP_rio_2020.tif” com a função <code>rast</code>.</p>
 <pre class="r"><code># Selecionar e carregar arquivo &quot;utm_cover_AP_rio_2020.tif&quot;
@@ -1858,7 +1858,7 @@ Baixar o arquivo Link: <a href="https://github.com/darrennorris/gisdata/blob/mas
 Lembrando-se de salvar o arquivo (“rivers.GPKG”) em um local conhecido no seu computador.</p>
 <p>Agora, com o proximo bloco de codigo, podemos selecionar o arquivo “rivers.GPKG”, e carregar primeiramente a camada “midpoints” e depois “centerline”.</p>
 <p>No exemplo, usamos <span style=" font-weight: bold;    ">%&gt;%</span>, que estabelece a ligação entre os passos do processo. Ou seja, <span style=" font-weight: bold;    ">%&gt;%</span> passa o objeto resultante automaticamente para a próxima função como primeiro argumento.
-Primeiramente carregamos os dados e em seguida converter as coordenadas para o mesmo sistema de referência que o arquivo raster (com a função st_transform).</p>
+Primeiramente carregamos os dados e em seguida converter (reprojeção) as coordenadas para o mesmo sistema de referência que o arquivo raster (com a função st_transform).</p>
 <pre class="r"><code>#  Selecionar o arquivo &quot;rivers.GPKG&quot;,
 meuSIG &lt;- file.choose()
 # Carregar pontos cada 5 km, camada midpoints
@@ -1895,15 +1895,15 @@ Figura 4.2: Cobertura da terra ao redor do Rio Araguari em 2020. Mostrando os po
 </div>
 <div id="calculo-de-métricas" class="section level1" number="5">
 <h1><span class="header-section-number">5</span> Calculo de métricas</h1>
-<p>Para ilustrar como rodar as funções e cálculos com landscapemetrics, vamos calcular a área central na paisagem que usamos no tutorial de Escala. Vamos estudar uma classe (floresta), portanto vamos incluir as métricas para nível de classe. Além disso, as métricas de paisagem em nível de classe são mais eficazes na definição de processos ecológicos (Tischendorf, L. Can landscape indices predict ecological processes consistently?. Landscape Ecology 16, 235–254 (2001).
+<p>Para ilustrar como rodar as funções e cálculos com landscapemetrics, vamos calcular a área central na paisagem. Vamos estudar uma classe (floresta), portanto vamos incluir as métricas para nível de classe. Além disso, as métricas de paisagem em nível de classe são mais eficazes na definição de processos ecológicos (Tischendorf, L. Can landscape indices predict ecological processes consistently?. Landscape Ecology 16, 235–254 (2001).
 <a href="https://doi.org/10.1023/A:1011112719782" class="uri">https://doi.org/10.1023/A:1011112719782</a>.).</p>
-<p>Para calcular as métricas de paisagem dentro de um certo buffer em torno de pontos de amostra, existe a função <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">sample_lsm()</span>. Através da função <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">sample_lsm()</span> podemos calcular mais de 50 métricas da paisagem, dentro de extensões diferentes.</p>
+<p>Para calcular as métricas de paisagem dentro de um certo buffer em torno de pontos de amostra, existe a função <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">sample_lsm()</span>. Através da função <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">sample_lsm()</span> podemos calcular mais de 50 métricas da paisagem, dentro de extensões (raios/distancias) diferentes.</p>
 <div id="ponto-único-raio-único-métrica-única" class="section level2" number="5.1">
 <h2><span class="header-section-number">5.1</span> Ponto único, raio único, métrica única</h2>
 <p>Métricas de área central (“core area”) são consideradas medidas da qualidade de hábitat, uma vez que indica quanto existe realmente de área efetiva de um fragmento, após descontar-se o efeito de borda. Vamos calcular a percentual de área central (“core area”) no entorno de um ponto de amostragem. Isso seria, a percentual de áreas centrais (excluídas as bordas de 30 m) de cada classe em relação à área total da paisagem.</p>
 <p>Para a função <span style="     border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #dedede !important;">sample_lsm()</span> funcionar, precisamos informar
-(i) a paisagem (arquivo de raster), (ii) ponto (vector),
-(iii) raio, (iv) forma do buffer (círculo ou quadrado) e por final (v) a métrica desejada.</p>
+(i) a paisagem (arquivo de raster), (ii) ponto (arquivo vector),
+(iii) raio, (iv) forma do buffer (círculo ou quadrado) e por final (v) a métrica desejada. Cada opção tem especificações particulares assim para que a função pode receber dados em formatos diferentes e produzir resultados confiorme necessidades de diversos casos.</p>
 <pre class="r"><code>minha_amostra_1000 &lt;- sample_lsm(landscape = floresta_2020, 
                                  y = rsm_31976[1, ], 
                             size = 1000, shape = &quot;circle&quot;, 

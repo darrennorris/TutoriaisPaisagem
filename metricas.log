@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.12.19)  13 FEB 2023 19:52
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.12.19)  15 FEB 2023 10:27
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -598,113 +598,109 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 169.
 (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-) [2]
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 228.
+) [2] [3]
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 230.
 (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-) [3]
+) [4]
 
 Package hyperref Warning: Difference (2) between bookmark levels is greater 
-(hyperref)                than one, level fixed on input line 331.
+(hyperref)                than one, level fixed on input line 333.
 
-[4] [5]
-Overfull \hbox (0.54366pt too wide) in paragraph at lines 383--383
-[] \T1/lmtt/m/n/10 #> |---------|---------|---------|---------|========================================= 
- []
-
-<metricas_files/figure-latex/unnamed-chunk-11-1.pdf, id=170, 361.35pt x 361.35pt>
+[5] [6]
+<metricas_files/figure-latex/unnamed-chunk-11-1.pdf, id=178, 361.35pt x 361.35pt>
 File: metricas_files/figure-latex/unnamed-chunk-11-1.pdf Graphic file (type pdf)
 <use metricas_files/figure-latex/unnamed-chunk-11-1.pdf>
-Package pdftex.def Info: metricas_files/figure-latex/unnamed-chunk-11-1.pdf  used on input line 405.
+Package pdftex.def Info: metricas_files/figure-latex/unnamed-chunk-11-1.pdf  used on input line 406.
 (pdftex.def)             Requested size: 361.34912pt x 361.34912pt.
-[6] [7 <./metricas_files/figure-latex/unnamed-chunk-11-1.pdf>]
-<metricas_files/figure-latex/unnamed-chunk-15-1.pdf, id=192, 361.35pt x 361.35pt>
+[7] [8 <./metricas_files/figure-latex/unnamed-chunk-11-1.pdf>]
+<metricas_files/figure-latex/unnamed-chunk-15-1.pdf, id=200, 361.35pt x 361.35pt>
 File: metricas_files/figure-latex/unnamed-chunk-15-1.pdf Graphic file (type pdf)
 <use metricas_files/figure-latex/unnamed-chunk-15-1.pdf>
-Package pdftex.def Info: metricas_files/figure-latex/unnamed-chunk-15-1.pdf  used on input line 460.
+Package pdftex.def Info: metricas_files/figure-latex/unnamed-chunk-15-1.pdf  used on input line 461.
 (pdftex.def)             Requested size: 361.34912pt x 361.34912pt.
-[8 <./metricas_files/figure-latex/unnamed-chunk-15-1.pdf>] [9]
-<metricas_files/figure-latex/unnamed-chunk-19-1.pdf, id=212, 469.755pt x 325.215pt>
+[9 <./metricas_files/figure-latex/unnamed-chunk-15-1.pdf>] [10]
+<metricas_files/figure-latex/unnamed-chunk-19-1.pdf, id=220, 469.755pt x 325.215pt>
 File: metricas_files/figure-latex/unnamed-chunk-19-1.pdf Graphic file (type pdf)
 <use metricas_files/figure-latex/unnamed-chunk-19-1.pdf>
-Package pdftex.def Info: metricas_files/figure-latex/unnamed-chunk-19-1.pdf  used on input line 531.
+Package pdftex.def Info: metricas_files/figure-latex/unnamed-chunk-19-1.pdf  used on input line 532.
 (pdftex.def)             Requested size: 422.7756pt x 292.6908pt.
 
 pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.531 ...ntes ao redor de um ponto de amostragem.}
-                                                  \label{fig:unnamed-chunk-19} [10 <./metricas_files/figure-latex/unnamed-chunk-19-1.pdf>] [11] [12]
-<www/logo_gg_lsm.png, id=234, 960.58875pt x 461.3235pt>
+l.532 ...ntes ao redor de um ponto de amostragem.}
+                                                  \label{fig:unnamed-chunk-19} [11 <./metricas_files/figure-latex/unnamed-chunk-19-1.pdf>] [12] [13]
+<www/logo_gg_lsm.png, id=243, 960.58875pt x 461.3235pt>
 File: www/logo_gg_lsm.png Graphic file (type png)
 <use www/logo_gg_lsm.png>
-Package pdftex.def Info: www/logo_gg_lsm.png  used on input line 648.
+Package pdftex.def Info: www/logo_gg_lsm.png  used on input line 649.
 (pdftex.def)             Requested size: 305.34264pt x 146.64104pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 661--663
+Underfull \hbox (badness 10000) in paragraph at lines 662--664
 
  []
 
-[13 <./www/logo_gg_lsm.png>]
-<metricas_files/figure-latex/unnamed-chunk-25-1.pdf, id=254, 469.755pt x 325.215pt>
+[14 <./www/logo_gg_lsm.png>]
+<metricas_files/figure-latex/unnamed-chunk-25-1.pdf, id=262, 469.755pt x 325.215pt>
 File: metricas_files/figure-latex/unnamed-chunk-25-1.pdf Graphic file (type pdf)
 <use metricas_files/figure-latex/unnamed-chunk-25-1.pdf>
-Package pdftex.def Info: metricas_files/figure-latex/unnamed-chunk-25-1.pdf  used on input line 696.
+Package pdftex.def Info: metricas_files/figure-latex/unnamed-chunk-25-1.pdf  used on input line 697.
 (pdftex.def)             Requested size: 234.87692pt x 162.6071pt.
-[14 <./metricas_files/figure-latex/unnamed-chunk-25-1.pdf>]
-LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line 728.
+[15 <./metricas_files/figure-latex/unnamed-chunk-25-1.pdf>]
+LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line 729.
 (c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/ts1lmtt.fd
 File: ts1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-<metricas_files/figure-latex/unnamed-chunk-26-1.pdf, id=265, 469.755pt x 325.215pt>
+<metricas_files/figure-latex/unnamed-chunk-26-1.pdf, id=274, 469.755pt x 325.215pt>
 File: metricas_files/figure-latex/unnamed-chunk-26-1.pdf Graphic file (type pdf)
 <use metricas_files/figure-latex/unnamed-chunk-26-1.pdf>
-Package pdftex.def Info: metricas_files/figure-latex/unnamed-chunk-26-1.pdf  used on input line 734.
+Package pdftex.def Info: metricas_files/figure-latex/unnamed-chunk-26-1.pdf  used on input line 735.
 (pdftex.def)             Requested size: 258.36604pt x 178.86879pt.
 
 pdfTeX warning (ext4): destination with the same identifier (name{figure.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.738 ...al de floresta em diferentes extensões.}
-                                                  \label{fig:unnamed-chunk-26} [15 <./metricas_files/figure-latex/unnamed-chunk-26-1.pdf>]
-<figures/fig_comp_linear.pdf, id=282, 794.97pt x 216.81pt>
+l.739 ...al de floresta em diferentes extensões.}
+                                                  \label{fig:unnamed-chunk-26} [16 <./metricas_files/figure-latex/unnamed-chunk-26-1.pdf>]
+<figures/fig_comp_linear.pdf, id=290, 794.97pt x 216.81pt>
 File: figures/fig_comp_linear.pdf Graphic file (type pdf)
 <use figures/fig_comp_linear.pdf>
-Package pdftex.def Info: figures/fig_comp_linear.pdf  used on input line 767.
+Package pdftex.def Info: figures/fig_comp_linear.pdf  used on input line 768.
 (pdftex.def)             Requested size: 460.36723pt x 125.55469pt.
-[16 <./figures/fig_comp_linear.pdf>] [17]
-<metricas_files/figure-latex/insert-fig-buffmetrics-1.pdf, id=302, 469.755pt x 325.215pt>
+[17 <./figures/fig_comp_linear.pdf>] [18]
+<metricas_files/figure-latex/insert-fig-buffmetrics-1.pdf, id=310, 469.755pt x 325.215pt>
 File: metricas_files/figure-latex/insert-fig-buffmetrics-1.pdf Graphic file (type pdf)
 <use metricas_files/figure-latex/insert-fig-buffmetrics-1.pdf>
-Package pdftex.def Info: metricas_files/figure-latex/insert-fig-buffmetrics-1.pdf  used on input line 787.
+Package pdftex.def Info: metricas_files/figure-latex/insert-fig-buffmetrics-1.pdf  used on input line 788.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[18 <./metricas_files/figure-latex/insert-fig-buffmetrics-1.pdf>] [19]
+[19 <./metricas_files/figure-latex/insert-fig-buffmetrics-1.pdf>] [20]
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[20]
-<metricas_files/figure-latex/insert-fig-multiplemetrics-1.pdf, id=330, 469.755pt x 325.215pt>
+[21]
+<metricas_files/figure-latex/insert-fig-multiplemetrics-1.pdf, id=338, 469.755pt x 325.215pt>
 File: metricas_files/figure-latex/insert-fig-multiplemetrics-1.pdf Graphic file (type pdf)
 <use metricas_files/figure-latex/insert-fig-multiplemetrics-1.pdf>
-Package pdftex.def Info: metricas_files/figure-latex/insert-fig-multiplemetrics-1.pdf  used on input line 958.
+Package pdftex.def Info: metricas_files/figure-latex/insert-fig-multiplemetrics-1.pdf  used on input line 959.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[21 <./metricas_files/figure-latex/insert-fig-multiplemetrics-1.pdf>] [22] (./metricas.aux)
+[22 <./metricas_files/figure-latex/insert-fig-multiplemetrics-1.pdf>] [23] (./metricas.aux)
 Package rerunfilecheck Info: File `metricas.out' has not changed.
 (rerunfilecheck)             Checksum: E1C9A3E0F209A268FF7FD7869B05E62A;3797.
  ) 
 Here is how much of TeX's memory you used:
- 14011 strings out of 478053
- 226644 string characters out of 5839389
+ 14012 strings out of 478053
+ 226651 string characters out of 5839389
  1867787 words of memory out of 5000000
  33778 multiletter control sequences out of 15000+600000
  558988 words of font info for 75 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 72i,9n,77p,1030b,488s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 72i,9n,77p,1030b,504s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}{c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}<c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb><c:/Users/user/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtti10.pfb>
-Output written on metricas.pdf (22 pages, 987663 bytes).
+Output written on metricas.pdf (23 pages, 988941 bytes).
 PDF statistics:
- 401 PDF objects out of 1000 (max. 8388607)
- 329 compressed objects within 4 object streams
- 70 named destinations out of 1000 (max. 500000)
+ 409 PDF objects out of 1000 (max. 8388607)
+ 336 compressed objects within 4 object streams
+ 71 named destinations out of 1000 (max. 500000)
  214 words of extra memory for PDF output out of 10000 (max. 10000000)
 
