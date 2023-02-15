@@ -356,11 +356,12 @@ minha_amostra_1000 <- sample_lsm(landscape = floresta_2020,
 ```
 
 Depois que executar ("run"), podemos olhar os dados com o codigo a seguir. 
+Os dados deve ter os valores (coluna value) da métrica (coluna metric) de cada classe (coluna class):
 ```{r, eval=FALSE}
 minha_amostra_1000
 ```
 
-Os dados deve ter os valores (coluna value) da métrica (coluna metric) de cada classe (coluna class):
+
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 minha_amostra_1000 %>% 
   kbl() %>%
